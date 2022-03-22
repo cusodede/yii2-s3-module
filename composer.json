@@ -1,0 +1,50 @@
+{
+	"name": "cusodede/s3",
+	"description": "S3 support module",
+	"type": "yii2-module",
+	"keywords": [
+		"yii2",
+		"module",
+		"cloud storage",
+		"minio",
+		"S3"
+	],
+	"license": "proprietary",
+	"authors": [
+		{
+			"name": "Pavel Dubrovsky",
+			"email": "antikillerxxl@gmail.com"
+		}
+	],
+	"minimum-stability": "dev",
+	"require": {
+		"php": ">=8.0",
+		"cusodede/yii2-default-controller": "dev-master"
+	},
+	"require-dev": {
+		"yiisoft/yii2": "dev-master",
+		"yiisoft/yii2-bootstrap": "^2.0.10",
+		"yiisoft/yii2-bootstrap4": "^2.0.10"
+	},
+	"autoload": {
+		"psr-4": {
+			"cusodede\\s3\\": "src"
+		}
+	},
+	"config": {
+		"process-timeout": 1800,
+		"fxp-asset": {
+			"enabled": false
+		}
+	},
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://asset-packagist.org"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/cusodede/yii2-default-controller"
+		}
+	]
+}
