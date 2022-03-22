@@ -14,6 +14,10 @@
 		{
 			"name": "Pavel Dubrovsky",
 			"email": "antikillerxxl@gmail.com"
+		},
+		{
+			"name": "Ivan Suares",
+			"email": "pepe_botika69@yahoo.com"
 		}
 	],
 	"minimum-stability": "dev",
