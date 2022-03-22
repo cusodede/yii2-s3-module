@@ -23,11 +23,13 @@
 	"minimum-stability": "dev",
 	"require": {
 		"php": ">=8.0",
-		"cusodede/yii2-default-controller": "dev-master"
+		"aws/aws-sdk-php": "^3.208",
+		"pozitronik/yii2-traits": "dev-master",
+		"pozitronik/yii2-badgewidget": "dev-master",
+		"pozitronik/yii2-grid-config": "dev-master"
 	},
 	"require-dev": {
 		"yiisoft/yii2": "dev-master",
-		"yiisoft/yii2-bootstrap": "^2.0.10",
 		"yiisoft/yii2-bootstrap4": "^2.0.10"
 	},
 	"autoload": {
