@@ -1,5 +1,5 @@
 {
-	"name": "cusodede/s3",
+	"name": "cusodede/yii2-s3-module",
 	"description": "S3 support module",
 	"type": "yii2-module",
 	"keywords": [
