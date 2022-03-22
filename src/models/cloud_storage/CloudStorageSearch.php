@@ -29,7 +29,6 @@ class CloudStorageSearch extends CloudStorage {
 	 */
 	public function search(array $params):ActiveDataProvider {
 		$query = self::find()->distinct()->active();
-		$query->scope();
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query

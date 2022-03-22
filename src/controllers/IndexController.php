@@ -14,6 +14,7 @@ use pozitronik\traits\traits\ActiveRecordTrait;
 use ReflectionException;
 use Throwable;
 use Yii;
+use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\base\UnknownClassException;
 use yii\web\Controller;
@@ -52,11 +53,25 @@ class IndexController extends Controller {
 	}
 
 	/**
+	 * @param int $id
+	 * @param string|null $mime Для переопределения mime-type
+	 * @return Response
+	 * @throws NotFoundHttpException
+	 * @throws Throwable
+	 * @throws Exception
+	 */
+	public function actionDownload(int $id, ?string $mime = null):Response {
+		if (null === $response = CloudStorage::Download($id, $mime)) throw new NotFoundHttpException("Model is not found!");
+		return $response;
+	}
+
+
+	/**
 	 * @return string|Response
 	 * @throws Throwable
 	 * @throws InvalidConfigException
 	 */
-	public function actionCreate() {
+	public function actionUpload() {
 		$model = new CloudStorage();
 		$s3 = new S3();
 		if (ControllerHelper::IsAjaxValidationRequest()) {
@@ -84,8 +99,8 @@ class IndexController extends Controller {
 		}
 		/* Постинга не было */
 		return (Yii::$app->request->isAjax)
-			?$this->renderAjax('modal/create', ['model' => $model, 'buckets' => $s3->getListBucketMap()])
-			:$this->render('create', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
+			?$this->renderAjax('modal/upload', ['model' => $model, 'buckets' => $s3->getListBucketMap()])
+			:$this->render('upload', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
 	}
 
 	/**
