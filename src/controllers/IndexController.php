@@ -44,6 +44,7 @@ class IndexController extends Controller {
 		];
 
 		if (Yii::$app->request->isAjax) {
+			/*todo: переопределение вьюх, как в справочниках*/
 			return $this->viewExists(static::ViewPath().'modal/index') /*если модальной вьюхи для индекса не найдено - редирект*/
 				?$this->renderAjax('modal/index', $viewParams)
 				:$this->redirect($this->link('index'));/*параметры неважны - редирект произойдёт в modalHelper.js*/
@@ -144,7 +145,7 @@ class IndexController extends Controller {
 	 */
 	public function actionCreateBucket():string {
 		$createBucketForm = new CreateBucketForm();
-		$isCreated = null;
+		$isCreated = false;
 		if (true === Yii::$app->request->isPost && true === $createBucketForm->load(Yii::$app->request->post()) && $createBucketForm->validate()) {
 			if (true === $isCreated = (new S3())->createBucket($createBucketForm->name)) {
 				$createBucketForm = new CreateBucketForm();
