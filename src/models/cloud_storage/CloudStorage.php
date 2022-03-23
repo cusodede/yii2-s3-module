@@ -48,7 +48,7 @@ class CloudStorage extends CloudStorageAR {
 	 * @return string
 	 * @throws ThrowableAlias
 	 */
-	public static function getMimeTypeByExtension(string $fileName):string {
+	public static function GetMimeTypeByExtension(string $fileName):string {
 		if ('' !== $ext = pathinfo($fileName, PATHINFO_EXTENSION)) {
 			$ext = strtolower($ext);
 			return ArrayHelper::getValue(S3Module::param('mimeTypes', static::MIME_TYPES), $ext, S3Module::param('defaultMimeType', static::DEFAULT_MIME_TYPE));
@@ -73,7 +73,7 @@ class CloudStorage extends CloudStorageAR {
 				$body = $result->get('Body');
 				$body->rewind();
 				return Yii::$app->response->sendContentAsFile($body->getContents(), $model->filename, [
-					'mimeType' => $mime??static::getMimeTypeByExtension($model->filename)
+					'mimeType' => $mime??static::GetMimeTypeByExtension($model->filename)
 				]);
 			} catch (S3Exception $e) {
 				throw new NotFoundHttpException("Error in storage: {$e->getMessage()}");
