@@ -36,6 +36,7 @@ $config = [
     'modules' => [
         's3' => [
             'class' => app\modules\s3\S3Module::class,
+            'defaultRoute' => 'index',
             'params' => [
                 'connection' => [
                     'host' => 'minio_host',
