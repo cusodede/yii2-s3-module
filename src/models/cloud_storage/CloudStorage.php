@@ -90,7 +90,7 @@ class CloudStorage extends CloudStorageAR {
 	 * @throws NotFoundHttpException
 	 * @throws ThrowableAlias
 	 */
-	public function upload(UploadedFile $instance):bool {
+	public function uploadInstance(UploadedFile $instance):bool {
 		try {
 			$s3 = new S3();
 			$this->filename = empty($this->filename)?$instance->name:$this->filename;

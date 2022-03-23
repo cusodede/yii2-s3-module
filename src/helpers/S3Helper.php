@@ -52,6 +52,7 @@ class S3Helper {
 	 * @return CloudStorage|null
 	 * @throws Exception
 	 * @throws Throwable
+	 * @deprecated
 	 */
 	public static function UploadInstance(UploadedFile $instance, ?string $bucket = null):?CloudStorage {
 		$s3 = new S3();
