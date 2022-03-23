@@ -29,9 +29,7 @@ class IndexController extends Controller {
 	 * @inheritDoc
 	 */
 	public function getViewPath():string {
-		return (null === $viewPath = S3Module::param('viewPath'))
-			?parent::getViewPath()
-			:$viewPath;
+		return S3Module::param('viewPath', parent::getViewPath());
 	}
 
 	/**
