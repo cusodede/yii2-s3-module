@@ -8,7 +8,6 @@ use cusodede\s3\models\S3;
 use pozitronik\helpers\PathHelper;
 use Throwable;
 use yii\base\Exception;
-use yii\web\UploadedFile;
 
 /**
  * S3Helper: обёртка над S3 для упрощения работы
@@ -46,17 +45,4 @@ class S3Helper {
 		return $s3->storage;
 	}
 
-	/**
-	 * @param UploadedFile $instance
-	 * @param string|null $bucket
-	 * @return CloudStorage|null
-	 * @throws Exception
-	 * @throws Throwable
-	 * @deprecated
-	 */
-	public static function UploadInstance(UploadedFile $instance, ?string $bucket = null):?CloudStorage {
-		$s3 = new S3();
-		$s3->saveObject($instance->tempName, $bucket, $instance->name);
-		return $s3->storage;
-	}
 }
