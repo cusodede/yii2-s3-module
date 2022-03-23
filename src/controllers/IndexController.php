@@ -80,8 +80,8 @@ class IndexController extends Controller {
 	 * @throws InvalidConfigException
 	 */
 	public function actionUpload() {
-		$model = new CloudStorage();
 		$s3 = new S3();
+		$model = new CloudStorage(['bucket' => $s3->getBucket()]);
 		if (true === Yii::$app->request->isPost && true === $model->load(Yii::$app->request->post())) {
 			$uploadedFile = UploadedFile::getInstances($model, 'file');
 			$model->filename = $model->filename??ArrayHelper::getValue($uploadedFile, '0.baseName');
