@@ -8,6 +8,7 @@ use Aws\Result;
 use Aws\S3\S3Client;
 use cusodede\s3\S3Module;
 use pozitronik\helpers\ArrayHelper;
+use pozitronik\helpers\PathHelper;
 use Throwable;
 use Yii;
 use yii\base\Exception;
@@ -24,11 +25,9 @@ class S3 extends Model {
 	private string $password;
 	private int $connectTimeout = 10;
 	private int $timeout = 10;
-	private string $certPath;
+	private ?string $certPath;
+	private ?string $certPassword;
 	private ?string $defaultBucket;
-
-	public const WEB_LOG = 's3.web';
-	public const CONSOLE_LOG = 's3.console';
 
 	public const BUCKET_PREFIX = 'cpu-';
 
@@ -42,7 +41,7 @@ class S3 extends Model {
 		$this->connectTimeout = (int)S3Module::param("connection.connect_timeout", $this->connectTimeout);
 		$this->timeout = (int)S3Module::param("connection.timeout", $this->timeout);
 		$this->certPath = S3Module::param("connection.cert_path");
-		/*absolute required! Установить параметр в конфиге*/
+		$this->certPassword = S3Module::param("connection.cert_password");
 		$this->defaultBucket = S3Module::param("defaultBucket");
 		parent::__construct();
 	}
@@ -73,8 +72,8 @@ class S3 extends Model {
 			'timeout' => $this->timeout
 		];
 
-		if ('' !== $this->certPath) {
-			$http[] = [$this->certPath, '']; // второй элемент пароль, не думаю что будем его использовать
+		if (null !== $this->certPath) {
+			$http[] = [$this->certPath, $this->certPassword??'']; // второй элемент пароль, не думаю что будем его использовать
 		}
 
 		return $http;
@@ -98,25 +97,19 @@ class S3 extends Model {
 	 * Сохраняем объект в хранилище
 	 * @param string $filePath path to the file we want to upload
 	 * @param string|null $bucket
-	 * @param string|null $filename
+	 * @param string|null $fileName
 	 * @throws Exception
 	 * @throws Throwable
 	 */
-	public function saveObject(string $filePath, ?string $bucket = null, ?string $filename = null):void {
-		if (null === $filename) {
-			$filename = basename($filePath);
+	public function saveObject(string $filePath, ?string $bucket = null, ?string $fileName = null):void {
+		if (null === $fileName) {
+			$fileName = basename($filePath);
 		}
-		$key = implode('_', [Yii::$app->security->generateRandomString(), $filename]);
-		$storageResponse = $this->client->putObject([
-			'Bucket' => $bucket = $this->getBucket($bucket),
-			'Key' => $key,
-			'Body' => fopen($filePath, 'rb')
-		]);
-
+		$storageResponse = $this->putObject($filePath, $key, $bucket);
 		$this->storage = new CloudStorage([
 			'bucket' => $bucket,
 			'key' => $key,
-			'filename' => $filename,
+			'filename' => $fileName,
 			'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
 			'size' => (false === $filesize = filesize($filePath))?null:$filesize
 		]);
@@ -124,18 +117,35 @@ class S3 extends Model {
 	}
 
 	/**
-	 * Получаем объект из хранилище
+	 * Получаем объект из хранилища
 	 * @param string $key
 	 * @param string|null $bucket
 	 * @param null|string $savePath Если null, то данные нужно выковыривать из потока
 	 * @return Result
 	 * @throws Throwable
 	 */
-	public function getObject(string $key, ?string $bucket = null, ?string $savePath = null):Result {
+	public function getObject(string $key, ?string &$bucket = null, ?string $savePath = null):Result {
 		return $this->client->getObject([
-			'Bucket' => $this->getBucket($bucket),
 			'Key' => $key,
+			'Bucket' => $bucket = $this->getBucket($bucket),
 			'SaveAs' => $savePath
+		]);
+	}
+
+	/**
+	 * Загрузка файла в хранилище
+	 * @param string $filePath
+	 * @param string|null $key
+	 * @param string|null $bucket
+	 * @return Result
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	public function putObject(string $filePath, ?string &$key = null, ?string &$bucket = null):Result {
+		return $this->client->putObject([
+			'Key' => $key = $key??static::GetFileNameKey(PathHelper::ExtractBaseName($filePath)),
+			'Bucket' => $bucket = $this->getBucket($bucket),
+			'Body' => fopen($filePath, 'rb')
 		]);
 	}
 
@@ -161,6 +171,15 @@ class S3 extends Model {
 	public function createBucket(string $name):bool {
 		$res = $this->client->createBucket(['Bucket' => self::BUCKET_PREFIX.$name])->toArray();
 		return null !== ArrayHelper::getValue($res, 'Location');
+	}
+
+	/**
+	 * @param string $fileName
+	 * @return string
+	 * @throws Exception
+	 */
+	private static function GetFileNameKey(string $fileName):string {
+		return implode('_', [Yii::$app->security->generateRandomString(), $fileName]);
 	}
 
 }
