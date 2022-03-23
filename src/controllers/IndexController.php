@@ -53,6 +53,16 @@ class IndexController extends Controller {
 
 	/**
 	 * @param int $id
+	 * @return string
+	 * @throws NotFoundHttpException
+	 */
+	public function actionView(int $id):string {
+		if (null === $model = CloudStorage::findOne($id)) throw new NotFoundHttpException();
+		return $this->render('view', compact('model'));
+	}
+
+	/**
+	 * @param int $id
 	 * @param string|null $mime Для переопределения mime-type
 	 * @return Response
 	 * @throws NotFoundHttpException
