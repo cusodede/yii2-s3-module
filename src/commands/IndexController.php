@@ -5,7 +5,6 @@ namespace cusodede\s3\commands;
 
 use cusodede\s3\models\S3;
 use Throwable;
-use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
 
@@ -30,7 +29,7 @@ class IndexController extends Controller {
 			$res = $this->s3->client->putObject(['Bucket' => $this->s3->getBucket($bucket), 'Key' => $key, 'Body' => fopen($filepath, 'rb')]);
 			$this->outputResult($res->toArray());
 		} catch (Throwable $e) {
-			$this->outputResult($e->getMessage(), true);
+			$this->outputResult($e->getMessage());
 		}
 	}
 
@@ -49,7 +48,7 @@ class IndexController extends Controller {
 			Console::output('Saving file in path:'.$savePath);
 			$this->outputResult($res->toArray());
 		} catch (Throwable $e) {
-			$this->outputResult($e->getMessage(), true);
+			$this->outputResult($e->getMessage());
 		}
 	}
 
@@ -65,7 +64,7 @@ class IndexController extends Controller {
 			$res = $this->s3->client->headObject(['Bucket' => $this->s3->getBucket($bucket), 'Key' => $key]);
 			$this->outputResult($res->toArray());
 		} catch (Throwable $e) {
-			$this->outputResult($e->getMessage(), true);
+			$this->outputResult($e->getMessage());
 		}
 	}
 
@@ -81,7 +80,7 @@ class IndexController extends Controller {
 			$res = $this->s3->client->deleteObject(['Bucket' => $bucket, 'Key' => $key]);
 			$this->outputResult($res->toArray());
 		} catch (Throwable $e) {
-			$this->outputResult($e->getMessage(), true);
+			$this->outputResult($e->getMessage());
 		}
 	}
 
@@ -98,9 +97,8 @@ class IndexController extends Controller {
 			foreach ($res['Contents'] as $content) {
 				Console::output("{$content['Key']} {$content['Size']} bytes");
 			}
-			Yii::info(json_encode($res), S3::CONSOLE_LOG);
 		} catch (Throwable $e) {
-			$this->outputResult($e->getMessage(), true);
+			$this->outputResult($e->getMessage());
 
 		}
 	}
@@ -115,23 +113,17 @@ class IndexController extends Controller {
 			$res = $this->s3->client->listBuckets()->toArray();
 			$this->outputResult('Quantity of buckets '.count($res['Buckets']));
 			foreach ($res['Buckets'] as $bucket) {
-				Console::output("{$bucket['Name']} created {$bucket['CreationDate']}");
+				Console::output("{$bucket['Name']} created at {$bucket['CreationDate']}");
 			}
-			Yii::info(json_encode($res), S3::CONSOLE_LOG);
 		} catch (Throwable $e) {
-			$this->outputResult($e->getMessage(), true);
+			$this->outputResult($e->getMessage());
 		}
 	}
 
 	/**
 	 * @param array $data
 	 */
-	private function outputResult(mixed $data, bool $isError = false):void {
-		if ($isError) {
-			Yii::error(is_string($data)?$data:json_encode($data), S3::CONSOLE_LOG);
-		} else {
-			Yii::info(is_string($data)?$data:json_encode($data), S3::CONSOLE_LOG);
-		}
+	private function outputResult(mixed $data):void {
 		Console::output(is_string($data)?$data:json_encode($data, JSON_PRETTY_PRINT));
 	}
 
