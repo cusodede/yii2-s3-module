@@ -25,7 +25,7 @@ use yii\widgets\DetailView;
 			'format' => 'raw',
 			'value' => static fn(CloudStorage $model) => BadgeWidget::widget([
 				'items' => $model->filename,
-				'urlScheme' => [S3Module::to(['/download']), 'id' => $model->id]
+				'urlScheme' => [S3Module::to(['download']), 'id' => $model->id]
 			])
 		],
 		'created_at',

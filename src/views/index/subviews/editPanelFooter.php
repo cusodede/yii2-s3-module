@@ -4,7 +4,7 @@ declare(strict_types = 1);
 /**
  * @var View $this
  * @var CloudStorage $model
- * @var ActiveForm|string $form
+ * @var ActiveForm| $form
  */
 
 use cusodede\s3\models\cloud_storage\CloudStorage;
@@ -16,6 +16,6 @@ use yii\web\View;
 
 <?= Html::submitButton('Сохранить', [
 		'class' => $model->isNewRecord?'btn btn-success float-right':'btn btn-primary float-right',
-		'form' => is_object($form)?$form->id:$form
+		'form' => $form->id
 	]
 ) ?>

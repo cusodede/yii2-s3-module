@@ -21,7 +21,7 @@ use yii\web\View;
 		<div class="panel-container show">
 			<div class="panel-content">
 				<?php if (true === $isCreated): ?>
-					<div class="alert alert-info" role="alert">Bucket создан!</div>
+					<div class="alert alert-info" role="alert">Корзина создана!</div>
 				<?php endif; ?>
 				<div class="row">
 					<div class="col-md-6">

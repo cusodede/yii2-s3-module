@@ -17,23 +17,28 @@ $isDisabled = $model->isNewRecord?false:'disabled';
 
 <div class="row">
 	<div class="col-md-12">
+		<?= $form->field($model, 'file')->fileInput() ?>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
 		<?= $form->field($model, 'bucket')->dropDownList($buckets, ['prompt' => '', 'disabled' => $isDisabled]) ?>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<?= $form->field($model, 'key')->textInput(['disabled' => $isDisabled, 'placeholder' => 'Произвольное наименование']) ?>
+		<?= $form->field($model, 'key')->textInput([
+			'disabled' => $isDisabled,
+			'placeholder' => 'Оставьте пустым для автоматической генерации.'
+		]) ?>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<?= $form
-			->field($model, 'filename')
-			->textInput(['disabled' => $isDisabled, 'placeholder' => 'Имя загружаемого файла с указанием расширения']) ?>
+		<?= $form->field($model, 'filename')->textInput([
+			'disabled' => $isDisabled,
+			'placeholder' => 'Имя загружаемого файла с указанием расширения. Оставьте пустым для автоподстановки.'
+		]) ?>
 	</div>
 </div>
-<div class="row">
-	<div class="col-md-12">
-		<?= $form->field($model, 'file')->fileInput() ?>
-	</div>
-</div>
+
