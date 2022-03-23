@@ -4,10 +4,7 @@ declare(strict_types = 1);
 namespace cusodede\s3\models\cloud_storage\active_record;
 
 use cusodede\s3\S3Module;
-use pozitronik\helpers\DateHelper;
-use pozitronik\helpers\ModuleHelper;
 use pozitronik\traits\traits\ActiveRecordTrait;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
 /**
