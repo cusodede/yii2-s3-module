@@ -31,7 +31,7 @@ class CreateBucketForm extends Model {
 	 * @throws Throwable
 	 */
 	public function checkNameUnique($attribute):bool {
-		$value = S3::BUCKET_PREFIX.ArrayHelper::getValue($this->getAttributes([$attribute]), $attribute);
+		$value = ArrayHelper::getValue($this->getAttributes([$attribute]), $attribute);
 		$res = (new S3())->client->listBuckets()->toArray();
 		foreach ($res['Buckets'] as $bucket) {
 			if ($value === $bucket['Name']) {

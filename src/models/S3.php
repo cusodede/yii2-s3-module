@@ -29,8 +29,6 @@ class S3 extends Model {
 	private ?string $certPassword;
 	private ?string $defaultBucket;
 
-	public const BUCKET_PREFIX = 'cpu-';
-
 	/**
 	 * @inheritDoc
 	 */
@@ -169,7 +167,7 @@ class S3 extends Model {
 	 * @throws Throwable
 	 */
 	public function createBucket(string $name):bool {
-		$res = $this->client->createBucket(['Bucket' => self::BUCKET_PREFIX.$name])->toArray();
+		$res = $this->client->createBucket(['Bucket' => $name])->toArray();
 		return null !== ArrayHelper::getValue($res, 'Location');
 	}
 
