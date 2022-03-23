@@ -30,14 +30,10 @@ class CreateBucketForm extends Model {
 	 * @return bool
 	 * @throws Throwable
 	 */
-	public function checkNameUnique($attribute):bool {
-		$value = ArrayHelper::getValue($this->getAttributes([$attribute]), $attribute);
-		$res = (new S3())->client->listBuckets()->toArray();
-		foreach ($res['Buckets'] as $bucket) {
-			if ($value === $bucket['Name']) {
-				$this->addErrors(['name' => 'Наименование должно быть уникальным']);
-				return true;
-			}
+	public function checkNameUnique(string $attribute):bool {
+		if (in_array(ArrayHelper::getValue($this->getAttributes([$attribute]), $attribute), ArrayHelper::getColumn(ArrayHelper::getValue((new S3())->client->listBuckets()->toArray(), 'Buckets'), 'Name'))) {
+			$this->addErrors(['name' => 'Наименование должно быть уникальным']);
+			return true;
 		}
 		return false;
 	}
