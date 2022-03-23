@@ -8,7 +8,6 @@ use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageSearch;
 use cusodede\s3\models\S3;
 use cusodede\s3\S3Module;
-use pozitronik\helpers\ArrayHelper;
 use ReflectionException;
 use Throwable;
 use Yii;
@@ -82,12 +81,8 @@ class IndexController extends Controller {
 	public function actionUpload() {
 		$s3 = new S3();
 		$model = new CloudStorage(['bucket' => $s3->getBucket()]);
-		if (true === Yii::$app->request->isPost && true === $model->load(Yii::$app->request->post())) {
-			$uploadedFile = UploadedFile::getInstances($model, 'file');
-			$model->filename = $model->filename??ArrayHelper::getValue($uploadedFile, '0.baseName');
-			$storageResponse = $s3->putObject(ArrayHelper::getValue($uploadedFile, '0.tempName'), $model->key, $model->bucket);
-			$model->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
-			if ($model->save()) return $this->redirect(S3Module::to('index'));
+		if (true === Yii::$app->request->isPost && true === $model->load(Yii::$app->request->post()) && null !== $uploadedFile = UploadedFile::getInstance($model, 'file')) {
+			if ($model->upload($uploadedFile)) return $this->redirect(S3Module::to('index'));
 		}
 		return $this->render('upload', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
 	}
@@ -101,14 +96,10 @@ class IndexController extends Controller {
 	 */
 	public function actionEdit(int $id) {
 		if (null === $model = CloudStorage::findOne($id)) throw new NotFoundHttpException();
-		$s3 = new S3();
-		if (true === Yii::$app->request->isPost) {
-			$uploadedFile = UploadedFile::getInstances($model, 'file');
-			$storageResponse = $s3->putObject(ArrayHelper::getValue($uploadedFile, '0.tempName'), $model->key, $model->bucket);
-			$model->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
-			if ($model->save()) return $this->redirect(S3Module::to('index'));
+		if (true === Yii::$app->request->isPost && null !== $uploadedFile = UploadedFile::getInstance($model, 'file')) {
+			if ($model->upload($uploadedFile)) return $this->redirect(S3Module::to('index'));
 		}
-		return $this->render('edit', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
+		return $this->render('edit', ['model' => $model, 'buckets' => (new S3())->getListBucketMap()]);
 	}
 
 	/**

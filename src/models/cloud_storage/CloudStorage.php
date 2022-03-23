@@ -15,6 +15,7 @@ use yii\base\Exception;
 use yii\helpers\FileHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 /**
  * Class CloudStorage
@@ -80,5 +81,26 @@ class CloudStorage extends CloudStorageAR {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param UploadedFile $instance
+	 * @return bool
+	 * @throws Exception
+	 * @throws NotFoundHttpException
+	 * @throws ThrowableAlias
+	 */
+	public function upload(UploadedFile $instance):bool {
+		try {
+			$s3 = new S3();
+			$this->filename = empty($this->filename)?$instance->name:$this->filename;
+			$this->key = empty($this->key)?null:$this->key;
+			$this->bucket = empty($this->bucket)?null:$this->bucket;
+			$storageResponse = $s3->putObject($instance->tempName, $this->key, $this->bucket);
+			$this->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
+			return $this->uploaded && $this->save();
+		} catch (S3Exception $e) {
+			throw new NotFoundHttpException("Error in storage: {$e->getMessage()}");
+		}
 	}
 }
