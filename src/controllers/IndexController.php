@@ -9,8 +9,6 @@ use cusodede\s3\models\cloud_storage\CloudStorageSearch;
 use cusodede\s3\models\S3;
 use cusodede\s3\S3Module;
 use pozitronik\helpers\ArrayHelper;
-use pozitronik\helpers\ControllerHelper;
-use pozitronik\traits\traits\ActiveRecordTrait;
 use ReflectionException;
 use Throwable;
 use Yii;
@@ -28,13 +26,22 @@ use yii\web\UploadedFile;
 class IndexController extends Controller {
 
 	/**
-	 * @return string|Response
+	 * @inheritDoc
+	 */
+	public function getViewPath():string {
+		return (null === $viewPath = S3Module::param('viewPath'))
+			?parent::getViewPath()
+			:$viewPath;
+	}
+
+	/**
+	 * @return string
 	 * @throws InvalidConfigException
 	 * @throws ReflectionException
 	 * @throws UnknownClassException
-	 * @noinspection PhpUndefinedMethodInspection Существование метода проверяется при инициализации поисковой модели
+	 * @throws Throwable
 	 */
-	public function actionIndex() {
+	public function actionIndex():string {
 		$searchModel = new CloudStorageSearch();
 
 		$viewParams = [
@@ -42,13 +49,6 @@ class IndexController extends Controller {
 			'dataProvider' => $searchModel->search(Yii::$app->request->queryParams),
 			'controller' => $this,
 		];
-
-		if (Yii::$app->request->isAjax) {
-			/*todo: переопределение вьюх, как в справочниках*/
-			return $this->viewExists(static::ViewPath().'modal/index') /*если модальной вьюхи для индекса не найдено - редирект*/
-				?$this->renderAjax('modal/index', $viewParams)
-				:$this->redirect($this->link('index'));/*параметры неважны - редирект произойдёт в modalHelper.js*/
-		}
 
 		return $this->render('index', $viewParams);
 	}
@@ -66,7 +66,6 @@ class IndexController extends Controller {
 		return $response;
 	}
 
-
 	/**
 	 * @return string|Response
 	 * @throws Throwable
@@ -75,68 +74,41 @@ class IndexController extends Controller {
 	public function actionUpload() {
 		$model = new CloudStorage();
 		$s3 = new S3();
-		if (ControllerHelper::IsAjaxValidationRequest()) {
-			return $this->asJson($model->validateModelFromPost());
-		}
 		if (true === Yii::$app->request->isPost && true === $model->load(Yii::$app->request->post())) {
-			/*todo: вынести в модель*/
 			$uploadedFile = UploadedFile::getInstances($model, 'file');
-			$bucket = $s3->getBucket($model->bucket);
-			$storageResponse = $s3->client->putObject([
-				'Bucket' => $bucket,
-				'Key' => $model->key,
-				'Body' => fopen($uploadedFile[0]->tempName, 'rb')
-			]);
-			Yii::info(json_encode($storageResponse->toArray()), S3::WEB_LOG);
-			$model->bucket = $bucket;
+
+			$storageResponse = $s3->putObject(ArrayHelper::getValue($uploadedFile, '0.tempName'), $model->key, $model->bucket);
+
 			$model->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
 			if ($model->save()) {
 				return $this->redirect(S3Module::to('test'));
 			}
-			/* Есть ошибки */
-			if (Yii::$app->request->isAjax) {
-				return $this->asJson($model->errors);
-			}
 		}
 		/* Постинга не было */
-		return (Yii::$app->request->isAjax)
-			?$this->renderAjax('modal/upload', ['model' => $model, 'buckets' => $s3->getListBucketMap()])
-			:$this->render('upload', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
+		return $this->render('upload', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
 	}
 
 	/**
-	 * @inheritdoc
+	 * @param int $id
+	 * @return string|Response
+	 * @throws InvalidConfigException
+	 * @throws NotFoundHttpException
+	 * @throws Throwable
 	 */
 	public function actionEdit(int $id) {
 		if (null === $model = CloudStorage::findOne($id)) throw new NotFoundHttpException();
 		$s3 = new S3();
 
-		/** @var ActiveRecordTrait $model */
-		if (ControllerHelper::IsAjaxValidationRequest()) {
-			return $this->asJson($model->validateModelFromPost());
-		}
 		if (true === Yii::$app->request->isPost) {
 			$uploadedFile = UploadedFile::getInstances($model, 'file');
-			$storageResponse = $s3->client->putObject([
-				'Bucket' => $model->bucket,
-				'Key' => $model->key,
-				'Body' => fopen($uploadedFile[0]->tempName, 'rb')
-			]);
-			Yii::info(json_encode($storageResponse->toArray()), S3::WEB_LOG);
-
+			$storageResponse = $s3->putObject(ArrayHelper::getValue($uploadedFile, '0.tempName'), $model->key, $model->bucket);
 			$model->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
 			if ($model->save()) {
-				return $this->redirect(S3Module::to('/test'));
-			}
-			/* Есть ошибки */
-			if (Yii::$app->request->isAjax) {
-				return $this->asJson($model->errors);
+				return $this->redirect(S3Module::to('test'));
 			}
 		}
 		/* Постинга не было */
-		return (Yii::$app->request->isAjax)
-			?$this->renderAjax('modal/edit', ['model' => $model, 'buckets' => $s3->getListBucketMap()])
-			:$this->render('edit', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
+		return $this->render('edit', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
 	}
 
 	/**
@@ -146,10 +118,8 @@ class IndexController extends Controller {
 	public function actionCreateBucket():string {
 		$createBucketForm = new CreateBucketForm();
 		$isCreated = false;
-		if (true === Yii::$app->request->isPost && true === $createBucketForm->load(Yii::$app->request->post()) && $createBucketForm->validate()) {
-			if (true === $isCreated = (new S3())->createBucket($createBucketForm->name)) {
-				$createBucketForm = new CreateBucketForm();
-			}
+		if (true === Yii::$app->request->isPost && true === $createBucketForm->load(Yii::$app->request->post()) && $createBucketForm->validate() && true === $isCreated = (new S3())->createBucket($createBucketForm->name)) {
+			$createBucketForm = new CreateBucketForm();
 		}
 		return $this->render('create-bucket', compact('createBucketForm', 'isCreated'));
 	}
