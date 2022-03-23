@@ -1,10 +1,35 @@
 # yii2-s3-module
 
-Модуль поддержки S3
+S3 support module (file-manager and stuff).
 
-# Установка
+# Installation with Composer
 
-# Подключение и настройки
+Add
+
+```
+{
+	"type": "vcs",
+	"url": "https://github.com/cusodede/yii2-s3-module"
+}
+```
+
+to repositories section of your `composer.json` file, then run
+
+```
+php composer.phar require cusodede/yii2-s3-module "dev-master"
+```
+
+or add
+
+```
+"cusodede/yii2-s3-module": "dev-master"
+```
+
+to the require section of your `composer.json` file.
+
+# Configuration and options
+
+See example config below:
 
 ```php
 $config = [
@@ -21,7 +46,7 @@ $config = [
                     'cert_path' => null, /* path to ssl certificate, set null to disable */
                     'cert_password' => null /* sertificate password, set null, if sertificate has no password */
                 ],
-                'viewPath' => '@vendor/cusodede/yii2-s3-module/src/views/', /* path to view templates, if you want to customize them */
+                'viewPath' => '@vendor/cusodede/yii2-s3-module/src/views/index', /* path to view templates, if you want to customize them */
                 'maxUploadFileSize' => null, /* file size limit for uploaded file, set null to disable */
                 'defaultBucket' => 'bucket', /* name of bucket, used by default, if null, alphabetically first bucket will be used */,
                 'mimeTypes' => [
