@@ -44,7 +44,7 @@ See example config below:
 $config = [
     'modules' => [
         's3' => [
-            'class' => app\modules\s3\S3Module::class,
+            'class' => cusodede\s3\S3Module::class,
             'defaultRoute' => 'index',
             'params' => [
                 'connection' => [
