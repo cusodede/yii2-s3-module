@@ -12,8 +12,8 @@ use yii\db\ActiveRecord;
  *
  * @property int $id
  * @property string $bucket Корзина в облаке
- * @property string $key Ключ файла в облаке
- * @property string $filename Название файла
+ * @property string $key Ключ файла в облаке, сгенерируется случайным образом, если не указан.
+ * @property string $filename Название файла, сгенерируется из имени файла, если не указано
  * @property null|int $size Размер файла
  * @property bool $uploaded Загружено
  * @property bool $deleted Удалено
@@ -34,7 +34,7 @@ class CloudStorageAR extends ActiveRecord {
 	 */
 	public function rules():array {
 		return [
-			[['bucket', 'key', 'filename'], 'required'],
+			[['bucket'], 'required'],
 			[['uploaded', 'deleted'], 'boolean'],
 			[['size'], 'integer'],
 			['created_at', 'safe'],

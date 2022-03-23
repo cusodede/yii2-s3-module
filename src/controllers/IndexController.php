@@ -84,15 +84,11 @@ class IndexController extends Controller {
 		$s3 = new S3();
 		if (true === Yii::$app->request->isPost && true === $model->load(Yii::$app->request->post())) {
 			$uploadedFile = UploadedFile::getInstances($model, 'file');
-
+			$model->filename = $model->filename??ArrayHelper::getValue($uploadedFile, '0.baseName');
 			$storageResponse = $s3->putObject(ArrayHelper::getValue($uploadedFile, '0.tempName'), $model->key, $model->bucket);
-
 			$model->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
-			if ($model->save()) {
-				return $this->redirect(S3Module::to('test'));
-			}
+			if ($model->save()) return $this->redirect(S3Module::to('index'));
 		}
-		/* Постинга не было */
 		return $this->render('upload', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
 	}
 
@@ -106,16 +102,12 @@ class IndexController extends Controller {
 	public function actionEdit(int $id) {
 		if (null === $model = CloudStorage::findOne($id)) throw new NotFoundHttpException();
 		$s3 = new S3();
-
 		if (true === Yii::$app->request->isPost) {
 			$uploadedFile = UploadedFile::getInstances($model, 'file');
 			$storageResponse = $s3->putObject(ArrayHelper::getValue($uploadedFile, '0.tempName'), $model->key, $model->bucket);
 			$model->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
-			if ($model->save()) {
-				return $this->redirect(S3Module::to('test'));
-			}
+			if ($model->save()) return $this->redirect(S3Module::to('index'));
 		}
-		/* Постинга не было */
 		return $this->render('edit', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
 	}
 
