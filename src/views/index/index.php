@@ -56,9 +56,10 @@ use yii\web\View;
 							'urlScheme' => [S3Module::to(['/download/index']), 'id' => $model->id],
 						])
 					],
-					'created_at',
+					'created_at:datetime',
 					'deleted:boolean',
-					'uploaded:boolean'
+					'uploaded:boolean',
+					'size:shortsize'
 				]
 			]) ?>
 		</div>
