@@ -122,10 +122,10 @@ class S3 extends Model {
 	 * @return Result
 	 * @throws Throwable
 	 */
-	public function getObject(string $key, ?string &$bucket = null, ?string $savePath = null):Result {
+	public function getObject(string $key, ?string $bucket = null, ?string $savePath = null):Result {
 		return $this->client->getObject([
 			'Key' => $key,
-			'Bucket' => $bucket = $this->getBucket($bucket),
+			'Bucket' => $this->getBucket($bucket),
 			'SaveAs' => $savePath
 		]);
 	}
