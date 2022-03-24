@@ -94,12 +94,14 @@ class CloudStorage extends CloudStorageAR {
 		try {
 			$s3 = new S3();
 			$this->filename = empty($this->filename)?$instance->name:$this->filename;
-			$this->key = empty($this->key)?S3::GetFileNameKey($this->filename):$this->key;
-			$this->bucket = empty($this->bucket)?$s3->getBucket($this->bucket):$this->bucket;
+			$key = empty($this->key)?S3::GetFileNameKey($this->filename):$this->key;
+			$bucket = empty($this->bucket)?$s3->getBucket($this->bucket):$this->bucket;
 			$storageResponse = (null === $resource = $instance->resource)
-				?$s3->putObject($instance->tempName, $this->key, $this->bucket)
-				:$s3->putResource($resource, $instance->name, $this->key, $this->bucket);
-
+				?$s3->putObject($instance->tempName, $key, $bucket)
+				:$s3->putResource($resource, $instance->name, $key, $bucket);
+			/*Передать атрибуты напрямую не выйдет*/
+			$this->key = $key;
+			$this->bucket = $bucket;
 			$this->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
 			return $this->uploaded && $this->save();
 		} catch (S3Exception $e) {
