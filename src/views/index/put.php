@@ -8,11 +8,9 @@ declare(strict_types = 1);
  */
 
 use cusodede\s3\models\cloud_storage\CloudStorage;
-use cusodede\s3\S3ModuleAssets;
 use yii\bootstrap4\ActiveForm;
 use yii\web\View;
 
-S3ModuleAssets::register($this);
 ?>
 
 <?php $form = ActiveForm::begin(); ?>

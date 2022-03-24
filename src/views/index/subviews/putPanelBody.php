@@ -19,22 +19,22 @@ $isDisabled = $model->isNewRecord?false:'disabled';
 
 <div class="row">
 	<div class="col-md-12">
-		<?= JQueryFileUpload::widget([
-			'model' => $model,
-			'url' => [S3Module::to('index/put')], // your route for saving images,
-			'appearance' => 'ui', // available values: 'ui','plus' or 'basic'
-
+		<?= $form->field($model, 'file')->widget(JQueryFileUpload::class, [
+			'url' => [S3Module::to('index/put')],
+			'appearance' => 'ui',
 			'formId' => $form->id,
+			'gallery' => false,
 			'options' => [
-				'method' => 'PUT'
 			],
 			'clientOptions' => [
-				'maxFileSize' => 2000000,
-//				'dataType' => 'json',
-//				'acceptFileTypes' => new yii\web\JsExpression('/(\.|\/)(gif|jpe?g|png)$/i'),
-				'autoUpload' => false
+				'disableImagePreview' => true,
+				'previewThumbnail' => false,
+				'preview' => false,
+				'type' => 'PUT',
+				'autoUpload' => false,
+				'multipart' => false
 			]
-		]); ?>
+		]) ?>
 	</div>
 </div>
 <div class="row">
