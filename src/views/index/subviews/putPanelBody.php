@@ -32,7 +32,7 @@ $isDisabled = $model->isNewRecord?false:'disabled';
 				'preview' => false,
 				'type' => 'PUT',
 				'autoUpload' => false,
-				'multipart' => false
+				'multipart' => true
 			]
 		]) ?>
 	</div>
