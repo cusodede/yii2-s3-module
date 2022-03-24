@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace cusodede\s3\controllers;
 
+use cusodede\s3\components\web\UploadedFile;
 use cusodede\s3\forms\CreateBucketForm;
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageSearch;
@@ -17,7 +18,6 @@ use yii\base\UnknownClassException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\web\UploadedFile;
 
 /**
  * Class IndexController
@@ -88,28 +88,20 @@ class IndexController extends Controller {
 	}
 
 	/**
-	 * @return string
+	 * @return string|Response
+	 * @throws Exception
+	 * @throws InvalidConfigException
+	 * @throws NotFoundHttpException
 	 * @throws Throwable
 	 */
 	public function actionPut() {
 		$s3 = new S3();
 		$model = new CloudStorage(['bucket' => $s3->getBucket()]);
-		if (Yii::$app->request->isPut) {
-			/* PUT data comes in on the stdin stream */
-			$putdata = fopen("php://input", 'rb');
 
-			/* Open a file for writing */
-			$fp = fopen("myputfile.ext", 'wb');
-
-			/* Read the data 1 KB at a time
-			   and write to the file */
-			while ($data = fread($putdata, 1024))
-				fwrite($fp, $data);
-
-			/* Close the streams */
-			fclose($fp);
-			fclose($putdata);
+		if (true === Yii::$app->request->isPut && true === $model->load(Yii::$app->request->getBodyParams()) && null !== $uploadedFile = UploadedFile::getInstance($model, 'file')) {
+			if ($model->uploadInstance($uploadedFile)) return $this->redirect(S3Module::to('index'));
 		}
+
 		return $this->render('put', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
 
 	}

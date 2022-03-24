@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace cusodede\s3\models\cloud_storage;
 
 use Aws\S3\Exception\S3Exception;
+use cusodede\s3\components\web\UploadedFile;
 use cusodede\s3\models\cloud_storage\active_record\CloudStorageAR;
 use cusodede\s3\models\S3;
 use cusodede\s3\S3Module;
@@ -15,7 +16,6 @@ use yii\base\Exception;
 use yii\helpers\FileHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\web\UploadedFile;
 
 /**
  * Class CloudStorage
@@ -96,7 +96,10 @@ class CloudStorage extends CloudStorageAR {
 			$this->filename = empty($this->filename)?$instance->name:$this->filename;
 			$this->key = empty($this->key)?S3::GetFileNameKey($this->filename):$this->key;
 			$this->bucket = empty($this->bucket)?$s3->getBucket($this->bucket):$this->bucket;
-			$storageResponse = $s3->putObject($instance->tempName, $this->key, $this->bucket);
+			$storageResponse = (null === $resource = $instance->tempResource)
+				?$s3->putObject($instance->tempName, $this->key, $this->bucket)
+				:$s3->putResource($resource, $instance->name, $this->key, $this->bucket);
+
 			$this->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
 			return $this->uploaded && $this->save();
 		} catch (S3Exception $e) {

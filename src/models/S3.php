@@ -148,6 +148,23 @@ class S3 extends Model {
 	}
 
 	/**
+	 * @param resource $resource
+	 * @param string $fileName
+	 * @param string|null $key
+	 * @param string|null $bucket
+	 * @return Result
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	public function putResource($resource, string $fileName, ?string &$key = null, ?string &$bucket = null):Result {
+		return $this->client->putObject([
+			'Key' => $key = $key??static::GetFileNameKey($fileName),
+			'Bucket' => $bucket = $this->getBucket($bucket),
+			'Body' => $resource
+		]);
+	}
+
+	/**
 	 * Получаем список buckets
 	 * @return array[]
 	 */
