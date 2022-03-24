@@ -88,6 +88,34 @@ class IndexController extends Controller {
 	}
 
 	/**
+	 * @return string
+	 * @throws Throwable
+	 */
+	public function actionPut() {
+		$s3 = new S3();
+		$model = new CloudStorage(['bucket' => $s3->getBucket()]);
+		if (Yii::$app->request->isPut) {
+			/* PUT data comes in on the stdin stream */
+			$putdata = fopen("php://input", 'rb');
+
+			/* Open a file for writing */
+			$fp = fopen("myputfile.ext", 'wb');
+
+			/* Read the data 1 KB at a time
+			   and write to the file */
+			while ($data = fread($putdata, 1024))
+				fwrite($fp, $data);
+
+			/* Close the streams */
+			fclose($fp);
+			fclose($putdata);
+		}
+		return $this->render('put', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
+
+	}
+
+
+	/**
 	 * @param int $id
 	 * @return string|Response
 	 * @throws InvalidConfigException
