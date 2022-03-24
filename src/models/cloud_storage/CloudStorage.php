@@ -96,7 +96,7 @@ class CloudStorage extends CloudStorageAR {
 			$this->filename = empty($this->filename)?$instance->name:$this->filename;
 			$this->key = empty($this->key)?S3::GetFileNameKey($this->filename):$this->key;
 			$this->bucket = empty($this->bucket)?$s3->getBucket($this->bucket):$this->bucket;
-			$storageResponse = (null === $resource = $instance->tempResource)
+			$storageResponse = (null === $resource = $instance->resource)
 				?$s3->putObject($instance->tempName, $this->key, $this->bucket)
 				:$s3->putResource($resource, $instance->name, $this->key, $this->bucket);
 
