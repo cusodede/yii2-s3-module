@@ -22,7 +22,7 @@ $isDisabled = $model->isNewRecord?false:'disabled';
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<?= $form->field($model, 'bucket')->dropDownList($buckets, ['prompt' => '', 'disabled' => $isDisabled]) ?>
+		<?= $form->field($model, 'bucket')->dropdownList($buckets, ['prompt' => '', 'disabled' => $isDisabled]) ?>
 	</div>
 </div>
 <div class="row">
