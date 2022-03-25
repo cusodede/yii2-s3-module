@@ -10,6 +10,7 @@ use yii\web\UploadedFile as YiiUploadedFile;
 
 /**
  * Class UploadedFile
+ * Перекрытие стандартного компонента для доступа к _tempResource
  * @property-read ?resource $resource
  */
 class UploadedFile extends YiiUploadedFile {
