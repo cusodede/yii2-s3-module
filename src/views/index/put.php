@@ -1,4 +1,7 @@
 <?php
+/** @noinspection PhpUndefinedClassInspection */
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** Пример кода, демонстрирующий отправку файлов через PUT **/
 declare(strict_types = 1);
 
 /**
