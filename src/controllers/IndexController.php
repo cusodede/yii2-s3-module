@@ -103,25 +103,6 @@ class IndexController extends Controller {
 	}
 
 	/**
-	 * @return string|Response
-	 * @throws Exception
-	 * @throws InvalidConfigException
-	 * @throws NotFoundHttpException
-	 * @throws Throwable
-	 */
-	public function actionPut() {
-		$s3 = new S3();
-		$model = new CloudStorage(['bucket' => $s3->getBucket()]);
-
-		if (true === Yii::$app->request->isPut && true === $model->load(Yii::$app->request->getBodyParams()) && null !== $uploadedFile = UploadedFile::getInstance($model, 'file')) {
-			if ($model->uploadInstance($uploadedFile)) return $this->redirect(S3Module::to('index'));
-		}
-
-		return $this->render('put', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
-
-	}
-
-	/**
 	 * @param int $id
 	 * @return string|Response
 	 * @throws InvalidConfigException
