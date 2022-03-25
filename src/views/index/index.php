@@ -23,7 +23,6 @@ use yii\web\View;
 	<div class="panel-hdr">
 		<div class="panel-content">
 			<?= S3Module::a('Загрузить файл', ['index/upload'], ['class' => 'btn btn-success']) ?>
-			<?= S3Module::a('Загрузить файл (put)', ['index/put'], ['class' => 'btn btn-success']) ?>
 			<?= S3Module::a('Добавить корзину', ['index/create-bucket'], ['class' => 'btn btn-success']) ?>
 		</div>
 	</div>

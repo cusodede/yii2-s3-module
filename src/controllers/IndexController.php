@@ -81,9 +81,24 @@ class IndexController extends Controller {
 	public function actionUpload() {
 		$s3 = new S3();
 		$model = new CloudStorage(['bucket' => $s3->getBucket()]);
-		if (true === Yii::$app->request->isPost && true === $model->load(Yii::$app->request->post()) && null !== $uploadedFile = UploadedFile::getInstance($model, 'file')) {
-			if ($model->uploadInstance($uploadedFile)) return $this->redirect(S3Module::to('index'));
+		if (Yii::$app->request->isPost
+			&& ($model->load(Yii::$app->request->post()))
+			&& (null !== $uploadedFile = UploadedFile::getInstance($model, 'file'))
+			&& $model->uploadInstance($uploadedFile)
+		) {
+			return $this->redirect(S3Module::to('index'));
 		}
+		if (Yii::$app->request->isPut) {
+			if (true !== $model->load(Yii::$app->request->getBodyParams())) {
+				throw new InvalidConfigException("Can't parse request, probably MultipartFormDataParser not configured.");
+			}
+
+			if ((null !== $uploadedFile = UploadedFile::getInstance($model, 'file')) && $model->uploadInstance($uploadedFile)) {
+				return $this->redirect(S3Module::to('index'));
+			}
+
+		}
+
 		return $this->render('upload', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
 	}
 
@@ -105,7 +120,6 @@ class IndexController extends Controller {
 		return $this->render('put', ['model' => $model, 'buckets' => $s3->getListBucketMap()]);
 
 	}
-
 
 	/**
 	 * @param int $id
