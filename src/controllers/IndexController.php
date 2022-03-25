@@ -101,8 +101,8 @@ class IndexController extends Controller {
 	 */
 	public function actionEdit(int $id) {
 		if (null === $model = CloudStorage::findOne($id)) throw new NotFoundHttpException();
-		if (true === Yii::$app->request->isPost && null !== $uploadedFile = UploadedFile::getInstance($model, 'file')) {
-			if ($model->uploadInstance($uploadedFile)) return $this->redirect(S3Module::to('index'));
+		if (Yii::$app->request->isPost && (null !== $uploadedFile = UploadedFile::getInstance($model, 'file')) && $model->uploadInstance($uploadedFile)) {
+			return $this->redirect(S3Module::to('index'));
 		}
 		return $this->render('edit', ['model' => $model, 'buckets' => (new S3())->getListBucketMap()]);
 	}
