@@ -90,4 +90,4 @@ return [
 ];
 ```
 
-that's all. Now it is possible to do stream uploads via `PUT` method. You can use a any proper JS-based widget (like `limion/yii2-jquery-fileupload-widget`) to do this. 
+that's all. Now it is possible to do stream uploads via `PUT` method. You can use a any proper JS-based widget (like `limion/yii2-jquery-fileupload-widget`) to do this. See also views/index/put.php for example.
