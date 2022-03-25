@@ -4,7 +4,9 @@ declare(strict_types = 1);
 namespace cusodede\s3\models\cloud_storage\active_record;
 
 use cusodede\s3\S3Module;
+use pozitronik\helpers\DateHelper;
 use pozitronik\traits\traits\ActiveRecordTrait;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
 /**
@@ -56,6 +58,19 @@ class CloudStorageAR extends ActiveRecord {
 			'created_at' => 'Дата создания',
 			'file' => 'Файл',
 			'size' => 'Размер'
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function behaviors():array {
+		return [
+			[
+				'class' => TimestampBehavior::class,
+				'updatedAtAttribute' => false,
+				'value' => DateHelper::lcDate(),
+			]
 		];
 	}
 
