@@ -34,6 +34,7 @@ Module needs to store file data in database table, which will be created by
 ```
 php yii migrate/up --migrationPath=@vendor/cusodede/yii2-s3-module/migrations
 ```
+
 command. You can customize table name by define `tableName` parameter in module configuration.
 
 # Configuration parameters
@@ -65,6 +66,7 @@ return [
                     'apk' => 'application/vnd.android.package-archive',
                 ],/* mime types list (ext => mime), used for downloaded files mime substitution. Note: that list overrides a magic.mime file information. */
                 'defaultMimeType' => 'application/octet-stream' /* mime type, that be used for any file, which extension has not included in mimeTypes parameter or in magic.mime */
+                'deleteTempFiles' => true /* delete php temp files after upload */
             ]
         ] 
     ]
@@ -74,7 +76,9 @@ return [
 
 # How to handle stream uploads via multipart/form-data?
 
-At first, configure [MultipartFormDataParser](https://www.yiiframework.com/doc/api/2.0/yii-web-multipartformdataparser) as request parser for multipart/form-data:
+At first,
+configure [MultipartFormDataParser](https://www.yiiframework.com/doc/api/2.0/yii-web-multipartformdataparser)
+as request parser for multipart/form-data:
 
 ```php
 return [
@@ -90,4 +94,5 @@ return [
 ];
 ```
 
-that's all. Now it is possible to do stream uploads via `PUT` method. You can use a any proper JS-based widget (like `limion/yii2-jquery-fileupload-widget`) to do this. See also views/index/put.php for example.
+that's all. Now it is possible to do stream uploads via `PUT` method. You can use a any proper JS-based
+widget (like `limion/yii2-jquery-fileupload-widget`) to do this. See also views/index/put.php for example.
