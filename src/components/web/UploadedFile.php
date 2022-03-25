@@ -32,4 +32,13 @@ class UploadedFile extends YiiUploadedFile {
 		return parent::getInstance($model, $attribute);
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function deleteTempFile():bool {
+		if (file_exists($this->tempName)) {
+			return unlink($this->tempName);
+		}
+		return false;
+	}
 }
