@@ -41,7 +41,8 @@ command. You can customize table name by define `tableName` parameter in module 
 See example config below:
 
 ```php
-$config = [
+return [
+    // ...
     'modules' => [
         's3' => [
             'class' => cusodede\s3\S3Module::class,
@@ -54,7 +55,7 @@ $config = [
                     'connect_timeout' => 10, /* http connection timeout */,
                     'timeout' => 10, /* http timeout */,
                     'cert_path' => null, /* path to ssl certificate, set null to disable */
-                    'cert_password' => null /* sertificate password, set null, if sertificate has no password */
+                    'cert_password' => null /* certificate password, set null, if certificate has no password */
                 ],
                 'tableName' => 'sys_cloud_storage', /* table with storage data, see Module migration section*/
                 'viewPath' => '@vendor/cusodede/yii2-s3-module/src/views/index', /* path to view templates, if you want to customize them */
@@ -67,4 +68,26 @@ $config = [
             ]
         ] 
     ]
+    // ...
 ]
+```
+
+# How to handle stream uploads via multipart/form-data?
+
+At first, configure [MultipartFormDataParser](https://www.yiiframework.com/doc/api/2.0/yii-web-multipartformdataparser) as request parser for multipart/form-data:
+
+```php
+return [
+    'components' => [
+        'request' => [
+            'parsers' => [
+                'multipart/form-data' => yii\web\MultipartFormDataParser::class
+            ],
+        ],
+        // ...
+    ],
+    // ...
+];
+```
+
+that's all. Now it is possible to do stream uploads via `PUT` method. You can use a any proper JS-based widget (like `limion/yii2-jquery-fileupload-widget`) to do this. 
