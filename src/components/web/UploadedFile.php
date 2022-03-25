@@ -21,7 +21,7 @@ class UploadedFile extends YiiUploadedFile {
 	 * @throws UnknownClassException
 	 */
 	public function getResource() {
-		return ReflectionHelper::getValue(parent::class, '_tempResource', $this);
+		return ([] === $resource = ReflectionHelper::getValue(parent::class, '_tempResource', $this))?null:$resource;
 	}
 
 	/**
