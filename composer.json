@@ -25,9 +25,7 @@
 		"php": ">=8.0",
 		"aws/aws-sdk-php": "^3.208",
 		"pozitronik/yii2-traits": "dev-master",
-		"pozitronik/yii2-badgewidget": "dev-master",
-		"pozitronik/yii2-grid-config": "dev-master",
-		"limion/yii2-jquery-fileupload-widget": "~1.0"
+		"pozitronik/yii2-badgewidget": "dev-master"
 	},
 	"require-dev": {
 		"yiisoft/yii2": "dev-master",
