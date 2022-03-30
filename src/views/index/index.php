@@ -56,6 +56,8 @@ use yii\web\View;
 							'urlScheme' => [S3Module::to(['/download/index']), 'id' => $model->id],
 						])
 					],
+					'model_name',
+					'model_key',
 					'created_at:datetime',
 					'deleted:boolean',
 					'uploaded:boolean',

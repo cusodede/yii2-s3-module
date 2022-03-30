@@ -20,6 +20,8 @@ use yii\db\ActiveRecord;
  * @property bool $uploaded Загружено
  * @property bool $deleted Удалено
  * @property bool $created_at Дата создания
+ * @property null|string $model_name Связанный класс
+ * @property null|int $model_key Ключ модели
  */
 class CloudStorageAR extends ActiveRecord {
 	use ActiveRecordTrait;
@@ -38,9 +40,9 @@ class CloudStorageAR extends ActiveRecord {
 		return [
 			[['bucket'], 'required'],
 			[['uploaded', 'deleted'], 'boolean'],
-			[['size'], 'integer'],
+			[['size', 'model_key',], 'integer'],
 			['created_at', 'safe'],
-			[['bucket', 'key', 'filename'], 'string', 'max' => 255],
+			[['bucket', 'key', 'filename', 'model_name',], 'string', 'max' => 255],
 		];
 	}
 
@@ -57,7 +59,9 @@ class CloudStorageAR extends ActiveRecord {
 			'deleted' => 'Удалено',
 			'created_at' => 'Дата создания',
 			'file' => 'Файл',
-			'size' => 'Размер'
+			'size' => 'Размер',
+			'model_name' => 'Связанный класс',
+			'model_key' => 'Ключ модели',
 		];
 	}
 

@@ -16,9 +16,9 @@ class CloudStorageSearch extends CloudStorage {
 	 */
 	public function rules():array {
 		return [
-			[['id'], 'integer'],
+			[['id', 'model_key',], 'integer'],
 			[['uploaded', 'deleted'], 'boolean'],
-			[['bucket', 'key', 'filename'], 'string', 'max' => 255],
+			[['bucket', 'key', 'filename', 'model_name',], 'string', 'max' => 255],
 		];
 	}
 
@@ -56,6 +56,8 @@ class CloudStorageSearch extends CloudStorage {
 		$query->andFilterWhere(['like', self::tableName().'.filename', $this->filename]);
 		$query->andFilterWhere(['like', self::tableName().'.bucket', $this->bucket]);
 		$query->andFilterWhere(['like', self::tableName().'.key', $this->key]);
+		$query->andFilterWhere(['model_name' => $this->model_name]);
+		$query->andFilterWhere(['model_key' => $this->model_key]);
 	}
 
 	/**
@@ -70,7 +72,9 @@ class CloudStorageSearch extends CloudStorage {
 				'uploaded',
 				'key',
 				'filename',
-				'bucket'
+				'bucket',
+				'model_name',
+				'model_key',
 			]
 		]);
 	}
