@@ -68,7 +68,7 @@ return [
                 'defaultMimeType' => 'application/octet-stream' /* mime type, that be used for any file, which extension has not included in mimeTypes parameter or in magic.mime */
                 'deleteTempFiles' => true /* delete php temp files after upload */
             ]
-        ] 
+        ]
     ]
     // ...
 ]
