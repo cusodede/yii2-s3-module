@@ -10,18 +10,18 @@ return [
 	'defaultRoute' => 'index',
 	'params' => [
 		'connection' => [
-			'host' => 'minio_host',
-			'login' => 'minio_user',
-			'password' => 'minio_password',
+			'host' => 'http://localhost:9004',
+			'login' => 'admin',
+			'password' => 'Admin-123',
 			'connect_timeout' => 10, /* http connection timeout */
 			'timeout' => 10, /* http timeout */
 			'cert_path' => null, /* path to ssl certificate, set null to disable */
 			'cert_password' => null /* certificate password, set null, if certificate has no password */
 		],
 		'tableName' => 'sys_cloud_storage', /* table with storage data, see Module migration section*/
-		'viewPath' => '@vendor/cusodede/yii2-s3-module/src/views/index', /* path to view templates, if you want to customize them */
+		'viewPath' => './src/views/index', /* path to view templates, if you want to customize them */
 		'maxUploadFileSize' => null, /* file size limit for uploaded file, set null to disable */
-		'defaultBucket' => 'bucket', /* name of bucket, used by default, if null, alphabetically first bucket will be used */
+		'defaultBucket' => 'testbucket', /* name of bucket, used by default, if null, alphabetically first bucket will be used */
 		'mimeTypes' => [
 			'apk' => 'application/vnd.android.package-archive',
 		],/* mime types list (ext => mime), used for downloaded files mime substitution. Note: that list overrides a magic.mime file information. */
