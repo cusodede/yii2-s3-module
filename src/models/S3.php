@@ -103,6 +103,7 @@ class S3 extends Model {
 		if (null === $fileName) {
 			$fileName = basename($filePath);
 		}
+        $key = implode('_', [Yii::$app->security->generateRandomString(), $fileName]);
 		$storageResponse = $this->putObject($filePath, $key, $bucket);
 		$this->storage = new CloudStorage([
 			'bucket' => $bucket,
