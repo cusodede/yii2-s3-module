@@ -130,8 +130,8 @@ class IndexController extends Controller {
 	/**
 	 * @inheritdoc
 	 */
-	public function beforeAction($action):bool {
+	public function init():void {
 		$this->s3 = new S3();
-		return parent::beforeAction($action);
+		parent::init();
 	}
 }
