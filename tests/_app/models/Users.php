@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace app\models;
 
-use cusodede\permissions\traits\UsersPermissionsTrait;
 use pozitronik\helpers\Utils;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
@@ -19,7 +18,6 @@ use yii\web\IdentityInterface;
  * @property-read string $authKey @see [[yii\web\IdentityInterface::getAuthKey()]]
  */
 class Users extends ActiveRecord implements IdentityInterface {
-	use UsersPermissionsTrait;
 
 	/**
 	 * {@inheritdoc}
