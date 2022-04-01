@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace console\commands;
 
-use app\models\Users;
+use ConsoleTester;
 use cusodede\s3\commands\IndexController;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -15,8 +15,10 @@ use yii\db\Exception;
  */
 class IndexControllerCest {
 
+	private const SAMPLE_FILE_PATH = './tests/_data/sample.txt';
+
 	/**
-	 * @return Controller
+	 * @return IndexController
 	 * @throws InvalidConfigException
 	 */
 	private function initDefaultController():Controller {
@@ -25,10 +27,28 @@ class IndexControllerCest {
 	}
 
 	/**
-	 * @return Users
-	 * @throws Exception
+	 * @param ConsoleTester $I
+	 * @return void
+	 * @throws InvalidConfigException
 	 */
-	private function initUser():Users {
-		return Users::CreateUser()->saveAndReturn();
+	public function putAndGet(ConsoleTester $I):void {
+		$controller = $this->initDefaultController();
+		$controller->actionPut(self::SAMPLE_FILE_PATH, 'test_key');
+		$controller->actionGet('test_key', null, './tests/_data/');
+		$I->assertFileEquals(self::SAMPLE_FILE_PATH, './tests/_data/test_key');
+	}
+
+	/**
+	 * @param ConsoleTester $I
+	 * @return void
+	 * @throws Exception
+	 * @throws InvalidConfigException
+	 */
+	public function listBucketsTest(ConsoleTester $I):void {
+		$controller = $this->initDefaultController();
+		$controller->actionListBuckets();
+		/*Не работает, я не знаю как*/
+		//$I->seeInShellOutput('Quantity of buckets');
+
 	}
 }
