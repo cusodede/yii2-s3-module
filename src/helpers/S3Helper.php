@@ -5,9 +5,12 @@ namespace cusodede\s3\helpers;
 
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\S3;
+use pozitronik\helpers\ArrayHelper;
 use pozitronik\helpers\PathHelper;
 use Throwable;
+use Yii;
 use yii\base\Exception;
+use yii\web\UploadedFile;
 
 /**
  * S3Helper: обёртка над S3 для упрощения работы
@@ -45,4 +48,31 @@ class S3Helper {
 		return $s3->storage;
 	}
 
+	/**
+	 * Загрузка файла из модели
+	 * @param $model
+	 * @param UploadedFile $uploadedFile
+	 * @param string $bucket Ведро в которое будет производится загрузка
+	 * @return bool
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	public static function uploadFileFromModel($model, UploadedFile $uploadedFile, string $bucket):bool {
+		$randomKey = Yii::$app->security->generateRandomString(10);
+		$storageResponse = (new S3())->client->putObject([
+			'Bucket' => $bucket,
+			'Key' => $randomKey,
+			'Body' => fopen($uploadedFile->tempName, 'rb')
+		]);
+
+		$cloudStorage = new CloudStorage();
+		$cloudStorage->key = $randomKey;
+		$cloudStorage->filename = $uploadedFile->baseName;
+		$cloudStorage->bucket = $bucket;
+		$cloudStorage->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
+		$cloudStorage->model_name = get_class($model);
+		$cloudStorage->model_key = $model->id;
+
+		return $cloudStorage->save();
+	}
 }
