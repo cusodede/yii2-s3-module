@@ -53,7 +53,7 @@ use yii\web\View;
 						'format' => 'raw',
 						'value' => static fn(CloudStorageSearch $model) => BadgeWidget::widget([
 							'items' => $model->filename,
-							'urlScheme' => [S3Module::to(['/download/index']), 'id' => $model->id],
+							'urlScheme' => [S3Module::to(['/index/download']), 'id' => $model->id],
 						])
 					],
 					'created_at:datetime',
