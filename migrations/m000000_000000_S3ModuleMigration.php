@@ -29,6 +29,8 @@ class m000000_000000_S3ModuleMigration extends Migration {
 			'created_at' => $this->dateTime()->comment('Дата создания'),
 			'uploaded' => $this->boolean()->notNull()->defaultValue(false)->comment('Загрузка завершена'),
 			'deleted' => $this->boolean()->notNull()->defaultValue(false)->comment('Флаг удаления'),
+			'model_name' => $this->string()->null()->comment('Связанный класс'),
+			'model_key' => $this->integer()->null()->comment('Ключ модели'),
 		]);
 
 		$this->createIndex('bucket', self::mainTableName(), 'bucket');
@@ -37,6 +39,8 @@ class m000000_000000_S3ModuleMigration extends Migration {
 		$this->createIndex('storage', self::mainTableName(), 'storage');
 		$this->createIndex('uploaded', self::mainTableName(), 'uploaded');
 		$this->createIndex('deleted', self::mainTableName(), 'deleted');
+		$this->createIndex(self::mainTableName().'_model_name', self::mainTableName(), 'model_name');
+		$this->createIndex(self::mainTableName().'_model_key', self::mainTableName(), 'model_key');
 
 	}
 
