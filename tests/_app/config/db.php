@@ -5,8 +5,8 @@ use yii\db\Connection;
 
 return [
 	'class' => Connection::class,
-	'dsn' => "pgsql:host=localhost;dbname=s3",
-	'username' => "postgres",
-	'password' => "postgres",
+    'dsn' => getenv('DB_DSN'),
+    'username' => getenv('DB_USER'),
+    'password' => getenv('DB_PASS'),
 	'enableSchemaCache' => false,
 ];

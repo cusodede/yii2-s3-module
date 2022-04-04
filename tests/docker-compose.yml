@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+
+  php80:
+    build:
+      context: ..
+      dockerfile: tests/docker/php/8.0/Dockerfile
+    volumes:
+      - ./runtime/.composer80:/root/.composer
+      - ..:/code
+    dns: &php_dns
+      - 8.8.8.8
+      - 4.4.4.4
+    environment: &php_environment
+      POSTGRES_HOST: postgres-s3
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: s3
+      COMPOSER_ALLOW_SUPERUSER: 1
+    env_file: &php_envfile
+      - .env
+    depends_on: &php_depends_on
+      - postgres
+      - minio
+    networks: &php_networks
+      - net
+
+  php81:
+    build:
+      context: ..
+      dockerfile: tests/docker/php/8.1/Dockerfile
+    volumes:
+      - ./runtime/.composer81:/root/.composer
+      - ..:/code
+    dns: *php_dns
+    environment: *php_environment
+    env_file: *php_envfile
+    depends_on: *php_depends_on
+    networks: *php_networks
+
+  postgres:
+    container_name: postgres-s3
+    hostname: postgres-s3
+    image: postgres:13.4
+    environment:
+      POSTGRES_DB: s3
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5466:5466"
+    networks: *php_networks
+
+  minio:
+    container_name: minio-s3
+    image: minio/minio
+    ports:
+      - "9008:9008"
+      - "9009:9009"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_HOST: http://minio-s3:9008
+      MINIO_ACCESS_KEY: AKIAIOSFODNN7EXAMPLE
+      MINIO_SECRET_KEY: wJalrXUtnFEMI
+    entrypoint: sh
+    command: -c 'mkdir -p /data/testbucket && minio server --console-address ":9009" --address ":9008" /data'
+    networks: *php_networks
+
+networks:
+  net:
+    name: yii2_s3_net
