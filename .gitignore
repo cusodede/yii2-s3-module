@@ -1,5 +1,5 @@
 .idea
 .env
 ./tests/.env
-./runtime/*
-!./runtime/.gitkeep
+./tests/runtime/*
+!./tests/runtime/.gitkeep
