@@ -16,13 +16,13 @@ Add
 to repositories section of your `composer.json` file, then run
 
 ```
-php composer.phar require cusodede/yii2-s3-module "dev-master"
+php composer.phar require cusodede/yii2-s3-module "^1.0.0"
 ```
 
 or add
 
 ```
-"cusodede/yii2-s3-module": "dev-master"
+"cusodede/yii2-s3-module": "^1.0.0"
 ```
 
 to the require section of your `composer.json` file.

@@ -44,7 +44,7 @@ class S3Helper {
 	 */
 	public static function FileToStorage(string $filePath, ?string $fileName = null, ?string $bucket = null):CloudStorage {
 		$s3 = new S3();
-		$s3->saveObject($filePath, $bucket, $fileName??PathHelper::ExtractBaseName($filePath));
+		$s3->saveObject($filePath, $bucket, $fileName??PathHelper::ExtractBaseName($filePath)??PathHelper::GetRandomTempFileName());
 		return $s3->storage;
 	}
 
