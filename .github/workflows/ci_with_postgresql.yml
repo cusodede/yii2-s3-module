@@ -1,94 +1,19 @@
 name: CI with PostgreSQL
-on:
-  pull_request:
-    branches: [ master ]
+on: [push, workflow_dispatch, pull_request]
 
 env:
-  DB_DSN: "pgsql:host=127.0.0.1;port=5432;dbname=s3"
-  DB_USER: "postgres"
-  DB_PASS: "postgres"
-
+  COMPOSE_PROJECT_NAME: yii2-s3-module
+  COMPOSE_FILE: tests/docker-compose.yml
 jobs:
-  build:
-    name: PHP ${{ matrix.php }} - ${{ matrix.os }}
-
-    runs-on: ${{ matrix.os }}
-
+  phpunit:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-        php:
-          - 8.0
-    #          - 8.1
-
-    services:
-      postgres:
-        image: postgres:13.4
-        env:
-          POSTGRES_DB: s3
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
+        php: [ 80, 81 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Setup minio
-        run: |
-          docker run -d -p 9000:9000 --name minio \
-                    -v /tmp/data:/data \
-                    -v /tmp/config:/root/.minio \
-                    minio/minio server /data
-          
-          export AWS_ACCESS_KEY_ID=minioadmin
-          export AWS_SECRET_ACCESS_KEY=minioadmin
-          export AWS_EC2_METADATA_DISABLED=true
-          
-          aws --endpoint-url http://127.0.0.1:9000/ s3 mb s3://testbucket
-
-      - name: Setup PHP with PECL extension
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          tools: composer:v2
-          extensions: imagick, pdo_pgsql, opcache
-          ini-values: opcache.enable=1, opcache.enable_cli=1, apc.enable_cli=1
-        env:
-          COMPOSER_TOKEN: ${{ secrets.COMPOSER_GITHUB_TOKEN }}
-
-      - name: Check php and composer
-        run: php -v && composer --version
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install composer dependencies
-        run: composer install
-
-      - name: Prepare test
-        run: cp tests/.env.example tests/.env && cp tests/_app/config/s3.env.php tests/_app/config/s3.php
-
-      - name: Run tests
-        run: vendor/bin/codecept run
-        env:
-          COMPOSER_TOKEN: ${{ secrets.COMPOSER_GITHUB_TOKEN }}
-          MINIO_HOST: http://127.0.0.1:9000
-          MINIO_ROOT_USER: minioadmin
-          MINIO_ROOT_PASSWORD: minioadmin
-          MINIO_CERT_PATH: ""
+      - name: PHP Codeception tests for PHP ${{ matrix.php }}
+        run: make test${{ matrix.php }}
