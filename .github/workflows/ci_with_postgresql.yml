@@ -15,5 +15,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Build
+        run: make build
+
       - name: PHP Codeception tests for PHP ${{ matrix.php }}
         run: make test${{ matrix.php }}
