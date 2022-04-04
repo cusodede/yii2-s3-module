@@ -1,4 +1,4 @@
-FROM php:8.0.16-cli
+FROM php:8.0.17-cli
 
 RUN apt-get update \
     && apt-get install -y curl unzip zlib1g-dev libzip-dev libicu-dev libpq-dev \
