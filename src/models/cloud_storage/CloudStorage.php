@@ -102,7 +102,7 @@ class CloudStorage extends CloudStorageAR {
 			/*Передать атрибуты напрямую не выйдет*/
 			$this->key = $key;
 			$this->bucket = $bucket;
-            $this->size = $instance->size;
+			$this->size = $instance->size;
 			if (S3Module::param('deleteTempFiles', true)) $instance->deleteTempFile();
 			$this->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
 			return $this->uploaded && $this->save();
