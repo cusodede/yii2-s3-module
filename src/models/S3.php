@@ -91,26 +91,27 @@ class S3 extends Model {
 		return ArrayHelper::getValue($buckets, $latestBucket.'.Name', new NotFoundHttpException("Bucket не найден"));
 	}
 
-	/**
-	 * Сохраняем объект в хранилище
-	 * @param string $filePath path to the file we want to upload
-	 * @param string|null $bucket
-	 * @param string|null $fileName
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public function saveObject(string $filePath, ?string $bucket = null, ?string $fileName = null):void {
+    /**
+     * Сохраняем объект в хранилище
+     * @param string $filePath path to the file we want to upload
+     * @param string|null $bucket
+     * @param string|null $fileName
+     * @param string|null $label Метка файла
+     * @throws Throwable
+     */
+	public function saveObject(string $filePath, ?string $bucket = null, ?string $fileName = null, string $label = null):void {
 		if (null === $fileName) {
 			$fileName = basename($filePath);
 		}
 		$key = implode('_', [Yii::$app->security->generateRandomString(), $fileName]);
-		$storageResponse = $this->putObject($filePath, $key, $bucket);
+		$storageResponse = $this->putObject($filePath, $key, $bucket, $label);
 		$this->storage = new CloudStorage([
 			'bucket' => $bucket,
 			'key' => $key,
 			'filename' => $fileName,
 			'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
-			'size' => (false === $filesize = filesize($filePath))?null:$filesize
+			'size' => (false === $filesize = filesize($filePath))?null:$filesize,
+            'label' => $label
 		]);
 		$this->storage->save();
 	}
@@ -131,21 +132,22 @@ class S3 extends Model {
 		]);
 	}
 
-	/**
-	 * Загрузка файла в хранилище
-	 * @param string $filePath
-	 * @param string|null $key
-	 * @param string|null $bucket
-	 * @return Result
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public function putObject(string $filePath, ?string &$key = null, ?string &$bucket = null):Result {
+    /**
+     * Загрузка файла в хранилище
+     * @param string $filePath
+     * @param string|null $key
+     * @param string|null $bucket
+     * @param string|null $label
+     * @return Result
+     * @throws Throwable
+     */
+	public function putObject(string $filePath, ?string &$key = null, ?string &$bucket = null, string $label = null):Result {
 		return $this->client->putObject([
 			'Key' => $key = $key??static::GetFileNameKey(PathHelper::ExtractBaseName($filePath)),
 			'Bucket' => $bucket = $this->getBucket($bucket),
-			'Body' => fopen($filePath, 'rb')
-		]);
+			'Body' => fopen($filePath, 'rb'),
+            'Tagging' => "label=$label"
+        ]);
 	}
 
 	/**
