@@ -8,8 +8,6 @@ use pozitronik\helpers\DateHelper;
 use pozitronik\traits\traits\ActiveRecordTrait;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\db\ActiveQuery;
-use cusodede\s3\models\cloud_storage_tags\active_record\CloudStorageTagsAR;
 
 /**
  * This is the model class for table "sys_cloud_storage".
@@ -24,7 +22,7 @@ use cusodede\s3\models\cloud_storage_tags\active_record\CloudStorageTagsAR;
  * @property bool $created_at Дата создания
  * @property null|string $model_name Связанный класс
  * @property null|int $model_key Ключ модели
- * @property-read CloudStorageTagsAR $relatedCloudStorageTags Связь с таблицей тегов
+ * @property null|string $label Метка файла
  */
 class CloudStorageAR extends ActiveRecord {
 	use ActiveRecordTrait;
@@ -45,7 +43,7 @@ class CloudStorageAR extends ActiveRecord {
 			[['uploaded', 'deleted'], 'boolean'],
 			[['size', 'model_key',], 'integer'],
 			['created_at', 'safe'],
-			[['bucket', 'key', 'filename', 'model_name',], 'string', 'max' => 255],
+			[['bucket', 'key', 'filename', 'model_name', 'label'], 'string', 'max' => 255],
 		];
 	}
 
@@ -65,6 +63,7 @@ class CloudStorageAR extends ActiveRecord {
 			'size' => 'Размер',
 			'model_name' => 'Связанный класс',
 			'model_key' => 'Ключ модели',
+			'label' => 'Метка файла',
 		];
 	}
 
@@ -80,11 +79,4 @@ class CloudStorageAR extends ActiveRecord {
 			]
 		];
 	}
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getRelatedCloudStorageTags(): ActiveQuery {
-        return $this->hasMany(CloudStorageTagsAR::class, ['cloud_storage_id' => 'id']);
-    }
 }
