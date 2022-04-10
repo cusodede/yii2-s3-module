@@ -33,18 +33,18 @@ class S3Helper {
 		return $filePath;
 	}
 
-	/**
-	 * Загрузить локальный файл в облако, вернуть объект хранилища
-	 * @param string $filePath
-	 * @param string|null $fileName Имя файла в облаке (null - оставить локальное)
-	 * @param string|null $bucket
-	 * @return CloudStorage
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public static function FileToStorage(string $filePath, ?string $fileName = null, ?string $bucket = null):CloudStorage {
+    /**
+     * Загрузить локальный файл в облако, вернуть объект хранилища
+     * @param string $filePath
+     * @param string|null $fileName Имя файла в облаке (null - оставить локальное)
+     * @param string|null $bucket
+     * @param string|null $label Метка файла
+     * @return CloudStorage
+     * @throws Throwable
+     */
+	public static function FileToStorage(string $filePath, ?string $fileName = null, ?string $bucket = null, string $label = null):CloudStorage {
 		$s3 = new S3();
-		$s3->saveObject($filePath, $bucket, $fileName??PathHelper::ExtractBaseName($filePath)??PathHelper::GetRandomTempFileName());
+		$s3->saveObject($filePath, $bucket, $fileName??PathHelper::ExtractBaseName($filePath)??PathHelper::GetRandomTempFileName(), $label);
 		return $s3->storage;
 	}
 
