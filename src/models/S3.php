@@ -200,4 +200,45 @@ class S3 extends Model {
 		return implode('_', [Yii::$app->security->generateRandomString(), $fileName]);
 	}
 
+    /**
+     * Метод устанавливает предоставленный набор тегов на объект, который уже существует в корзине.
+     * @param string $key
+     * @param array $tagSet
+     * For example:
+     * [
+     *     [
+     *         'Key' => '<string>', // REQUIRED
+     *         'Value' => '<string>', // REQUIRED
+     *     ],
+     *     // ...
+     * ]
+     * @param string|null $bucket
+     * @return Result
+     * @throws Throwable
+     */
+    public function putObjectTagging(string $key, array $tagSet, ?string &$bucket = null): Result {
+
+        return $this->client->putObjectTagging([
+            'Key' => $key,
+            'Bucket' => $bucket = $this->getBucket($bucket),
+            'Tagging' => [
+                'TagSet' => $tagSet
+            ],
+        ]);
+    }
+
+    /**
+     * Метод возвращает набор тегов объекта.
+     * @param string $key
+     * @param string|null $bucket
+     * @return Result
+     * @throws Throwable
+     */
+    public function getObjectTagging(string $key, ?string &$bucket = null): Result {
+
+        return $this->client->getObjectTagging([
+            'Key' => $key,
+            'Bucket' => $bucket = $this->getBucket($bucket),
+        ]);
+    }
 }
