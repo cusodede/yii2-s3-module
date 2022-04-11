@@ -198,17 +198,17 @@ class S3 extends Model {
 		return implode('_', [Yii::$app->security->generateRandomString(), $fileName]);
 	}
 
-    /**
-     * Удаляем объект из хранилища
-     * @param string $key
-     * @param string|null $bucket
-     * @return Result
-     * @throws Throwable
-     */
-    public function deleteObject(string $key, string &$bucket = null): Result {
-        return $this->client->deleteObject([
-            'Bucket' => $bucket = $this->getBucket($bucket),
-            'Key'    => $key,
-        ]);
-    }
+	/**
+	 * Удаляем объект из хранилища
+	 * @param string $key
+	 * @param string|null $bucket
+	 * @return Result
+	 * @throws Throwable
+	 */
+	public function deleteObject(string $key, string &$bucket = null): Result {
+		return $this->client->deleteObject([
+			'Bucket' => $bucket = $this->getBucket($bucket),
+			'Key'    => $key,
+		]);
+	}
 }
