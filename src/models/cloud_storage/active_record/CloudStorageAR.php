@@ -30,25 +30,25 @@ use yii\db\ActiveRecord;
 class CloudStorageAR extends ActiveRecord {
 	use ActiveRecordTrait;
 
-    /**
-     * @var array
-     */
-    public array $tags = [];
+	/**
+	 * @var array
+	 */
+	public array $tags = [];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function afterSave($insert, $changedAttributes):void {
-        parent::afterSave($insert, $changedAttributes);
+	/**
+	 * {@inheritdoc}
+	 */
+	public function afterSave($insert, $changedAttributes):void {
+		parent::afterSave($insert, $changedAttributes);
 
-        foreach ($this->tags as $label => $key) {
-            $tag = new CloudStorageTags(['tag_label' => $label, 'tag_key' => $key]);
+		foreach ($this->tags as $label => $key) {
+			$tag = new CloudStorageTags(['tag_label' => $label, 'tag_key' => $key]);
 
-            parent::link('relatedTags', $tag);
-        }
-    }
+			parent::link('relatedTags', $tag);
+		}
+	}
 
-    /**
+	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName():string {
@@ -100,10 +100,10 @@ class CloudStorageAR extends ActiveRecord {
 		];
 	}
 
-    /**
-     * @return ActiveQuery
-     */
-    public function getRelatedTags():ActiveQuery {
-        return $this->hasMany(CloudStorageTags::class, ['cloud_storage_id' => 'id']);
-    }
+	/**
+	 * @return ActiveQuery
+	 */
+	public function getRelatedTags():ActiveQuery {
+		return $this->hasMany(CloudStorageTags::class, ['cloud_storage_id' => 'id']);
+	}
 }

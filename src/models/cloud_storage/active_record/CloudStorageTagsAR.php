@@ -20,42 +20,42 @@ use yii\db\ActiveRecord;
  * @property-read CloudStorage $relatedStorage
  */
 class CloudStorageTagsAR extends ActiveRecord {
-    use ActiveRecordTrait;
+	use ActiveRecordTrait;
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName():string {
-        return S3Module::param('tagsTableName', 'sys_cloud_storage_tags');
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName():string {
+		return S3Module::param('tagsTableName', 'sys_cloud_storage_tags');
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules():array {
-        return [
-            [['cloud_storage_id', 'tag_label', 'tag_key'], 'required'],
-            [['cloud_storage_id'], 'integer'],
-            [['tag_label', 'tag_key'], 'string', 'max' => 255],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules():array {
+		return [
+			[['cloud_storage_id', 'tag_label', 'tag_key'], 'required'],
+			[['cloud_storage_id'], 'integer'],
+			[['tag_label', 'tag_key'], 'string', 'max' => 255],
+		];
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels():array {
-        return [
-            'id' => 'ID',
-            'cloud_storage_id' => 'Модель загруженного файла',
-            'tag_label' => 'Название тега',
-            'tag_key' => 'Значение тега',
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels():array {
+		return [
+			'id' => 'ID',
+			'cloud_storage_id' => 'Модель загруженного файла',
+			'tag_label' => 'Название тега',
+			'tag_key' => 'Значение тега',
+		];
+	}
 
-    /**
-     * @return ActiveQuery
-     */
-    public function getRelatedStorage():ActiveQuery {
-        return $this->hasOne(CloudStorage::class, ['id' => 'cloud_storage_id']);
-    }
+	/**
+	 * @return ActiveQuery
+	 */
+	public function getRelatedStorage():ActiveQuery {
+		return $this->hasOne(CloudStorage::class, ['id' => 'cloud_storage_id']);
+	}
 }

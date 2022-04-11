@@ -32,28 +32,28 @@ class S3ModuleTest extends Unit {
 
 	}
 
-    /**
-     * @return void
-     * @throws Exception
-     * @throws Throwable
-     */
-    public function testTagsBinding():void {
-        $params = new PutObjectMethodParams();
-        $params->addTag('tag1', 'tag1value');
-        $params->addTag('tag2');
+	/**
+	 * @return void
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	public function testTagsBinding():void {
+		$params = new PutObjectMethodParams();
+		$params->addTag('tag1', 'tag1value');
+		$params->addTag('tag2');
 
-        $storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, $params);
+		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, $params);
 
-        $result = (new S3())->getObjectTagging($storage->key);
+		$result = (new S3())->getObjectTagging($storage->key);
 
-        $tagSet = ArrayHelper::map($result->get('TagSet'), 'Key', 'Value');
+		$tagSet = ArrayHelper::map($result->get('TagSet'), 'Key', 'Value');
 
-        $this::assertEquals('tag1value', $tagSet['tag1'] ?? '');
-        $this::assertEquals('tag2', $tagSet['tag2'] ?? '');
+		$this::assertEquals('tag1value', $tagSet['tag1'] ?? '');
+		$this::assertEquals('tag2', $tagSet['tag2'] ?? '');
 
-        $tags = ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key');
+		$tags = ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key');
 
-        $this::assertArrayHasKey('tag1', $tags);
-        $this::assertArrayHasKey('tag2', $tags);
-    }
+		$this::assertArrayHasKey('tag1', $tags);
+		$this::assertArrayHasKey('tag2', $tags);
+	}
 }

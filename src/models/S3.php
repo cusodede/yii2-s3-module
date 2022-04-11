@@ -92,15 +92,15 @@ class S3 extends Model {
 		return ArrayHelper::getValue($buckets, $latestBucket.'.Name', new NotFoundHttpException("Bucket не найден"));
 	}
 
-    /**
-     * Сохраняем объект в хранилище
-     * @param string $filePath path to the file we want to upload
-     * @param string|null $bucket
-     * @param string|null $fileName
-     * @param PutObjectMethodParams|null $params
-     * @throws Exception
-     * @throws Throwable
-     */
+	/**
+	 * Сохраняем объект в хранилище
+	 * @param string $filePath path to the file we want to upload
+	 * @param string|null $bucket
+	 * @param string|null $fileName
+	 * @param PutObjectMethodParams|null $params
+	 * @throws Exception
+	 * @throws Throwable
+	 */
 	public function saveObject(string $filePath, ?string $bucket = null, ?string $fileName = null, ?PutObjectMethodParams $params = null):void {
 		if (null === $fileName) {
 			$fileName = basename($filePath);
@@ -134,33 +134,33 @@ class S3 extends Model {
 		]);
 	}
 
-    /**
-     * Получаем объект с тегами из хранилища по заданному ключу.
-     * @param string $key
-     * @param string|null $bucket
-     * @return Result
-     * @throws Throwable
-     */
-    public function getObjectTagging(string $key, ?string $bucket = null):Result {
-        return $this->client->getObjectTagging(['Key' => $key, 'Bucket' => $this->getBucket($bucket)]);
-    }
+	/**
+	 * Получаем объект с тегами из хранилища по заданному ключу.
+	 * @param string $key
+	 * @param string|null $bucket
+	 * @return Result
+	 * @throws Throwable
+	 */
+	public function getObjectTagging(string $key, ?string $bucket = null):Result {
+		return $this->client->getObjectTagging(['Key' => $key, 'Bucket' => $this->getBucket($bucket)]);
+	}
 
-    /**
-     * Загрузка файла в хранилище
-     * @param string $filePath
-     * @param string|null $key
-     * @param string|null $bucket
-     * @param PutObjectMethodParams|null $params
-     * @return Result
-     * @throws Exception
-     * @throws Throwable
-     */
+	/**
+	 * Загрузка файла в хранилище
+	 * @param string $filePath
+	 * @param string|null $key
+	 * @param string|null $bucket
+	 * @param PutObjectMethodParams|null $params
+	 * @return Result
+	 * @throws Exception
+	 * @throws Throwable
+	 */
 	public function putObject(string $filePath, ?string &$key = null, ?string &$bucket = null, ?PutObjectMethodParams $params = null):Result {
 		return $this->client->putObject([
 			'Key' => $key = $key??static::GetFileNameKey(PathHelper::ExtractBaseName($filePath)),
 			'Bucket' => $bucket = $this->getBucket($bucket),
 			'Body' => fopen($filePath, 'rb'),
-            'Tagging' => $params?->composeTags()
+			'Tagging' => $params?->composeTags()
 		]);
 	}
 
