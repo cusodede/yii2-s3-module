@@ -87,10 +87,7 @@ class S3Helper {
 		if (false === $storage->save()) {
 			throw new ServerErrorHttpException('Could not record');
 		}
-		$storageResponse = (new S3())->deleteObject($storage->key);
-		if (false === $storageResponse['DeleteMarker']) {
-			throw new ServerErrorHttpException('Failed to delete file.');
-		}
+		(new S3())->deleteObject($storage->key);
 		return $storage->id;
 	}
 }
