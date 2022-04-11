@@ -10,7 +10,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "sys_cloud_storage".
+ * This is the model class for table "sys_cloud_storage_tags".
  *
  * @property int $id
  * @property string $cloud_storage_id ID загруженного файла
