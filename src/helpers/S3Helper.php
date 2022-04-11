@@ -10,6 +10,7 @@ use pozitronik\helpers\PathHelper;
 use Throwable;
 use Yii;
 use yii\base\Exception;
+use yii\web\ServerErrorHttpException;
 use yii\web\UploadedFile;
 
 /**
@@ -74,17 +75,22 @@ class S3Helper {
 		return $cloudStorage->save();
 	}
 
-    /**
-     * Метод для удаления файлов
-     * @param int $storageId
-     * @return int|null
-     * @throws Throwable
-     */
-    public static function deleteFile(int $storageId):?int {
-        if (null === $storage = CloudStorage::findModel($storageId)) return null;
-        $storage->deleted = false;
-        $storage->save();
-        (new S3())->deleteObject($storage->key, $storage->bucket);
-        return $storage->id;
-    }
+	/**
+	 * Метод для удаления файлов
+	 * @param int $storageId
+	 * @return int|null
+	 * @throws Throwable
+	 */
+	public static function deleteFile(int $storageId): ?int {
+		if (null === $storage = CloudStorage::findModel($storageId)) return null;
+		$storage->deleted = true;
+		if (false === $storage->save()) {
+			throw new ServerErrorHttpException('Could not record');
+		}
+		$storageResponse = (new S3())->deleteObject($storage->key, $storage->bucket);
+		if (false === $storageResponse['DeleteMarker']) {
+			throw new ServerErrorHttpException('Failed to delete file.');
+		}
+		return $storage->id;
+	}
 }
