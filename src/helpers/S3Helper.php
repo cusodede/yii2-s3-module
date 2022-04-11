@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace cusodede\s3\helpers;
 
+use cusodede\s3\components\PutObjectMethodParams;
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\S3;
 use pozitronik\helpers\ArrayHelper;
@@ -31,18 +32,19 @@ class S3Helper {
 		return $filePath;
 	}
 
-	/**
-	 * Загрузить локальный файл в облако, вернуть объект хранилища
-	 * @param string $filePath
-	 * @param string|null $fileName Имя файла в облаке (null - оставить локальное)
-	 * @param string|null $bucket
-	 * @return CloudStorage
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public static function FileToStorage(string $filePath, ?string $fileName = null, ?string $bucket = null):CloudStorage {
+    /**
+     * Загрузить локальный файл в облако, вернуть объект хранилища
+     * @param string $filePath
+     * @param string|null $fileName Имя файла в облаке (null - оставить локальное)
+     * @param string|null $bucket
+     * @param PutObjectMethodParams|null $params
+     * @return CloudStorage
+     * @throws Exception
+     * @throws Throwable
+     */
+	public static function FileToStorage(string $filePath, ?string $fileName = null, ?string $bucket = null, ?PutObjectMethodParams $params = null):CloudStorage {
 		$s3 = new S3();
-		$s3->saveObject($filePath, $bucket, $fileName??PathHelper::ExtractBaseName($filePath)??PathHelper::GetRandomTempFileName());
+		$s3->saveObject($filePath, $bucket, $fileName??PathHelper::ExtractBaseName($filePath)??PathHelper::GetRandomTempFileName(), $params);
 		return $s3->storage;
 	}
 
