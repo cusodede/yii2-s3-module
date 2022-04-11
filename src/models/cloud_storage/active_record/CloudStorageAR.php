@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace cusodede\s3\models\cloud_storage\active_record;
 
+use cusodede\s3\models\cloud_storage\CloudStorageTags;
 use cusodede\s3\S3Module;
 use pozitronik\helpers\DateHelper;
 use pozitronik\traits\traits\ActiveRecordTrait;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -22,11 +24,31 @@ use yii\db\ActiveRecord;
  * @property bool $created_at Дата создания
  * @property null|string $model_name Связанный класс
  * @property null|int $model_key Ключ модели
+ *
+ * @property-read CloudStorageTags[] $relatedTags
  */
 class CloudStorageAR extends ActiveRecord {
 	use ActiveRecordTrait;
 
-	/**
+    /**
+     * @var array
+     */
+    public array $tags = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function afterSave($insert, $changedAttributes):void {
+        parent::afterSave($insert, $changedAttributes);
+
+        foreach ($this->tags as $label => $key) {
+            $tag = new CloudStorageTags(['tag_label' => $label, 'tag_key' => $key]);
+
+            parent::link('relatedTags', $tag);
+        }
+    }
+
+    /**
 	 * {@inheritdoc}
 	 */
 	public static function tableName():string {
@@ -78,4 +100,10 @@ class CloudStorageAR extends ActiveRecord {
 		];
 	}
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getRelatedTags():ActiveQuery {
+        return $this->hasMany(CloudStorageTags::class, ['cloud_storage_id' => 'id']);
+    }
 }
