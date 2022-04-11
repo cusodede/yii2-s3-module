@@ -135,7 +135,7 @@ class S3 extends Model {
 	}
 
     /**
-     * Получаем объекта с тегами из хранилища по заданному ключу.
+     * Получаем объект с тегами из хранилища по заданному ключу.
      * @param string $key
      * @param string|null $bucket
      * @return Result
