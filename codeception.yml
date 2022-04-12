@@ -13,11 +13,11 @@ modules:
       dsn: "%DB_DSN%"
       user: "%DB_USER%"
       password: "%DB_PASS%"
-      transaction: true
-      cleanup: true
     Yii2:
       parts: [ orm ]
       configFile: 'tests/_app/config/main.php'
+      transaction: true
+      cleanup: true
 params:
   env: tests/.env
 extensions:
