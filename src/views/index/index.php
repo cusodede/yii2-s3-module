@@ -38,11 +38,12 @@ use yii\web\View;
 				'columns' => [
 					[
 						'class' => ActionColumn::class,
-						'template' => '<div class="btn-group">{edit}{view}{download}</div>',
+						'template' => '<div class="btn-group">{edit}{view}{download}{delete}</div>',
 						'buttons' => [
 							'edit' => static fn(string $url):string => Html::a('<i class="fa fa-edit"></i>', $url),
 							'view' => static fn(string $url):string => Html::a('<i class="fa fa-eye"></i>', $url),
 							'download' => static fn(string $url):string => Html::a('<i class="fa fa-download"></i>', $url),
+							'delete' => static fn(string $url):string => Html::a('<i class="fa fa-trash"></i>', $url),
 						],
 					],
 					'id',
