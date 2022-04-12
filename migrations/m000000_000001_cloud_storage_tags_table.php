@@ -6,9 +6,9 @@ use cusodede\s3\models\cloud_storage\active_record\CloudStorageTagsAR;
 use yii\db\Migration;
 
 /**
- * Class m000000_000000_cloud_storage_tags_table
+ * Class m000000_000001_cloud_storage_tags_table
  */
-class m000000_000000_cloud_storage_tags_table extends Migration {
+class m000000_000001_cloud_storage_tags_table extends Migration {
 	/**
 	 * @return string
 	 */
