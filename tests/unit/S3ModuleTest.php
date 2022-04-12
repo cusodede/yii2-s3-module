@@ -37,9 +37,11 @@ class S3ModuleTest extends Unit {
 		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
 		$result = S3Helper::deleteFile($storage->id);
 		$result2 = S3Helper::deleteFile(rand());
+		$result3 = S3Helper::StorageToFile($result);
 
 		$this::assertEquals($storage->id, $result);
 		$this::assertNull($result2);
+		$this::assertNull($result3);
 	}
 
 }
