@@ -10,9 +10,9 @@ return [
 	'defaultRoute' => 'index',
 	'params' => [
 		'connection' => [
-			'host' => 'http://localhost:9004',
-			'login' => 'admin',
-			'password' => 'Admin-123',
+			'host' => $_ENV['MINIO_HOST'],
+			'login' => $_ENV['MINIO_ROOT_USER'],
+			'password' => $_ENV['MINIO_ROOT_PASSWORD'],
 			'connect_timeout' => 10, /* http connection timeout */
 			'timeout' => 10, /* http timeout */
 			'cert_path' => null, /* path to ssl certificate, set null to disable */
