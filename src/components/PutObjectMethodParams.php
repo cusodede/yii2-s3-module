@@ -19,7 +19,7 @@ class PutObjectMethodParams {
 	 * @return void
 	 */
 	public function addTag(string $name, ?string $value = null):void {
-		$this->tags[$name] = $value ?? $name;
+		$this->tags[$name] = $value??$name;
 	}
 
 	/**

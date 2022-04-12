@@ -48,8 +48,8 @@ class S3ModuleTest extends Unit {
 
 		$tagSet = ArrayHelper::map($result->get('TagSet'), 'Key', 'Value');
 
-		$this::assertEquals('tag1value', $tagSet['tag1'] ?? '');
-		$this::assertEquals('tag2', $tagSet['tag2'] ?? '');
+		$this::assertEquals('tag1value', $tagSet['tag1']??'');
+		$this::assertEquals('tag2', $tagSet['tag2']??'');
 
 		$tags = ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key');
 

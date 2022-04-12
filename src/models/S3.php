@@ -114,7 +114,7 @@ class S3 extends Model {
 			'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
 			'size' => (false === $filesize = filesize($filePath))?null:$filesize
 		]);
-		$this->storage->tags = $params ? $params->getTags() : [];
+		$this->storage->tags = $params?$params->getTags():[];
 		$this->storage->save();
 	}
 
