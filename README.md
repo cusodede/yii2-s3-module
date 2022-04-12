@@ -29,13 +29,13 @@ to the require section of your `composer.json` file.
 
 # Module migration
 
-Module needs to store file data in database table, which will be created by
+Module needs to store file data in database tables, which will be created by
 
 ```
 php yii migrate/up --migrationPath=@vendor/cusodede/yii2-s3-module/migrations
 ```
 
-command. You can customize table name by define `tableName` parameter in module configuration.
+command. You can customize table names by define `tableName` and `tagsTableName` parameters in module configuration.
 
 # Configuration parameters
 
@@ -58,7 +58,8 @@ return [
                     'cert_path' => null, /* path to ssl certificate, set null to disable */
                     'cert_password' => null /* certificate password, set null, if certificate has no password */
                 ],
-                'tableName' => 'sys_cloud_storage', /* table with storage data, see Module migration section*/
+                'tableName' => 'sys_cloud_storage', /* table with storage data info, see Module migration section */
+                'tagsTableName' => 'sys_cloud_storage_tags', /*table with local tags, see Module migration section */
                 'viewPath' => '@vendor/cusodede/yii2-s3-module/src/views/index', /* path to view templates, if you want to customize them */
                 'maxUploadFileSize' => null, /* file size limit for uploaded file, set null to disable */
                 'defaultBucket' => 'bucket', /* name of bucket, used by default, if null, alphabetically first bucket will be used */
