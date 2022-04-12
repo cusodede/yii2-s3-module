@@ -31,24 +31,6 @@ class CloudStorageAR extends ActiveRecord {
 	use ActiveRecordTrait;
 
 	/**
-	 * @var array
-	 */
-	public array $tags = [];
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function afterSave($insert, $changedAttributes):void {
-		parent::afterSave($insert, $changedAttributes);
-
-		foreach ($this->tags as $label => $key) {
-			$tag = new CloudStorageTags(['tag_label' => $label, 'tag_key' => $key]);
-
-			$this->link('relatedTags', $tag);
-		}
-	}
-
-	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName():string {
@@ -106,4 +88,5 @@ class CloudStorageAR extends ActiveRecord {
 	public function getRelatedTags():ActiveQuery {
 		return $this->hasMany(CloudStorageTags::class, ['cloud_storage_id' => 'id']);
 	}
+
 }
