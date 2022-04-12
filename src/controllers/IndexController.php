@@ -119,4 +119,19 @@ class IndexController extends Controller {
 		}
 		return $this->render('create-bucket', compact('createBucketForm', 'isCreated'));
 	}
+
+	/**
+	 * @param int $id
+	 * @return Response
+	 * @throws Throwable
+	 */
+	public function actionDelete(int $id): Response {
+		if (null === $cloudStorage = CloudStorage::findOne($id)) throw new NotFoundHttpException();
+		$cloudStorage->deleted = true;
+		if (false === $cloudStorage->save()) {
+			throw new ServerErrorHttpException('Could not record');
+		}
+		(new S3())->deleteObject($cloudStorage->key);
+		return $this->redirect(S3Module::to('index'));
+	}
 }
