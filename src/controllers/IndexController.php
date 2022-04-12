@@ -5,6 +5,7 @@ namespace cusodede\s3\controllers;
 
 use cusodede\s3\components\web\UploadedFile;
 use cusodede\s3\forms\CreateBucketForm;
+use cusodede\s3\helpers\S3Helper;
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageSearch;
 use cusodede\s3\models\S3;
@@ -126,12 +127,9 @@ class IndexController extends Controller {
 	 * @throws Throwable
 	 */
 	public function actionDelete(int $id): Response {
-		if (null === $cloudStorage = CloudStorage::findOne($id)) throw new NotFoundHttpException();
-		$cloudStorage->deleted = true;
-		if (false === $cloudStorage->save()) {
-			throw new ServerErrorHttpException('Could not record');
-		}
-		(new S3())->deleteObject($cloudStorage->key);
+		$result = S3Helper::deleteFile($id);
+		if (null === $result) throw new NotFoundHttpException();
+
 		return $this->redirect(S3Module::to('index'));
 	}
 }
