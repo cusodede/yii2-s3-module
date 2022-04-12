@@ -10,7 +10,7 @@ class PutObjectMethodParams {
 	/**
 	 * @var array
 	 */
-	private array $tags = [];
+	private array $_tags = [];
 
 	/**
 	 * Добавление названия и значения тега в опции.
@@ -19,22 +19,22 @@ class PutObjectMethodParams {
 	 * @return void
 	 */
 	public function addTag(string $name, ?string $value = null):void {
-		$this->tags[$name] = $value??$name;
+		$this->_tags[$name] = $value??$name;
 	}
 
 	/**
 	 * @return string|null
 	 */
 	public function composeTags():?string {
-		return [] === $this->tags
+		return [] === $this->_tags
 			?null
-			:http_build_query($this->tags);
+			:http_build_query($this->_tags);
 	}
 
 	/**
 	 * @return array
 	 */
 	public function getTags():array {
-		return $this->tags;
+		return $this->_tags;
 	}
 }
