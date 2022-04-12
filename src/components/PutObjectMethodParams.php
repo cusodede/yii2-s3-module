@@ -18,7 +18,7 @@ class PutObjectMethodParams {
 	 * @param string|null $value если `null`, то в качестве значения будет использовано название тега.
 	 * @return void
 	 */
-	public function addTag(string $name, ?string $value = null):void {
+	public function setTag(string $name, ?string $value = null):void {
 		$this->_tags[$name] = $value??$name;
 	}
 
