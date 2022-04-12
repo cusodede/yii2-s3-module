@@ -59,4 +59,19 @@ class ArrayTagAdapter {
 		$this->setTag($name, $value);
 		return true;
 	}
+
+	/**
+	 * Формат тегов для putObjectTagging
+	 * @return array
+	 */
+	public function tagSet():array {
+		$result = [];
+		foreach ($this->_tags as $key => $value) {
+			$result[] = [
+				'Key' => $key,
+				'Value' => $value
+			];
+		}
+		return $result;
+	}
 }

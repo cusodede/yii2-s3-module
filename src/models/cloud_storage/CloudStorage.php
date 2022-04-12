@@ -11,11 +11,11 @@ use cusodede\s3\models\S3;
 use cusodede\s3\S3Module;
 use GuzzleHttp\Psr7\Stream;
 use pozitronik\helpers\ArrayHelper;
+use Throwable;
 use Throwable as ThrowableAlias;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
-use yii\db\BaseActiveRecord;
 use yii\helpers\FileHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -124,10 +124,10 @@ class CloudStorage extends CloudStorageAR {
 	/**
 	 * @inheritDoc
 	 */
-	public function init():void {
-		parent::init();
+	public function afterFind():void {
+		parent::afterFind();
 		/*При создании объекта теги подсасываются из бд*/
-		$this->_tags = $this->relatedTags;
+		$this->_tags = CloudStorageTags::retrieveTags($this->id);
 	}
 
 	/**
@@ -143,11 +143,30 @@ class CloudStorage extends CloudStorageAR {
 	public function setTags(array $tags):void {
 		$this->_tags = $tags;
 		$this->on($this->isNewRecord?static::EVENT_AFTER_INSERT:static::EVENT_AFTER_UPDATE, function(Event $event) {
-			foreach ($event->data as $label => $key) {
-				$tag = new CloudStorageTags(['tag_label' => $label, 'tag_key' => $key]);
-				BaseActiveRecord::link('relatedTags', $tag);
-			}
+			CloudStorageTags::assignTags($this->id, $event->data);
 		}, $this->tags);
+	}
+
+	/**
+	 * Взять теги записи из S3
+	 * @return void
+	 * @throws Throwable
+	 */
+	public function syncTagsFromS3():void {
+		$remoteTags = (new S3())->getTagsArray($this->key, $this->bucket);
+		CloudStorageTags::clearTags($this->id);
+		CloudStorageTags::assignTags($this->id, $remoteTags);
+		$this->_tags = CloudStorageTags::retrieveTags($this->id);
+	}
+
+	/**
+	 * Записать теги записи в S3. Синхронизирует только сохранённые теги.
+	 * @return void
+	 * @throws Throwable
+	 */
+	public function syncTagsToS3():void {
+		$tags = CloudStorageTags::retrieveTags($this->id);
+		(new S3())->setObjectTagging($this->key, $this->bucket, $tags);
 	}
 
 }

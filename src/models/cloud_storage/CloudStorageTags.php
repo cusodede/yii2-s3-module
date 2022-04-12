@@ -3,13 +3,14 @@ declare(strict_types = 1);
 
 namespace cusodede\s3\models\cloud_storage;
 
+use cusodede\s3\models\ArrayTagAdapter;
 use cusodede\s3\models\cloud_storage\active_record\CloudStorageTagsAR;
+use pozitronik\helpers\ArrayHelper;
 
 /**
  * Class CloudStorageTags
  */
 class CloudStorageTags extends CloudStorageTagsAR {
-
 
 	/**
 	 * Получить все теги всех записей из S3
@@ -28,19 +29,31 @@ class CloudStorageTags extends CloudStorageTagsAR {
 	}
 
 	/**
-	 * Взять теги записи из S3
+	 * @param int $cloud_storage_id
+	 * @param string[]|null $tags
 	 * @return void
 	 */
-	public function syncFromS3():void {
-		//todo
+	public static function assignTags(int $cloud_storage_id, ?array $tags):void {
+		$tags = (new ArrayTagAdapter($tags))->getTags();
+		foreach ($tags as $tag_label => $tag_key) {
+			(new CloudStorageTags(compact('cloud_storage_id', 'tag_label', 'tag_key')))->save();
+		}
 	}
 
 	/**
-	 * Записать теги записи в S3
+	 * @param int $cloud_storage_id
+	 * @return string[]
+	 */
+	public static function retrieveTags(int $cloud_storage_id):array {
+		return ArrayHelper::map(self::find()->where(['cloud_storage_id' => $cloud_storage_id])->all(), 'tag_label', 'tag_key');
+	}
+
+	/**
+	 * @param int $cloud_storage_id
 	 * @return void
 	 */
-	public function syncToS3():void {
-		//todo
+	public static function clearTags(int $cloud_storage_id):void {
+		self::deleteAll(['cloud_storage_id' => $cloud_storage_id]);
 	}
 
 }

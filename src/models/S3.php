@@ -135,24 +135,45 @@ class S3 extends Model {
 
 	/**
 	 * Получаем объект с тегами из хранилища по заданному ключу.
-	 * @param string $key
+	 * @param string|null $key |null
 	 * @param string|null $bucket
 	 * @return Result
 	 * @throws Throwable
 	 */
-	public function getObjectTagging(string $key, ?string $bucket = null):Result {
-		return $this->client->getObjectTagging(['Key' => $key, 'Bucket' => $this->getBucket($bucket)]);
+	public function getObjectTagging(?string $key = null, ?string $bucket = null):Result {
+		return $this->client->getObjectTagging(['Key' => $key??$this->storage->key, 'Bucket' => $this->getBucket($bucket)]);
+	}
+
+	/**
+	 * Устанавливает массив тегов объекта
+	 * @param string|null $key
+	 * @param string|null $bucket
+	 * @param array|null $tags Массив тегов, null для очистки тегов
+	 * @return Result
+	 * @throws Throwable
+	 */
+	public function setObjectTagging(?string $key = null, ?string $bucket = null, ?array $tags = null):Result {
+		return null === $tags
+			?$this->client->deleteObjectTagging([
+				'Key' => $key??$this->storage->key,
+				'Bucket' => $this->getBucket($bucket)
+			])
+			:$this->client->putObjectTagging([
+				'Key' => $key??$this->storage->key,
+				'Bucket' => $this->getBucket($bucket),
+				'Tagging' => ['TagSet' => (new ArrayTagAdapter($tags))->tagSet()]
+			]);
 	}
 
 	/**
 	 * Возвращает массив тегов объекта
-	 * @param string $key
+	 * @param string|null $key
 	 * @param string|null $bucket
 	 * @return array
 	 * @throws Throwable
 	 */
-	public function getTagsArray(string $key, ?string $bucket = null):array {
-		return ArrayHelper::map($this->client->getObjectTagging(['Key' => $key, 'Bucket' => $this->getBucket($bucket)])->get('TagSet'), 'Key', 'Value');
+	public function getTagsArray(?string $key = null, ?string $bucket = null):array {
+		return ArrayHelper::map($this->client->getObjectTagging(['Key' => $key??$this->storage->key, 'Bucket' => $this->getBucket($bucket)])->get('TagSet'), 'Key', 'Value');
 	}
 
 	/**
