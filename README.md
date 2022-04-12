@@ -100,7 +100,7 @@ widget (like `limion/yii2-jquery-fileupload-widget`) to do this. See also views/
 
 # Local tagging
 
-It is possible to mark uploads with tags, what may be used for quick search. Tags will be stored in local table and also will be assigned to S3 object. But it works only to one side: tags from S3 objects will not be synchronized to local table.
+It is possible to mark uploads with tags, what may be used for quick search. Tags will be stored in local table and also will be assigned to S3 object. But it works only to one side: tags from S3 objects will not be synchronized to local table. It is possible to sync local and remote tags, see `CloudStorage::syncTagsFromS3()` and `CloudStorage::syncTagsToS3()` methods. 
 
 # Running local tests
 
