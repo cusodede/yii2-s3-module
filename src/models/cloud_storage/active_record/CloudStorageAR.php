@@ -44,7 +44,7 @@ class CloudStorageAR extends ActiveRecord {
 		foreach ($this->tags as $label => $key) {
 			$tag = new CloudStorageTags(['tag_label' => $label, 'tag_key' => $key]);
 
-			parent::link('relatedTags', $tag);
+			$this->link('relatedTags', $tag);
 		}
 	}
 
