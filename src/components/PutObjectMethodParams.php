@@ -26,16 +26,9 @@ class PutObjectMethodParams {
 	 * @return string|null
 	 */
 	public function composeTags():?string {
-		if ([] === $this->tags) {
-			return null;
-		}
-
-		$str = '';
-		foreach ($this->tags as $name => $value) {
-			$str .= "$name=$value&";
-		}
-
-		return rtrim($str, '&');
+		return [] === $this->tags
+			?null
+			:http_build_query($this->tags);
 	}
 
 	/**
