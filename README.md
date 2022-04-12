@@ -99,4 +99,4 @@ widget (like `limion/yii2-jquery-fileupload-widget`) to do this. See also views/
 
 # Running local tests
 
-Copy `.env.example` to `.env`, and set configuration corresponding to your local environment. Then run `php vendor/bin/codecept run` command.
+Copy `tests/.env.example` to `tests/.env`, and set configuration corresponding to your local environment. Then run `php vendor/bin/codecept run` command.
