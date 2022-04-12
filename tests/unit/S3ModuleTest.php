@@ -39,8 +39,8 @@ class S3ModuleTest extends Unit {
 	 */
 	public function testTagsBinding():void {
 		$params = new PutObjectMethodParams();
-		$params->addTag('tag1', 'tag1value');
-		$params->addTag('tag2');
+		$params->setTag('tag1', 'tag1value');
+		$params->setTag('tag2');
 
 		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, $params);
 
