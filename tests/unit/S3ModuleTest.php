@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace unit;
 
 use Codeception\Test\Unit;
-use cusodede\s3\components\PutObjectMethodParams;
 use cusodede\s3\helpers\S3Helper;
 use cusodede\s3\models\S3;
 use Throwable;
@@ -38,22 +37,46 @@ class S3ModuleTest extends Unit {
 	 * @throws Throwable
 	 */
 	public function testTagsBinding():void {
-		$params = new PutObjectMethodParams();
-		$params->setTag('tag1', 'tag1value');
-		$params->setTag('tag2');
 
-		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, $params);
+		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, [
+			'tag1' => 'tag1value', 'tag2', 'emptyTag' => null
+		]);
 
-		$result = (new S3())->getObjectTagging($storage->key);
+		/*Проверим присвоение тегов объекту*/
+		$this::assertEquals($storage->tags, [
+			'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
+		]);
 
-		$tagSet = ArrayHelper::map($result->get('TagSet'), 'Key', 'Value');
+		/*Проверим соответствие тегов в S3*/
+		$result = (new S3())->getTagsArray($storage->key);
+		$this::assertEquals($result, [
+			'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
+		]);
 
-		$this::assertEquals('tag1value', $tagSet['tag1']??'');
-		$this::assertEquals('tag2', $tagSet['tag2']??'');
+		$this::assertEquals($result['tag1'], 'tag1value');
+		$this::assertEquals($result['tag2'], 'tag2');
+		$this::assertEquals($result['emptyTag'], 'emptyTag');
 
+		/*Проверим соответствие тегов в БД*/
 		$tags = ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key');
 
-		$this::assertArrayHasKey('tag1', $tags);
-		$this::assertArrayHasKey('tag2', $tags);
+		$this::assertEquals($tags, [
+			'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
+		]);
+	}
+
+	/**
+	 * @return void
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	public function testEmptyTags():void {
+		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
+
+		$this::assertEquals($storage->tags, []);
+
+		$result = (new S3())->getTagsArray($storage->key);
+		$this::assertEquals($result, []);
+		$this::assertEquals(ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key'), []);
 	}
 }

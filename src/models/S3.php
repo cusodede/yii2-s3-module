@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace cusodede\s3\models;
 
-use cusodede\s3\components\PutObjectMethodParams;
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use Aws\Result;
 use Aws\S3\S3Client;
@@ -97,16 +96,16 @@ class S3 extends Model {
 	 * @param string $filePath path to the file we want to upload
 	 * @param string|null $bucket
 	 * @param string|null $fileName
-	 * @param PutObjectMethodParams|null $params
+	 * @param string[]|null $tags
 	 * @throws Exception
 	 * @throws Throwable
 	 */
-	public function saveObject(string $filePath, ?string $bucket = null, ?string $fileName = null, ?PutObjectMethodParams $params = null):void {
+	public function saveObject(string $filePath, ?string $bucket = null, ?string $fileName = null, ?array $tags = null):void {
 		if (null === $fileName) {
 			$fileName = basename($filePath);
 		}
 		$key = implode('_', [Yii::$app->security->generateRandomString(), $fileName]);
-		$storageResponse = $this->putObject($filePath, $key, $bucket, $params);
+		$storageResponse = $this->putObject($filePath, $key, $bucket, $tags);
 		$this->storage = new CloudStorage([
 			'bucket' => $bucket,
 			'key' => $key,
@@ -114,7 +113,7 @@ class S3 extends Model {
 			'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
 			'size' => (false === $filesize = filesize($filePath))?null:$filesize
 		]);
-		$this->storage->tags = $params?$params->getTags():[];
+		$this->storage->tags = $tags??[];
 		$this->storage->save();
 	}
 
@@ -146,21 +145,32 @@ class S3 extends Model {
 	}
 
 	/**
+	 * Возвращает массив тегов объекта
+	 * @param string $key
+	 * @param string|null $bucket
+	 * @return array
+	 * @throws Throwable
+	 */
+	public function getTagsArray(string $key, ?string $bucket = null):array {
+		return ArrayHelper::map($this->client->getObjectTagging(['Key' => $key, 'Bucket' => $this->getBucket($bucket)])->get('TagSet'), 'Key', 'Value');
+	}
+
+	/**
 	 * Загрузка файла в хранилище
 	 * @param string $filePath
 	 * @param string|null $key
 	 * @param string|null $bucket
-	 * @param PutObjectMethodParams|null $params
+	 * @param string[]|null $tags
 	 * @return Result
 	 * @throws Exception
 	 * @throws Throwable
 	 */
-	public function putObject(string $filePath, ?string &$key = null, ?string &$bucket = null, ?PutObjectMethodParams $params = null):Result {
+	public function putObject(string $filePath, ?string &$key = null, ?string &$bucket = null, ?array $tags = null):Result {
 		return $this->client->putObject([
 			'Key' => $key = $key??static::GetFileNameKey(PathHelper::ExtractBaseName($filePath)),
 			'Bucket' => $bucket = $this->getBucket($bucket),
 			'Body' => fopen($filePath, 'rb'),
-			'Tagging' => $params?->composeTags()
+			'Tagging' => (string)(new ArrayTagAdapter($tags))
 		]);
 	}
 

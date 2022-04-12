@@ -98,6 +98,10 @@ return [
 that's all. Now it is possible to do stream uploads via `PUT` method. You can use a any proper JS-based
 widget (like `limion/yii2-jquery-fileupload-widget`) to do this. See also views/index/put.php for example.
 
+# Local tagging
+
+It is possible to mark uploads with tags, what may be used for quick search. Tags will be stored in local table and also will be assigned to S3 object. But it works only to one side: tags from S3 objects will not be synchronized to local table.
+
 # Running local tests
 
 Copy `tests/.env.example` to `tests/.env`, and set configuration corresponding to your local environment. Then run `php vendor/bin/codecept run` command.

@@ -10,6 +10,7 @@ use cusodede\s3\models\cloud_storage\active_record\CloudStorageTagsAR;
  */
 class CloudStorageTags extends CloudStorageTagsAR {
 
+
 	/**
 	 * Получить все теги всех записей из S3
 	 * @return void
