@@ -82,7 +82,7 @@ jobs:
         run: composer install
 
       - name: Prepare test
-        run: cp tests/.env.example tests/.env && cp tests/_app/config/s3.env.php tests/_app/config/s3.php
+        run: cp tests/.env.example tests/.env
 
       - name: Run tests
         run: vendor/bin/codecept run

@@ -96,3 +96,7 @@ return [
 
 that's all. Now it is possible to do stream uploads via `PUT` method. You can use a any proper JS-based
 widget (like `limion/yii2-jquery-fileupload-widget`) to do this. See also views/index/put.php for example.
+
+# Running local tests
+
+Copy `tests/.env.example` to `tests/.env`, and set configuration corresponding to your local environment. Then run `php vendor/bin/codecept run` command.
