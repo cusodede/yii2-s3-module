@@ -126,7 +126,7 @@ class IndexController extends Controller {
 	 * @return Response
 	 * @throws Throwable
 	 */
-	public function actionDelete(int $id): Response {
+	public function actionDelete(int $id):Response {
 		$result = S3Helper::deleteFile($id);
 		if (null === $result) throw new NotFoundHttpException();
 

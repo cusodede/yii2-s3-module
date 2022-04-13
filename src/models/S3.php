@@ -205,10 +205,10 @@ class S3 extends Model {
 	 * @return Result
 	 * @throws Throwable
 	 */
-	public function deleteObject(string $key, string &$bucket = null): Result {
+	public function deleteObject(string $key, string &$bucket = null):Result {
 		return $this->client->deleteObject([
 			'Bucket' => $bucket = $this->getBucket($bucket),
-			'Key'    => $key,
+			'Key' => $key,
 		]);
 	}
 }
