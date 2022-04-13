@@ -26,7 +26,7 @@ class S3Helper {
 	 * @throws Throwable
 	 */
 	public static function StorageToFile(int $storageId, ?string $filePath = null):?string {
-		if (null === $storage = CloudStorage::findModel($storageId)) return null;
+		if (null === $storage = CloudStorage::find()->where(['id' => $storageId, 'deleted' => false])->one()) return null;
 		$filePath = $filePath??PathHelper::GetTempFileName(sprintf('%s_%s_%s', $storage->key, Yii::$app->security->generateRandomString(6), $storage->filename));
 		(new S3())->getObject($storage->key, $storage->bucket, $filePath);
 		return $filePath;
@@ -83,7 +83,7 @@ class S3Helper {
 	 * @throws Throwable
 	 */
 	public static function deleteFile(int $storageId, ?string $bucket = null): ?int {
-		if (null === $storage = CloudStorage::findModel($storageId)) return null;
+		if (null === $storage = CloudStorage::find()->where(['id' => $storageId, 'deleted' => false])->one()) return null;
 		$storage->deleted = true;
 		if (false === $storage->save()) return null;
 
