@@ -10,7 +10,6 @@ use pozitronik\helpers\PathHelper;
 use Throwable;
 use Yii;
 use yii\base\Exception;
-use yii\web\ServerErrorHttpException;
 use yii\web\UploadedFile;
 
 /**
@@ -26,7 +25,7 @@ class S3Helper {
 	 * @throws Throwable
 	 */
 	public static function StorageToFile(int $storageId, ?string $filePath = null):?string {
-		if (null === $storage = CloudStorage::find()->where(['id' => $storageId, 'deleted' => false])->one()) return null;
+		if (null === $storage = CloudStorage::find()->where(['id' => $storageId])->active()->one()) return null;
 		$filePath = $filePath??PathHelper::GetTempFileName(sprintf('%s_%s_%s', $storage->key, Yii::$app->security->generateRandomString(6), $storage->filename));
 		(new S3())->getObject($storage->key, $storage->bucket, $filePath);
 		return $filePath;
@@ -83,9 +82,9 @@ class S3Helper {
 	 * @throws Throwable
 	 */
 	public static function deleteFile(int $storageId, ?string $bucket = null):?int {
-		if (null === $storage = CloudStorage::find()->where(['id' => $storageId, 'deleted' => false])->one()) return null;
+		if (null === $storage = CloudStorage::find()->where(['id' => $storageId])->active()->one()) return null;
 		$storage->deleted = true;
-		if (false === $storage->save()) return null;
+		$storage->save();
 
 		(new S3())->deleteObject($storage->key, $bucket);
 		return $storage->id;
