@@ -208,7 +208,7 @@ class S3 extends Model {
 	public function deleteObject(string $key, string &$bucket = null):Result {
 		return $this->client->deleteObject([
 			'Bucket' => $bucket = $this->getBucket($bucket),
-			'Key' => $key,
+			'Key' => $key
 		]);
 	}
 }
