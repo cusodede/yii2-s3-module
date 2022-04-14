@@ -142,4 +142,40 @@ class S3ModuleTest extends Unit {
 		/*Проверяем, что тег установился в облаке*/
 		$this::assertEquals($s3->getTagsArray(), ['someTag' => 'someTagValue']);
 	}
+
+	/**
+	 * @return void
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	public function testTagsManipulations():void {
+		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, ['tag1' => 'tag1value']);
+		$s3 = new S3(['storage' => $storage]);
+		$result = $s3->getTagsArray();
+		$this::assertEquals($result, ['tag1' => 'tag1value']);
+
+		$storage->tags = ['newTagName' => 'newTagValue'];
+		$storage->save();
+
+		$this::assertEquals($storage->tags, ['newTagName' => 'newTagValue']);
+
+		$result = $s3->getTagsArray();
+
+		/*Прямое изменение тегов в хранилище НЕ МЕНЯЕТ теги в S3*/
+		$this::assertEquals($result, ['tag1' => 'tag1value']);
+		/*После синхронизации теги появятся в S3*/
+		$storage->syncTagsToS3();
+		$result = $s3->getTagsArray();
+		$this::assertEquals($result, ['newTagName' => 'newTagValue']);
+
+		/*Добавим тег в S3 + перезапишем имеющийся*/
+		$s3->setObjectTagging(null, null, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
+		$result = $s3->getTagsArray();
+
+		$this::assertEquals($result,  ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
+		$s3->storage->syncTagsFromS3();
+
+		$this::assertEquals($s3->storage->tags, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
+
+	}
 }
