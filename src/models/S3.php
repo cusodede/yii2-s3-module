@@ -19,7 +19,7 @@ use yii\web\NotFoundHttpException;
  * @property S3Client $client
  */
 class S3 extends Model {
-	public CloudStorage $storage;
+	public ?CloudStorage $storage = null;
 	private string $host;
 	private string $login;
 	private string $password;
@@ -93,6 +93,15 @@ class S3 extends Model {
 	}
 
 	/**
+	 * Получение ключа: если он не указан напрямую, то взять из связанного хранилища.
+	 * @param string|null $key
+	 * @return string
+	 */
+	public function getKey(?string $key = null):string {
+		return $key??$this?->storage?->key;
+	}
+
+	/**
 	 * Сохраняем объект в хранилище
 	 * @param string $filePath path to the file we want to upload
 	 * @param string|null $bucket
@@ -105,11 +114,11 @@ class S3 extends Model {
 		if (null === $fileName) {
 			$fileName = basename($filePath);
 		}
-		$key = implode('_', [Yii::$app->security->generateRandomString(), $fileName]);
+		$key = static::GetFileNameKey($fileName);
 		$storageResponse = $this->putObject($filePath, $key, $bucket, $tags);
 		$this->storage = new CloudStorage([
-			'bucket' => $bucket,
-			'key' => $key,
+			'bucket' => $this->getBucket($bucket),
+			'key' => $this->getKey($key),
 			'filename' => $fileName,
 			'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
 			'size' => (false === $filesize = filesize($filePath))?null:$filesize
@@ -119,30 +128,33 @@ class S3 extends Model {
 	}
 
 	/**
-	 * Получаем объект из хранилища
-	 * @param string $key
+	 * Получаем объект из хранилища по заданному ключу
+	 * @param string|null $key
 	 * @param string|null $bucket
 	 * @param null|string $savePath Если null, то данные нужно выковыривать из потока
 	 * @return Result
 	 * @throws Throwable
 	 */
-	public function getObject(string $key, ?string $bucket = null, ?string $savePath = null):Result {
+	public function getObject(?string $key = null, ?string $bucket = null, ?string $savePath = null):Result {
 		return $this->client->getObject([
-			'Key' => $key,
+			'Key' => $this->getKey($key),
 			'Bucket' => $this->getBucket($bucket),
 			'SaveAs' => $savePath
 		]);
 	}
 
 	/**
-	 * Получаем объект с тегами из хранилища по заданному ключу.
+	 * Получаем объект с тегами из хранилища по заданному ключу
 	 * @param string|null $key |null
 	 * @param string|null $bucket
 	 * @return Result
 	 * @throws Throwable
 	 */
 	public function getObjectTagging(?string $key = null, ?string $bucket = null):Result {
-		return $this->client->getObjectTagging(['Key' => $key??$this->storage->key, 'Bucket' => $this->getBucket($bucket)]);
+		return $this->client->getObjectTagging([
+			'Key' => $this->getKey($key),
+			'Bucket' => $this->getBucket($bucket)
+		]);
 	}
 
 	/**
@@ -156,11 +168,11 @@ class S3 extends Model {
 	public function setObjectTagging(?string $key = null, ?string $bucket = null, ?array $tags = null):Result {
 		return null === $tags
 			?$this->client->deleteObjectTagging([
-				'Key' => $key??$this->storage->key,
+				'Key' => $this->getKey($key),
 				'Bucket' => $this->getBucket($bucket)
 			])
 			:$this->client->putObjectTagging([
-				'Key' => $key??$this->storage->key,
+				'Key' => $this->getKey($key),
 				'Bucket' => $this->getBucket($bucket),
 				'Tagging' => ['TagSet' => (new ArrayTagAdapter($tags))->tagSet()]
 			]);
@@ -174,7 +186,10 @@ class S3 extends Model {
 	 * @throws Throwable
 	 */
 	public function getTagsArray(?string $key = null, ?string $bucket = null):array {
-		return ArrayHelper::map($this->client->getObjectTagging(['Key' => $key??$this->storage->key, 'Bucket' => $this->getBucket($bucket)])->get('TagSet'), 'Key', 'Value');
+		return ArrayHelper::map($this->client->getObjectTagging([
+			'Key' => $this->getKey($key),
+			'Bucket' => $this->getBucket($bucket)
+		])->get('TagSet'), 'Key', 'Value');
 	}
 
 	/**
@@ -189,7 +204,7 @@ class S3 extends Model {
 	 */
 	public function putObject(string $filePath, ?string &$key = null, ?string &$bucket = null, ?array $tags = null):Result {
 		return $this->client->putObject([
-			'Key' => $key = $key??static::GetFileNameKey(PathHelper::ExtractBaseName($filePath)),
+			'Key' => $key = $this->getKey($key??static::GetFileNameKey(PathHelper::ExtractBaseName($filePath))),
 			'Bucket' => $bucket = $this->getBucket($bucket),
 			'Body' => fopen($filePath, 'rb'),
 			'Tagging' => (string)(new ArrayTagAdapter($tags))
@@ -207,14 +222,14 @@ class S3 extends Model {
 	 */
 	public function putResource($resource, string $fileName, ?string &$key = null, ?string &$bucket = null):Result {
 		return $this->client->putObject([
-			'Key' => $key = $key??static::GetFileNameKey($fileName),
+			'Key' => $key = $this->getKey($key??static::GetFileNameKey($fileName)),
 			'Bucket' => $bucket = $this->getBucket($bucket),
 			'Body' => $resource
 		]);
 	}
 
 	/**
-	 * Получаем список buckets
+	 * Получаем список корзин
 	 * @return array[]
 	 */
 	public function getListBucketMap():array {
@@ -227,14 +242,13 @@ class S3 extends Model {
 	}
 
 	/**
-	 * Создаем bucket
+	 * Создание корзины
 	 * @param string $name
 	 * @return bool
 	 * @throws Throwable
 	 */
 	public function createBucket(string $name):bool {
-		$res = $this->client->createBucket(['Bucket' => $name])->toArray();
-		return null !== ArrayHelper::getValue($res, 'Location');
+		return null !== ArrayHelper::getValue($this->client->createBucket(['Bucket' => $name])->toArray(), 'Location');
 	}
 
 	/**
