@@ -37,6 +37,7 @@ class CloudStorageTagsAR extends ActiveRecord {
 			[['cloud_storage_id', 'tag_label', 'tag_key'], 'required'],
 			[['cloud_storage_id'], 'integer'],
 			[['tag_label', 'tag_key'], 'string', 'max' => 255],
+			[['cloud_storage_id', 'tag_label'], 'unique', 'targetAttribute' => ['cloud_storage_id', 'tag_label']]
 		];
 	}
 
