@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace cusodede\s3\models\cloud_storage\active_record;
 
+use cusodede\s3\models\cloud_storage\CloudStorageTags;
 use cusodede\s3\S3Module;
 use pozitronik\helpers\DateHelper;
 use pozitronik\traits\traits\ActiveRecordTrait;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -22,6 +24,8 @@ use yii\db\ActiveRecord;
  * @property bool $created_at Дата создания
  * @property null|string $model_name Связанный класс
  * @property null|int $model_key Ключ модели
+ *
+ * @property-read CloudStorageTags[] $relatedTags
  */
 class CloudStorageAR extends ActiveRecord {
 	use ActiveRecordTrait;
@@ -76,6 +80,13 @@ class CloudStorageAR extends ActiveRecord {
 				'value' => DateHelper::lcDate(),
 			]
 		];
+	}
+
+	/**
+	 * @return ActiveQuery
+	 */
+	public function getRelatedTags():ActiveQuery {
+		return $this->hasMany(CloudStorageTags::class, ['cloud_storage_id' => 'id']);
 	}
 
 }
