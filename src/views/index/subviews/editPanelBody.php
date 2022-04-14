@@ -9,6 +9,7 @@ declare(strict_types = 1);
  */
 
 use cusodede\s3\models\cloud_storage\CloudStorage;
+use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
 use yii\web\View;
 
@@ -41,4 +42,18 @@ $isDisabled = $model->isNewRecord?false:'disabled';
 		]) ?>
 	</div>
 </div>
-
+<div class="row">
+	<div class="col-md-12">
+		<?= $form->field($model, 'tags')->widget(Select2::class, [
+			'options' => [
+				'placeholder' => 'Выберите или добавьте теги',
+				'multiple' => true,
+			],
+			'pluginOptions' => [
+				'tags' => true,
+				'tokenSeparators' => [',', ' '],
+				'maximumInputLength' => 10
+			]
+		]) ?>
+	</div>
+</div>
