@@ -32,7 +32,7 @@ class S3 extends Model {
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct() {
+	public function __construct(array $config = []) {
 		$this->host = S3Module::param("connection.host");
 		$this->login = S3Module::param("connection.login");
 		$this->password = S3Module::param("connection.password");
@@ -41,7 +41,7 @@ class S3 extends Model {
 		$this->certPath = S3Module::param("connection.cert_path");
 		$this->certPassword = S3Module::param("connection.cert_password");
 		$this->defaultBucket = S3Module::param("defaultBucket");
-		parent::__construct();
+		parent::__construct($config);
 	}
 
 	/**
