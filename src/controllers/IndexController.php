@@ -5,6 +5,7 @@ namespace cusodede\s3\controllers;
 
 use cusodede\s3\components\web\UploadedFile;
 use cusodede\s3\forms\CreateBucketForm;
+use cusodede\s3\helpers\S3Helper;
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageSearch;
 use cusodede\s3\models\S3;
@@ -118,5 +119,16 @@ class IndexController extends Controller {
 			$createBucketForm = new CreateBucketForm();
 		}
 		return $this->render('create-bucket', compact('createBucketForm', 'isCreated'));
+	}
+
+	/**
+	 * @param int $id
+	 * @return Response
+	 * @throws Throwable
+	 */
+	public function actionDelete(int $id):Response {
+		if (null === S3Helper::deleteFile($id)) throw new NotFoundHttpException();
+
+		return $this->redirect(S3Module::to('index'));
 	}
 }
