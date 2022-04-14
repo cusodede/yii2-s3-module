@@ -65,7 +65,7 @@ use yii\web\View;
 					'uploaded:boolean',
 					'size:shortsize',
 					[
-						'attribute' => 'tags',
+						'attribute' => 'tagsFilter',
 						'format' => 'raw',
 						'value' => static fn(CloudStorageSearch $model) => BadgeWidget::widget([
 							'items' => $model->tags,
