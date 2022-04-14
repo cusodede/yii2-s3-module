@@ -3,11 +3,14 @@ declare(strict_types = 1);
 
 namespace unit;
 
+use Aws\S3\Exception\S3Exception;
 use Codeception\Test\Unit;
 use cusodede\s3\helpers\S3Helper;
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageTags;
 use cusodede\s3\models\S3;
+use pozitronik\helpers\PathHelper;
+use pozitronik\helpers\Utils;
 use Throwable;
 use Yii;
 use yii\base\Exception;
@@ -172,12 +175,13 @@ class S3ModuleTest extends Unit {
 		$s3->setObjectTagging(null, null, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
 		$result = $s3->getTagsArray();
 
-		$this::assertEquals($result,  ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
+		$this::assertEquals($result, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
 		$s3->storage->syncTagsFromS3();
 
 		$this::assertEquals($s3->storage->tags, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
 
 	}
+
 	/**
 	 * @return void
 	 * @throws Throwable
@@ -191,6 +195,11 @@ class S3ModuleTest extends Unit {
 		$this::assertEquals($storage->id, $result);
 		$this::assertNull($result2);
 		$this::assertNull($result3);
+
+		$s3 = new S3(['storage' => $storage]);
+		$this->expectException(S3Exception::class);
+		$s3->getObject(null, null, PathHelper::GetTempFileName());
+
 	}
 
 }
