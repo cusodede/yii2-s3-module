@@ -78,17 +78,18 @@ class S3 extends Model {
 	}
 
 	/**
-	 * Если bucket не задан явно, то идем в конфиг и берем defaultBucket. Если нет defaultBucket то, берем первый bucket по алфавиту
+	 * Выбор корзины при скачивании и загрузке.
+	 * Если она указана явно, или указана в связанном хранилище, берём оттуда.
+	 * Иначе выбираем хранилище по умолчанию. Если оно не указано, то выбирается последняя корзина из списка имеющихся.
 	 * @param string|null $bucket
 	 * @return string
 	 * @throws Throwable
 	 */
 	public function getBucket(?string $bucket = null):string {
-		if (null !== $bucket) return $bucket;
-		if (null !== $this->defaultBucket) return $this->defaultBucket;
+		if (null !== $bucket || (null !== $bucket = $this?->storage?->bucket) || (null !== $bucket = $this->defaultBucket)) return $bucket;
 		$buckets = ArrayHelper::getValue($this->client->listBuckets()->toArray(), 'Buckets', []);
 		$latestBucket = count($buckets) - 1;
-		return ArrayHelper::getValue($buckets, $latestBucket.'.Name', new NotFoundHttpException("Bucket не найден"));
+		return ArrayHelper::getValue($buckets, $latestBucket.'.Name', new NotFoundHttpException("No buckets configured/found"));
 	}
 
 	/**
