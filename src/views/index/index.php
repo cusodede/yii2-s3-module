@@ -12,6 +12,7 @@ use cusodede\s3\models\cloud_storage\CloudStorageSearch;
 use cusodede\s3\S3Module;
 use pozitronik\widgets\BadgeWidget;
 use pozitronik\traits\traits\ControllerTrait;
+use yii\base\DynamicModel;
 use yii\bootstrap4\Html;
 use yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
@@ -62,7 +63,15 @@ use yii\web\View;
 					'created_at:datetime',
 					'deleted:boolean',
 					'uploaded:boolean',
-					'size:shortsize'
+					'size:shortsize',
+					[
+						'attribute' => 'tags',
+						'format' => 'raw',
+						'value' => static fn(CloudStorageSearch $model) => BadgeWidget::widget([
+							'items' => $model->tags,
+							'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item):string => $keyAttributeValue.":"
+						])
+					]
 				]
 			]) ?>
 		</div>
