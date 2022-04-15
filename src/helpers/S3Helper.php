@@ -11,6 +11,7 @@ use Throwable;
 use Yii;
 use yii\base\Exception;
 use yii\web\UploadedFile;
+use yii\base\Model;
 
 /**
  * S3Helper: обёртка над S3 для упрощения работы
@@ -49,29 +50,29 @@ class S3Helper {
 
 	/**
 	 * Загрузка файла из модели
-	 * @param $model
-	 * @param UploadedFile $uploadedFile
-	 * @param string $bucket Ведро в которое будет производится загрузка
+	 * @param Model $model
+	 * @param string $filePath
+	 * @param string $fileName
+	 * @param string|null $bucket
+	 * @param array|null $tags
 	 * @return bool
-	 * @throws Exception
 	 * @throws Throwable
+	 * @throws Exception
 	 */
-	public static function uploadFileFromModel($model, UploadedFile $uploadedFile, string $bucket):bool {
-		$randomKey = Yii::$app->security->generateRandomString(10);
-		$storageResponse = (new S3())->client->putObject([
-			'Bucket' => $bucket,
-			'Key' => $randomKey,
-			'Body' => fopen($uploadedFile->tempName, 'rb')
+	public static function uploadFileFromModel(Model $model, string $filePath, string $fileName, ?string $bucket = null, ?array $tags = null):bool {
+		$key = S3::GetFileNameKey($fileName);
+		$storageResponse = (new S3())->putObject($filePath, $key, $bucket, $tags);
+
+		$cloudStorage = new CloudStorage([
+			'bucket' => $bucket,
+			'key' => $key,
+			'filename' => $fileName,
+			'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
+			'size' => (false === $filesize = filesize($filePath))?null:$filesize,
+			'model_name' => get_class($model),
+			'model_key' => $model->id
 		]);
-
-		$cloudStorage = new CloudStorage();
-		$cloudStorage->key = $randomKey;
-		$cloudStorage->filename = $uploadedFile->baseName;
-		$cloudStorage->bucket = $bucket;
-		$cloudStorage->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
-		$cloudStorage->model_name = get_class($model);
-		$cloudStorage->model_key = $model->id;
-
+		$cloudStorage->tags = $tags??[];
 		return $cloudStorage->save();
 	}
 
