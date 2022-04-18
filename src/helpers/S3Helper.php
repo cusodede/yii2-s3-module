@@ -10,7 +10,6 @@ use pozitronik\helpers\PathHelper;
 use Throwable;
 use Yii;
 use yii\base\Exception;
-use yii\web\UploadedFile;
 use yii\base\Model;
 
 /**
@@ -71,7 +70,7 @@ class S3Helper {
 			'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
 			'size' => (false === $filesize = filesize($filePath))?null:$filesize,
 			'model_name' => get_class($model),
-			'model_key' => $model->id
+			'model_key' => ArrayHelper::getValue($model, 'id')//Скорее всего, это будет ActiveRecord, но если нет - загрузим без конкретной связи
 		]);
 		$cloudStorage->tags = $tags??[];
 		return $cloudStorage->save();
