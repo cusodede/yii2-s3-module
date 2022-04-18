@@ -9,6 +9,7 @@ declare(strict_types = 1);
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\S3Module;
 use pozitronik\widgets\BadgeWidget;
+use yii\base\DynamicModel;
 use yii\web\View;
 use yii\widgets\DetailView;
 
@@ -30,6 +31,14 @@ use yii\widgets\DetailView;
 		],
 		'created_at',
 		'deleted:boolean',
-		'uploaded:boolean'
+		'uploaded:boolean',
+		[
+			'attribute' => 'tags',
+			'format' => 'raw',
+			'value' => static fn(CloudStorage $model) => BadgeWidget::widget([
+				'items' => $model->tags,
+				'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item):string => $keyAttributeValue.":"
+			])
+		]
 	]
 ]) ?>

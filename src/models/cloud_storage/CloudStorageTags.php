@@ -37,7 +37,11 @@ class CloudStorageTags extends CloudStorageTagsAR {
 		$tags = (new ArrayTagAdapter($tags))->getTags();
 		static::clearTags($cloud_storage_id);
 		foreach ($tags as $tag_label => $tag_key) {
-			(new CloudStorageTags(compact('cloud_storage_id', 'tag_label', 'tag_key')))->save();
+			(new CloudStorageTags([
+				'cloud_storage_id' => $cloud_storage_id,
+				'tag_label' => (string)$tag_label,
+				'tag_key' => $tag_key
+			]))->save();
 		}
 	}
 

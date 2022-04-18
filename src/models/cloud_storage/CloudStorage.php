@@ -49,7 +49,20 @@ class CloudStorage extends CloudStorageAR {
 	public function rules():array {
 		return array_merge(
 			parent::rules(),
-			[['file', 'file', 'maxSize' => S3Module::param('maxUploadFileSize')]]
+			[
+				['file', 'file', 'maxSize' => S3Module::param('maxUploadFileSize')],
+				['tags', 'safe']
+			]
+		);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels():array {
+		return array_merge(
+			parent::attributeLabels(),
+			['tags' => 'Теги']
 		);
 	}
 

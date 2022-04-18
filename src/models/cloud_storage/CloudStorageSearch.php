@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace cusodede\s3\models\cloud_storage;
 
+use cusodede\s3\models\cloud_storage\active_record\CloudStorageTagsAR;
 use Throwable;
 use yii\data\ActiveDataProvider;
 
@@ -12,6 +13,11 @@ use yii\data\ActiveDataProvider;
 class CloudStorageSearch extends CloudStorage {
 
 	/**
+	 * @var null|string $tagsFilter Фильтр по значению тега
+	 */
+	public ?string $tagsFilter = null;
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function rules():array {
@@ -19,7 +25,18 @@ class CloudStorageSearch extends CloudStorage {
 			[['id', 'model_key',], 'integer'],
 			[['uploaded', 'deleted'], 'boolean'],
 			[['bucket', 'key', 'filename', 'model_name',], 'string', 'max' => 255],
+			[['tagsFilter'], 'string']
 		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels():array {
+		return array_merge(
+			parent::attributeLabels(),
+			['tagsFilter' => 'Теги']
+		);
 	}
 
 	/**
@@ -28,7 +45,8 @@ class CloudStorageSearch extends CloudStorage {
 	 * @throws Throwable
 	 */
 	public function search(array $params):ActiveDataProvider {
-		$query = self::find()->distinct()->active();
+		$query = self::find()->active();
+		$query->joinWith(['relatedTags']);
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query
@@ -58,6 +76,7 @@ class CloudStorageSearch extends CloudStorage {
 		$query->andFilterWhere(['like', self::tableName().'.key', $this->key]);
 		$query->andFilterWhere(['model_name' => $this->model_name]);
 		$query->andFilterWhere(['model_key' => $this->model_key]);
+		$query->andFilterWhere(['like', CloudStorageTagsAR::tableName().'.tag_key', $this->tagsFilter]);
 	}
 
 	/**
@@ -75,6 +94,10 @@ class CloudStorageSearch extends CloudStorage {
 				'bucket',
 				'model_name',
 				'model_key',
+				'tagsFilter' => [
+					'asc' => [CloudStorageTagsAR::tableName().'.tag_key' => SORT_ASC],
+					'desc' => [CloudStorageTagsAR::tableName().'.tag_key' => SORT_DESC]
+				]
 			]
 		]);
 	}
