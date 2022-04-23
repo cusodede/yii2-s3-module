@@ -29,7 +29,6 @@ $isDisabled = $model->isNewRecord?false:'disabled';
 <div class="row">
 	<div class="col-md-12">
 		<?= $form->field($model, 'key')->textInput([
-			'disabled' => $isDisabled,
 			'placeholder' => 'Оставьте пустым для автоматической генерации.'
 		]) ?>
 	</div>
@@ -37,7 +36,6 @@ $isDisabled = $model->isNewRecord?false:'disabled';
 <div class="row">
 	<div class="col-md-12">
 		<?= $form->field($model, 'filename')->textInput([
-			'disabled' => $isDisabled,
 			'placeholder' => 'Имя загружаемого файла с указанием расширения. Оставьте пустым для автоподстановки.'
 		]) ?>
 	</div>
