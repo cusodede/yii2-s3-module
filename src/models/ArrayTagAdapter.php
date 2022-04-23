@@ -9,9 +9,9 @@ namespace cusodede\s3\models;
 class ArrayTagAdapter {
 
 	/**
-	 * @var string[]
+	 * @var string|array
 	 */
-	private array $_tags = [];
+	private string|array $_tags = [];
 
 	/**
 	 * @return string
@@ -21,9 +21,9 @@ class ArrayTagAdapter {
 	}
 
 	/**
-	 * @param null|string[] $tags
+	 * @param string|array|null $tags
 	 */
-	public function __construct(?array $tags = null) {
+	public function __construct(string|array $tags = null) {
 		if (null !== $tags) {
 			foreach ($tags as $tag => $value) {
 				$this->setTag(is_string($tag)?$tag:$value, $value);

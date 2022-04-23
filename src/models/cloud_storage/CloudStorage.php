@@ -23,7 +23,7 @@ use yii\web\Response;
 /**
  * Class CloudStorage
  *
- * @property string[] $tags
+ * @property string|array $tags
  */
 class CloudStorage extends CloudStorageAR {
 
@@ -39,9 +39,9 @@ class CloudStorage extends CloudStorageAR {
 	public $file;
 
 	/**
-	 * @var string[] tag label => tag key
+	 * @var string|array tag label => tag key
 	 */
-	private array $_tags = [];
+	private string|array $_tags = [];
 
 	/**
 	 * @inheritDoc
@@ -151,9 +151,9 @@ class CloudStorage extends CloudStorageAR {
 	}
 
 	/**
-	 * @param string[] $tags
+	 * @param string|array $tags
 	 */
-	public function setTags(array $tags):void {
+	public function setTags(string|array $tags):void {
 		$this->_tags = $tags;
 		$this->on($this->isNewRecord?static::EVENT_AFTER_INSERT:static::EVENT_AFTER_UPDATE, function(Event $event) {
 			CloudStorageTags::assignTags($this->id, $event->data);
