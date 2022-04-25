@@ -11,5 +11,5 @@ RUN apt-get update \
 COPY . /code
 WORKDIR /code
 
-ENTRYPOINT ["tests/docker/php/entrypoint.sh"]
+ENTRYPOINT ["sh", "tests/docker/php/entrypoint.sh"]
 CMD ["sleep", "infinity"]
