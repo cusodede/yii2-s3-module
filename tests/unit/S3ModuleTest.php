@@ -10,7 +10,6 @@ use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageTags;
 use cusodede\s3\models\S3;
 use pozitronik\helpers\PathHelper;
-use pozitronik\helpers\Utils;
 use Throwable;
 use Yii;
 use yii\base\Exception;
