@@ -151,9 +151,10 @@ class CloudStorage extends CloudStorageAR {
 	}
 
 	/**
-	 * @param string[] $tags
+	 * @param mixed $tags
 	 */
-	public function setTags(array $tags):void {
+	public function setTags(mixed $tags):void {
+		if (empty($tags)) $tags = [];
 		$this->_tags = $tags;
 		$this->on($this->isNewRecord?static::EVENT_AFTER_INSERT:static::EVENT_AFTER_UPDATE, function(Event $event) {
 			CloudStorageTags::assignTags($this->id, $event->data);
