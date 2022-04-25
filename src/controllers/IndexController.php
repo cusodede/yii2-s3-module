@@ -5,6 +5,7 @@ namespace cusodede\s3\controllers;
 
 use cusodede\s3\components\web\UploadedFile;
 use cusodede\s3\forms\CreateBucketForm;
+use cusodede\s3\helpers\S3Helper;
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageSearch;
 use cusodede\s3\models\S3;
@@ -93,6 +94,7 @@ class IndexController extends Controller {
 	}
 
 	/**
+	 * Разрешаем редактирование записи, при этом разрешаем не перезагружать файл
 	 * @param int $id
 	 * @return string|Response
 	 * @throws InvalidConfigException
@@ -101,12 +103,19 @@ class IndexController extends Controller {
 	 */
 	public function actionEdit(int $id) {
 		if (null === $model = CloudStorage::findOne($id)) throw new NotFoundHttpException();
-		if (Yii::$app->request->isPost && (null !== $uploadedFile = UploadedFile::getInstance($model, 'file')) && $model->uploadInstance($uploadedFile)) {
+		if (
+			(Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) || //default POST
+			(Yii::$app->request->isPut && $model->load(Yii::$app->request->getBodyParams())) //multipart/form-data via PUT
+		) {
+			if ((null !== $uploadedFile = UploadedFile::getInstance($model, 'file'))) {
+				$model->uploadInstance($uploadedFile);
+			} else {
+				$model->save();
+			}
 			return $this->redirect(S3Module::to('index'));
 		}
 		return $this->render('edit', ['model' => $model, 'buckets' => (new S3())->getListBucketMap()]);
 	}
-
 	/**
 	 * @return string
 	 * @throws Throwable
@@ -118,5 +127,16 @@ class IndexController extends Controller {
 			$createBucketForm = new CreateBucketForm();
 		}
 		return $this->render('create-bucket', compact('createBucketForm', 'isCreated'));
+	}
+
+	/**
+	 * @param int $id
+	 * @return Response
+	 * @throws Throwable
+	 */
+	public function actionDelete(int $id):Response {
+		if (null === S3Helper::deleteFile($id)) throw new NotFoundHttpException();
+
+		return $this->redirect(S3Module::to('index'));
 	}
 }

@@ -28,7 +28,7 @@ class UploadedFile extends YiiUploadedFile {
 	 * @inheritDoc
 	 * Для приведения типа
 	 */
-	public static function getInstance($model, $attribute):self {
+	public static function getInstance($model, $attribute):?self {
 		return parent::getInstance($model, $attribute);
 	}
 

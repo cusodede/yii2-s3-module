@@ -10,15 +10,16 @@ return [
 	'defaultRoute' => 'index',
 	'params' => [
 		'connection' => [
-            'host' => getenv('MINIO_HOST'),
-            'login' => getenv('MINIO_ROOT_USER'),
-            'password' => getenv('MINIO_ROOT_PASSWORD'),
+			'host' => $_ENV['MINIO_HOST'],
+			'login' => $_ENV['MINIO_ROOT_USER'],
+			'password' => $_ENV['MINIO_ROOT_PASSWORD'],
 			'connect_timeout' => 10, /* http connection timeout */
 			'timeout' => 10, /* http timeout */
 			'cert_path' => null, /* path to ssl certificate, set null to disable */
 			'cert_password' => null /* certificate password, set null, if certificate has no password */
 		],
-		'tableName' => 'sys_cloud_storage', /* table with storage data, see Module migration section*/
+		'tableName' => 'sys_cloud_storage', /* table with storage data info*/
+		'tagsTableName' => 'sys_cloud_storage_tags', /* table with local tags */
 		'viewPath' => './src/views/index', /* path to view templates, if you want to customize them */
 		'maxUploadFileSize' => null, /* file size limit for uploaded file, set null to disable */
 		'defaultBucket' => 'testbucket', /* name of bucket, used by default, if null, alphabetically first bucket will be used */

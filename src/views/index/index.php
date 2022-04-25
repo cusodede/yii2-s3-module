@@ -12,6 +12,7 @@ use cusodede\s3\models\cloud_storage\CloudStorageSearch;
 use cusodede\s3\S3Module;
 use pozitronik\widgets\BadgeWidget;
 use pozitronik\traits\traits\ControllerTrait;
+use yii\base\DynamicModel;
 use yii\bootstrap4\Html;
 use yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
@@ -38,11 +39,12 @@ use yii\web\View;
 				'columns' => [
 					[
 						'class' => ActionColumn::class,
-						'template' => '<div class="btn-group">{edit}{view}{download}</div>',
+						'template' => '<div class="btn-group">{edit}{view}{download}{delete}</div>',
 						'buttons' => [
 							'edit' => static fn(string $url):string => Html::a('<i class="fa fa-edit"></i>', $url),
 							'view' => static fn(string $url):string => Html::a('<i class="fa fa-eye"></i>', $url),
 							'download' => static fn(string $url):string => Html::a('<i class="fa fa-download"></i>', $url),
+							'delete' => static fn(string $url):string => Html::a('<i class="fa fa-trash"></i>', $url),
 						],
 					],
 					'id',
@@ -61,7 +63,15 @@ use yii\web\View;
 					'created_at:datetime',
 					'deleted:boolean',
 					'uploaded:boolean',
-					'size:shortsize'
+					'size:shortsize',
+					[
+						'attribute' => 'tagsFilter',
+						'format' => 'raw',
+						'value' => static fn(CloudStorageSearch $model) => BadgeWidget::widget([
+							'items' => $model->tags,
+							'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item):string => $keyAttributeValue.":"
+						])
+					]
 				]
 			]) ?>
 		</div>

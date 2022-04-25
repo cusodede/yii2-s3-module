@@ -10,7 +10,7 @@ use pozitronik\helpers\PathHelper;
 use Throwable;
 use Yii;
 use yii\base\Exception;
-use yii\web\UploadedFile;
+use yii\base\Model;
 
 /**
  * S3Helper: обёртка над S3 для упрощения работы
@@ -25,10 +25,9 @@ class S3Helper {
 	 * @throws Throwable
 	 */
 	public static function StorageToFile(int $storageId, ?string $filePath = null):?string {
-		if (null === $storage = CloudStorage::findModel($storageId)) return null;
-		if (null === $filePath) {
-			$filePath = PathHelper::GetTempFileName($storage->key);
-		}
+		/** @var CloudStorage $storage */
+		if (null === $storage = CloudStorage::find()->where(['id' => $storageId])->active()->one()) return null;
+		$filePath = $filePath??PathHelper::GetTempFileName(sprintf('%s_%s_%s', $storage->key, Yii::$app->security->generateRandomString(6), $storage->filename));
 		(new S3())->getObject($storage->key, $storage->bucket, $filePath);
 		return $filePath;
 	}
@@ -38,41 +37,59 @@ class S3Helper {
 	 * @param string $filePath
 	 * @param string|null $fileName Имя файла в облаке (null - оставить локальное)
 	 * @param string|null $bucket
+	 * @param string[]|null $tags
 	 * @return CloudStorage
 	 * @throws Exception
 	 * @throws Throwable
 	 */
-	public static function FileToStorage(string $filePath, ?string $fileName = null, ?string $bucket = null):CloudStorage {
+	public static function FileToStorage(string $filePath, ?string $fileName = null, ?string $bucket = null, ?array $tags = null):CloudStorage {
 		$s3 = new S3();
-		$s3->saveObject($filePath, $bucket, $fileName??PathHelper::ExtractBaseName($filePath)??PathHelper::GetRandomTempFileName());
+		$s3->saveObject($filePath, $bucket, $fileName??PathHelper::ExtractBaseName($filePath)??PathHelper::GetRandomTempFileName(), $tags);
 		return $s3->storage;
 	}
 
 	/**
 	 * Загрузка файла из модели
-	 * @param $model
-	 * @param UploadedFile $uploadedFile
-	 * @param string $bucket Ведро в которое будет производится загрузка
+	 * @param Model $model
+	 * @param string $filePath
+	 * @param string $fileName
+	 * @param string|null $bucket
+	 * @param array|null $tags
 	 * @return bool
+	 * @throws Throwable
 	 * @throws Exception
+	 */
+	public static function uploadFileFromModel(Model $model, string $filePath, string $fileName, ?string $bucket = null, ?array $tags = null):bool {
+		$key = S3::GetFileNameKey($fileName);
+		$storageResponse = (new S3())->putObject($filePath, $key, $bucket, $tags);
+
+		$cloudStorage = new CloudStorage([
+			'bucket' => $bucket,
+			'key' => $key,
+			'filename' => $fileName,
+			'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
+			'size' => (false === $filesize = filesize($filePath))?null:$filesize,
+			'model_name' => get_class($model),
+			'model_key' => ArrayHelper::getValue($model, 'id')//Скорее всего, это будет ActiveRecord, но если нет - загрузим без конкретной связи
+		]);
+		$cloudStorage->tags = $tags??[];
+		return $cloudStorage->save();
+	}
+
+	/**
+	 * Метод для удаления файлов
+	 * @param int $storageId
+	 * @param string|null $bucket
+	 * @return int|null
 	 * @throws Throwable
 	 */
-	public static function uploadFileFromModel($model, UploadedFile $uploadedFile, string $bucket):bool {
-		$randomKey = Yii::$app->security->generateRandomString(10);
-		$storageResponse = (new S3())->client->putObject([
-			'Bucket' => $bucket,
-			'Key' => $randomKey,
-			'Body' => fopen($uploadedFile->tempName, 'rb')
-		]);
+	public static function deleteFile(int $storageId, ?string $bucket = null):?int {
+		/** @var CloudStorage $storage */
+		if (null === $storage = CloudStorage::find()->where(['id' => $storageId])->active()->one()) return null;
+		$storage->deleted = true;
+		$storage->save();
 
-		$cloudStorage = new CloudStorage();
-		$cloudStorage->key = $randomKey;
-		$cloudStorage->filename = $uploadedFile->baseName;
-		$cloudStorage->bucket = $bucket;
-		$cloudStorage->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
-		$cloudStorage->model_name = get_class($model);
-		$cloudStorage->model_key = $model->id;
-
-		return $cloudStorage->save();
+		(new S3())->deleteObject($storage->key, $bucket);
+		return $storage->id;
 	}
 }

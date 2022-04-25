@@ -11,7 +11,9 @@ modules:
     - Cli
     - Yii2:
         configFile: './tests/_app/config/main.php'
-
+  config:
+    Yii2:
+      transaction: false
   step_decorators: ~
 extensions:
   enabled:

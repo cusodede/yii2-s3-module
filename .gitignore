@@ -3,3 +3,4 @@
 ./tests/.env
 ./tests/runtime/*
 !./tests/runtime/.gitkeep
+/composer.lock
