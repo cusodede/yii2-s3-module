@@ -84,8 +84,9 @@ class S3Helper {
 	 * @throws Throwable
 	 */
 	public static function deleteFile(CloudStorage|int $storage, ?string $bucket = null):?int {
-		$storageModel = $storage;
-		if (is_int($storage) && null === $storageModel = CloudStorage::find()->where(['id' => $storage])->active()->one()) return null;
+		if (null === $storageModel = (is_int($storage))
+				?CloudStorage::find()->where(['id' => $storage])->active()->one()
+				:$storage) return null;
 		$storageModel->deleted = true;
 		$storageModel->save();
 
