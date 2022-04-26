@@ -78,18 +78,19 @@ class S3Helper {
 
 	/**
 	 * Метод для удаления файлов
-	 * @param int $storageId
+	 * @param CloudStorage|int $storage
 	 * @param string|null $bucket
 	 * @return int|null
 	 * @throws Throwable
 	 */
-	public static function deleteFile(int $storageId, ?string $bucket = null):?int {
-		/** @var CloudStorage $storage */
-		if (null === $storage = CloudStorage::find()->where(['id' => $storageId])->active()->one()) return null;
-		$storage->deleted = true;
-		$storage->save();
+	public static function deleteFile(CloudStorage|int $storage, ?string $bucket = null):?int {
+		if (null === $storageModel = (is_int($storage))
+				?CloudStorage::find()->where(['id' => $storage])->active()->one()
+				:$storage) return null;
+		$storageModel->deleted = true;
+		$storageModel->save();
 
-		(new S3())->deleteObject($storage->key, $bucket);
-		return $storage->id;
+		(new S3())->deleteObject($storageModel->key, $bucket);
+		return $storageModel->id;
 	}
 }
