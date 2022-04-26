@@ -202,4 +202,21 @@ class S3ModuleTest extends Unit {
 
 	}
 
+	/**
+	 * @return void
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	public function testDeleteStorageFile():void {
+		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
+		$result = S3Helper::deleteFile($storage);
+
+		$this::assertEquals($storage->id, $result);
+		$this::assertEquals(true, $storage->deleted);
+
+		$s3 = new S3(['storage' => $storage]);
+		$this->expectException(S3Exception::class);
+		$s3->getObject(null, null, PathHelper::GetTempFileName());
+	}
+
 }
