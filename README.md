@@ -105,3 +105,7 @@ It is possible to mark uploads with tags, what may be used for quick search. Tag
 # Running local tests
 
 Copy `tests/.env.example` to `tests/.env`, and set configuration corresponding to your local environment. Then run `php vendor/bin/codecept run` command.
+
+# Running test in docker
+
+Copy `tests/.env.example` to `tests/.env`, then run `make build && make test` command.
