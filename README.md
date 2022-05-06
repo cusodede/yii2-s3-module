@@ -1,5 +1,7 @@
 # yii2-s3-module
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cusodede/yii2-s3-module/CI%20with%20PostgreSQL)
+
 S3 support module (file-manager and stuff).
 
 # Installation with Composer
