@@ -25,7 +25,7 @@
 		"php": ">=8.0",
 		"aws/aws-sdk-php": "^3.208",
 		"pozitronik/yii2-traits": "^1.0.0",
-		"pozitronik/yii2-badgewidget": "^1.0.0",
+		"pozitronik/yii2-badgewidget": "^2.0.0",
 		"kartik-v/yii2-widget-select2": "dev-master"
 	},
 	"require-dev": {
