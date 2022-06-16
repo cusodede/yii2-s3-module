@@ -273,4 +273,21 @@ class S3 extends Model {
 			'Bucket' => $this->getBucket($bucket)
 		]);
 	}
+
+	/**
+	 * Изменяем дефолтный таймаут
+	 * @param int $time
+	 * @return void
+	 */
+	public function setTimeout(int $time):void {
+		$this->timeout = $time;
+	}
+	/**
+	 * Изменяем дефолтный таймаут подключения
+	 * @param int $time
+	 * @return void
+	 */
+	public function setConnectTimeout(int $time):void {
+		$this->connectTimeout = $time;
+	}
 }
