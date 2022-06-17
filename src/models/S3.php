@@ -17,6 +17,9 @@ use yii\web\NotFoundHttpException;
 
 /**
  * @property S3Client $client
+ *
+ * @property-write int $timeout
+ * @property-write int $connectTimeout
  */
 class S3 extends Model {
 	public ?CloudStorage $storage = null;
