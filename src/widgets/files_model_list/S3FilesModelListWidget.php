@@ -21,10 +21,10 @@ class S3FilesModelListWidget extends Widget {
 	 */
 	public function run():string {
 		if (null === $this->model) throw new InvalidConfigException("Model parameter is required");
-		if (null === $id = $this->model?->id) throw new InvalidConfigException("Model must have an non-null id attribute");
+		$cloudStorage = CloudStorage::find()
+			->where(['model_key' => $this->model?->id, 'model_name' => get_class($this->model)])
+			->all();
 
-		return $this->render('list', ['cloudStorage' => CloudStorage::find()
-			->where(['model_key' => $id, 'model_name' => get_class($this->model)])
-			->all()]);
+		return $this->render('list', ['cloudStorage' => $cloudStorage]);
 	}
 }
