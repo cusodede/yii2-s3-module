@@ -1,8 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-namespace unit;
-
 use Aws\S3\Exception\S3Exception;
 use Codeception\Test\Unit;
 use cusodede\s3\helpers\S3Helper;
@@ -10,8 +8,6 @@ use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageTags;
 use cusodede\s3\models\S3;
 use pozitronik\helpers\PathHelper;
-use Throwable;
-use Yii;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
