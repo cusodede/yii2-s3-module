@@ -60,16 +60,17 @@ return [
                     'cert_path' => null, /* path to ssl certificate, set null to disable */
                     'cert_password' => null /* certificate password, set null, if certificate has no password */
                 ],
-                'tableName' => 'sys_cloud_storage', /* table with storage data info, see Module migration section */
-                'tagsTableName' => 'sys_cloud_storage_tags', /*table with local tags, see Module migration section */
+                'tableName' => 'sys_cloud_storage', /* the table with storage data info, see Module migration section */
+                'tagsTableName' => 'sys_cloud_storage_tags', /* the table with local tags, see Module migration section */
                 'viewPath' => '@vendor/cusodede/yii2-s3-module/src/views/index', /* path to view templates, if you want to customize them */
-                'maxUploadFileSize' => null, /* file size limit for uploaded file, set null to disable */
-                'defaultBucket' => 'bucket', /* name of bucket, used by default, if null, alphabetically first bucket will be used */
+                'maxUploadFileSize' => null, /* a file size limit for uploaded file, set null to disable */
+                'defaultBucket' => 'bucket', /* a name of bucket, used by default, if null, an alphabetically first bucket will be used */
                 'mimeTypes' => [
                     'apk' => 'application/vnd.android.package-archive',
                 ],/* mime types list (ext => mime), used for downloaded files mime substitution. Note: that list overrides a magic.mime file information. */
-                'defaultMimeType' => 'application/octet-stream', /* mime type, that be used for any file, which extension has not included in mimeTypes parameter or in magic.mime */
+                'defaultMimeType' => 'application/octet-stream', /* mime type, that be used for any file, which extension aren't included in mimeTypes parameter or in magic.mime */
                 'deleteTempFiles' => true /* delete php temp files after upload */
+                'instance' => null /* String: an additional instance name (useful for connection definition, if several connections are used. Null: disabled */
             ]
         ]
     ]
