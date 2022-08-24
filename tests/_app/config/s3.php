@@ -28,6 +28,5 @@ return [
 		],/* mime types list (ext => mime), used for downloaded files mime substitution. Note: that list overrides a magic.mime file information. */
 		'defaultMimeType' => 'application/octet-stream', /* mime type, that be used for any file, which extension has not included in mimeTypes parameter or in magic.mime */
 		'deleteTempFiles' => true, /* delete php temp files after upload */
-		'instance' => 'test_s3_instance',
 	]
 ];

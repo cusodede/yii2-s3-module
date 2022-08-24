@@ -76,7 +76,7 @@ class CloudStorageSearch extends CloudStorage {
 		$query->andFilterWhere(['like', self::fieldName('key'), $this->key]);
 		$query->andFilterWhere([self::fieldName('model_name') => $this->model_name]);
 		$query->andFilterWhere([self::fieldName('model_key') => $this->model_key]);
-		$query->andFilterWhere([self::fieldName('instance') => $this->instance]);
+		$query->andFilterWhere([self::fieldName('instance') => $this->connection]);
 		$query->andFilterWhere(['like', CloudStorageTagsAR::fieldName('tag_key'), $this->tagsFilter]);
 	}
 
