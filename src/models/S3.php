@@ -42,13 +42,11 @@ class S3 extends Model {
 		parent::__construct($config);
 
 		$connections = S3Module::param('connection');
-		if (is_array($connections)) {
-			if (null === $this->_connection) {//use first connection in list
-				$this->_connection = key($connections);
-			} else {
-				if (!isset($connections[$this->_connection])) {
-					throw new InvalidConfigException("Connection '{$this->_connection}' is not configured.");
-				}
+		if (null === $this->_connection) {//use first connection in list
+			if (!isset($connections['host'])) $this->_connection = key($connections);
+		} else {
+			if (!isset($connections[$this->_connection])) {
+				throw new InvalidConfigException("Connection '{$this->_connection}' is not configured.");
 			}
 		}
 
