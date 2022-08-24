@@ -12,6 +12,7 @@ use pozitronik\helpers\PathHelper;
 use Throwable;
 use Yii;
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
 
@@ -39,7 +40,20 @@ class S3 extends Model {
 	 */
 	public function __construct(array $config = []) {
 		parent::__construct($config);
+
+		$connections = S3Module::param('connection');
+		if (is_array($connections)) {
+			if (null === $this->_connection) {//use first connection in list
+				$this->_connection = key($connections);
+			} else {
+				if (!isset($connections[$this->_connection])) {
+					throw new InvalidConfigException("Connection '{$this->_connection}' is not configured.");
+				}
+			}
+		}
+
 		$connectionSectionName = null === $this->_connection?'connection':"connection.{$this->_connection}";
+
 		$this->_host = S3Module::param("$connectionSectionName.host");
 		$this->_login = S3Module::param("$connectionSectionName.login");
 		$this->_password = S3Module::param("$connectionSectionName.password");

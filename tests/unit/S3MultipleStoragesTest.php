@@ -8,6 +8,7 @@ use cusodede\s3\S3Module;
 use Throwable;
 use Yii;
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
 
 /**
  * Class S3MultipleStoragesTest
@@ -16,6 +17,7 @@ class S3MultipleStoragesTest extends Unit {
 
 	private const SAMPLE_FILE_PATH = './tests/_data/sample.txt';
 	private const SAMPLE2_FILE_PATH = './tests/_data/sample2.txt';
+	private const SAMPLE3_FILE_PATH = './tests/_data/sample3.txt';
 
 	/**
 	 * @return void
@@ -73,6 +75,29 @@ class S3MultipleStoragesTest extends Unit {
 
 		$this::assertFileEquals(self::SAMPLE2_FILE_PATH, S3Helper::StorageToFile($storageTwo->id));
 		$this::assertEquals('SecondS3Connection', $storageTwo->connection);
+	}
 
+	/**
+	 * @return void
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	public function testDefaultConnection():void {
+		//Соединение не указано - будет использоваться первое в списке
+		$defaultStorage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE3_FILE_PATH));
+		$this::assertFileEquals(self::SAMPLE3_FILE_PATH, S3Helper::StorageToFile($defaultStorage->id));
+		$this::assertEquals('FirstS3Connection', $defaultStorage->connection);
+	}
+
+	/**
+	 * @return void
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	public function testUnknownConnection():void {
+		$this->expectExceptionObject(new InvalidConfigException("Connection 'ThisConnectionNotExists' is not configured."));
+		$defaultStorage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE3_FILE_PATH), connection: 'ThisConnectionNotExists');
+		$this::assertFileEquals(self::SAMPLE3_FILE_PATH, S3Helper::StorageToFile($defaultStorage->id));
+		$this::assertEquals('FirstS3Connection', $defaultStorage->connection);
 	}
 }
