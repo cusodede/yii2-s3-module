@@ -36,7 +36,7 @@ class S3MultipleStoragesTest extends Unit {
 						'timeout' => 10,
 						'cert_path' => null,
 						'cert_password' => null,
-						'bucket' => 'first_bucket'
+						'defaultBucket' => 'first_bucket'
 					],
 					'SecondS3Connection' => [
 						'host' => $_ENV['MINIO_HOST'],//Same server used
@@ -46,15 +46,15 @@ class S3MultipleStoragesTest extends Unit {
 						'timeout' => 10,
 						'cert_path' => null,
 						'cert_password' => null,
-						'bucket' => 'second_bucket'
+						'defaultBucket' => 'second_bucket'
 					]
 				],
 				'tableName' => 'sys_cloud_storage',
 				'tagsTableName' => 'sys_cloud_storage_tags',
 				'viewPath' => './src/views/index',
-				'maxUploadFileSize' => null,//todo соединение
-				'defaultBucket' => 'testbucket',//todo:
-				'deleteTempFiles' => true,//todo
+				'defaultBucket' => 'testbucket',
+				'maxUploadFileSize' => null,
+				'deleteTempFiles' => true,
 			]
 		]);
 	}

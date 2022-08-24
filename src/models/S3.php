@@ -47,7 +47,7 @@ class S3 extends Model {
 		$this->_timeout = (int)S3Module::param("$connectionSectionName.timeout", $this->_timeout);
 		$this->_certPath = S3Module::param("$connectionSectionName.cert_path");
 		$this->_certPassword = S3Module::param("$connectionSectionName.cert_password");
-		$this->_defaultBucket = S3Module::param("defaultBucket");
+		$this->_defaultBucket = S3Module::param("$connectionSectionName.defaultBucket", S3Module::param("defaultBucket"));//корзина может быть переопределена в настройках соединения
 	}
 
 	/**
