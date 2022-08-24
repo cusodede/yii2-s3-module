@@ -64,7 +64,7 @@ services:
       MINIO_ACCESS_KEY: AKIAIOSFODNN7EXAMPLE
       MINIO_SECRET_KEY: wJalrXUtnFEMI
     entrypoint: sh
-    command: -c 'mkdir -p /data/testbucket && minio server --console-address ":9009" --address ":9008" /data'
+    command: -c 'mkdir -p /data/testbucket && mkdir -p /data/first_bucket && mkdir -p /data/second_bucket && minio server --console-address ":9009" --address ":9008" /data'
     networks: *php_networks
 
 networks:
