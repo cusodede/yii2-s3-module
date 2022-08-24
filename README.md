@@ -6,16 +6,7 @@ S3 support module (file-manager and stuff).
 
 # Installation with Composer
 
-Add
-
-```
-{
-    "type": "vcs",
-    "url": "https://github.com/cusodede/yii2-s3-module"
-}
-```
-
-to repositories section of your `composer.json` file, then run
+Run
 
 ```
 php composer.phar require cusodede/yii2-s3-module "^1.0.0"
