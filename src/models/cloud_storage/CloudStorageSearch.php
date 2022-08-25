@@ -24,7 +24,7 @@ class CloudStorageSearch extends CloudStorage {
 		return [
 			[['id', 'model_key',], 'integer'],
 			[['uploaded', 'deleted'], 'boolean'],
-			[['bucket', 'key', 'filename', 'model_name', 'instance'], 'string', 'max' => 255],
+			[['bucket', 'key', 'filename', 'model_name', 'connection'], 'string', 'max' => 255],
 			[['tagsFilter'], 'string']
 		];
 	}
@@ -76,7 +76,7 @@ class CloudStorageSearch extends CloudStorage {
 		$query->andFilterWhere(['like', self::fieldName('key'), $this->key]);
 		$query->andFilterWhere([self::fieldName('model_name') => $this->model_name]);
 		$query->andFilterWhere([self::fieldName('model_key') => $this->model_key]);
-		$query->andFilterWhere([self::fieldName('instance') => $this->connection]);
+		$query->andFilterWhere([self::fieldName('connection') => $this->connection]);
 		$query->andFilterWhere(['like', CloudStorageTagsAR::fieldName('tag_key'), $this->tagsFilter]);
 	}
 
@@ -95,7 +95,7 @@ class CloudStorageSearch extends CloudStorage {
 				'bucket',
 				'model_name',
 				'model_key',
-				'instance',
+				'connection',
 				'tagsFilter' => [
 					'asc' => [CloudStorageTagsAR::tableName().'.tag_key' => SORT_ASC],
 					'desc' => [CloudStorageTagsAR::tableName().'.tag_key' => SORT_DESC]

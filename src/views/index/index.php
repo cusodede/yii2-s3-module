@@ -72,7 +72,7 @@ use yii\web\View;
 							'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item):string => $keyAttributeValue.":"
 						])
 					],
-					'instance'
+					'connection'
 				]
 			]) ?>
 		</div>
