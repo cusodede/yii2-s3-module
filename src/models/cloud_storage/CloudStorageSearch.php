@@ -24,7 +24,7 @@ class CloudStorageSearch extends CloudStorage {
 		return [
 			[['id', 'model_key',], 'integer'],
 			[['uploaded', 'deleted'], 'boolean'],
-			[['bucket', 'key', 'filename', 'model_name',], 'string', 'max' => 255],
+			[['bucket', 'key', 'filename', 'model_name', 'instance'], 'string', 'max' => 255],
 			[['tagsFilter'], 'string']
 		];
 	}
@@ -68,15 +68,16 @@ class CloudStorageSearch extends CloudStorage {
 	 * @throws Throwable
 	 */
 	private function filterData($query):void {
-		$query->andFilterWhere([self::tableName().'.id' => $this->id]);
-		$query->andFilterWhere([self::tableName().'.deleted' => $this->deleted]);
-		$query->andFilterWhere([self::tableName().'.uploaded' => $this->uploaded]);
-		$query->andFilterWhere(['like', self::tableName().'.filename', $this->filename]);
-		$query->andFilterWhere(['like', self::tableName().'.bucket', $this->bucket]);
-		$query->andFilterWhere(['like', self::tableName().'.key', $this->key]);
-		$query->andFilterWhere(['model_name' => $this->model_name]);
-		$query->andFilterWhere(['model_key' => $this->model_key]);
-		$query->andFilterWhere(['like', CloudStorageTagsAR::tableName().'.tag_key', $this->tagsFilter]);
+		$query->andFilterWhere([self::fieldName('id') => $this->id]);
+		$query->andFilterWhere([self::fieldName('deleted') => $this->deleted]);
+		$query->andFilterWhere([self::fieldName('uploaded') => $this->uploaded]);
+		$query->andFilterWhere(['like', self::fieldName('filename'), $this->filename]);
+		$query->andFilterWhere(['like', self::fieldName('bucket'), $this->bucket]);
+		$query->andFilterWhere(['like', self::fieldName('key'), $this->key]);
+		$query->andFilterWhere([self::fieldName('model_name') => $this->model_name]);
+		$query->andFilterWhere([self::fieldName('model_key') => $this->model_key]);
+		$query->andFilterWhere([self::fieldName('instance') => $this->connection]);
+		$query->andFilterWhere(['like', CloudStorageTagsAR::fieldName('tag_key'), $this->tagsFilter]);
 	}
 
 	/**
@@ -94,6 +95,7 @@ class CloudStorageSearch extends CloudStorage {
 				'bucket',
 				'model_name',
 				'model_key',
+				'instance',
 				'tagsFilter' => [
 					'asc' => [CloudStorageTagsAR::tableName().'.tag_key' => SORT_ASC],
 					'desc' => [CloudStorageTagsAR::tableName().'.tag_key' => SORT_DESC]

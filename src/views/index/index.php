@@ -71,7 +71,8 @@ use yii\web\View;
 							'items' => $model->tags,
 							'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item):string => $keyAttributeValue.":"
 						])
-					]
+					],
+					'instance'
 				]
 			]) ?>
 		</div>

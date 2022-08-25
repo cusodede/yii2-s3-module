@@ -12,6 +12,7 @@ use pozitronik\helpers\PathHelper;
 use Throwable;
 use Yii;
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
 
@@ -20,31 +21,45 @@ use yii\web\NotFoundHttpException;
  *
  * @property-write int $timeout
  * @property-write int $connectTimeout
+ * @property ?string $connection Connection name, if several used
  */
 class S3 extends Model {
 	public ?CloudStorage $storage = null;
-	private string $host;
-	private string $login;
-	private string $password;
-	private int $connectTimeout = 10;
-	private int $timeout = 10;
-	private ?string $certPath;
-	private ?string $certPassword;
-	private ?string $defaultBucket;
+	private string $_host;
+	private string $_login;
+	private string $_password;
+	private int $_connectTimeout = 10;
+	private int $_timeout = 10;
+	private ?string $_certPath;
+	private ?string $_certPassword;
+	private ?string $_defaultBucket;
+	private ?string $_connection = null;
 
 	/**
 	 * @inheritDoc
 	 */
 	public function __construct(array $config = []) {
-		$this->host = S3Module::param("connection.host");
-		$this->login = S3Module::param("connection.login");
-		$this->password = S3Module::param("connection.password");
-		$this->connectTimeout = (int)S3Module::param("connection.connect_timeout", $this->connectTimeout);
-		$this->timeout = (int)S3Module::param("connection.timeout", $this->timeout);
-		$this->certPath = S3Module::param("connection.cert_path");
-		$this->certPassword = S3Module::param("connection.cert_password");
-		$this->defaultBucket = S3Module::param("defaultBucket");
 		parent::__construct($config);
+
+		$connections = S3Module::param('connection');
+		if (null === $this->_connection) {//use first connection in list
+			if (!isset($connections['host'])) $this->_connection = key($connections);
+		} else {
+			if (!isset($connections[$this->_connection])) {
+				throw new InvalidConfigException("Connection '{$this->_connection}' is not configured.");
+			}
+		}
+
+		$connectionSectionName = null === $this->_connection?'connection':"connection.{$this->_connection}";
+
+		$this->_host = S3Module::param("$connectionSectionName.host");
+		$this->_login = S3Module::param("$connectionSectionName.login");
+		$this->_password = S3Module::param("$connectionSectionName.password");
+		$this->_connectTimeout = (int)S3Module::param("$connectionSectionName.connect_timeout", $this->_connectTimeout);
+		$this->_timeout = (int)S3Module::param("$connectionSectionName.timeout", $this->_timeout);
+		$this->_certPath = S3Module::param("$connectionSectionName.cert_path");
+		$this->_certPassword = S3Module::param("$connectionSectionName.cert_password");
+		$this->_defaultBucket = S3Module::param("$connectionSectionName.defaultBucket", S3Module::param("defaultBucket"));//корзина может быть переопределена в настройках соединения
 	}
 
 	/**
@@ -54,12 +69,12 @@ class S3 extends Model {
 		return new S3Client([
 			'version' => 'latest',
 			'region' => '', // обязательный параметр. Из доки AWS: Specifies which AWS Region to send this request to.
-			'endpoint' => $this->host,
+			'endpoint' => $this->_host,
 			'use_path_style_endpoint' => true, // определяет вид URL. Если true, то http://minio:9002/test/, иначе http://test.minio:9002/
 			'http' => $this->getHttp(),
 			'credentials' => [
-				'key' => $this->login,
-				'secret' => $this->password
+				'key' => $this->_login,
+				'secret' => $this->_password
 			]
 		]);
 	}
@@ -69,12 +84,12 @@ class S3 extends Model {
 	 */
 	private function getHttp():array {
 		$http = [
-			'connect_timeout' => $this->connectTimeout,
-			'timeout' => $this->timeout
+			'connect_timeout' => $this->_connectTimeout,
+			'timeout' => $this->_timeout
 		];
 
-		if (null !== $this->certPath) {
-			$http[] = [$this->certPath, $this->certPassword??'']; // второй элемент пароль, не думаю что будем его использовать
+		if (null !== $this->_certPath) {
+			$http[] = [$this->_certPath, $this->_certPassword??'']; // второй элемент пароль, не думаю что будем его использовать
 		}
 
 		return $http;
@@ -89,7 +104,7 @@ class S3 extends Model {
 	 * @throws Throwable
 	 */
 	public function getBucket(?string $bucket = null):string {
-		if (null !== $bucket || (null !== $bucket = $this?->storage?->bucket) || (null !== $bucket = $this->defaultBucket)) return $bucket;
+		if (null !== $bucket || (null !== $bucket = $this?->storage?->bucket) || (null !== $bucket = $this->_defaultBucket)) return $bucket;
 		$buckets = ArrayHelper::getValue($this->client->listBuckets()->toArray(), 'Buckets', []);
 		$latestBucket = count($buckets) - 1;
 		return ArrayHelper::getValue($buckets, $latestBucket.'.Name', new NotFoundHttpException("No buckets configured/found"));
@@ -124,7 +139,8 @@ class S3 extends Model {
 			'key' => $this->getKey($key),
 			'filename' => $fileName,
 			'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
-			'size' => (false === $filesize = filesize($filePath))?null:$filesize
+			'size' => (false === $filesize = filesize($filePath))?null:$filesize,
+			'connection' => $this->_connection
 		]);
 		$this->storage->tags = $tags??[];
 		$this->storage->save();
@@ -272,7 +288,7 @@ class S3 extends Model {
 	 */
 	public function deleteObject(?string $key, ?string $bucket = null):Result {
 		return $this->client->deleteObject([
-			'Key' =>  $this->getKey($key),
+			'Key' => $this->getKey($key),
 			'Bucket' => $this->getBucket($bucket)
 		]);
 	}
@@ -283,14 +299,29 @@ class S3 extends Model {
 	 * @return void
 	 */
 	public function setTimeout(int $time):void {
-		$this->timeout = $time;
+		$this->_timeout = $time;
 	}
+
 	/**
 	 * Изменяем дефолтный таймаут подключения
 	 * @param int $time
 	 * @return void
 	 */
 	public function setConnectTimeout(int $time):void {
-		$this->connectTimeout = $time;
+		$this->_connectTimeout = $time;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getConnection():?string {
+		return $this->_connection;
+	}
+
+	/**
+	 * @param string|null $_connection
+	 */
+	public function setConnection(?string $_connection):void {
+		$this->_connection = $_connection;
 	}
 }
