@@ -5,7 +5,6 @@ namespace cusodede\s3\models\cloud_storage\active_record;
 
 use cusodede\s3\models\cloud_storage\CloudStorageTags;
 use cusodede\s3\S3Module;
-use pozitronik\helpers\DateHelper;
 use pozitronik\traits\traits\ActiveRecordTrait;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -75,11 +74,12 @@ class CloudStorageAR extends ActiveRecord {
 	 * {@inheritdoc}
 	 */
 	public function behaviors():array {
+		$dateFormat = S3Module::param("dateFormat", "Y-m-d H:i:s");
 		return [
 			[
 				'class' => TimestampBehavior::class,
 				'updatedAtAttribute' => false,
-				'value' => DateHelper::lcDate(),
+				'value' => (is_callable($dateFormat))?$dateFormat():date($dateFormat)
 			]
 		];
 	}

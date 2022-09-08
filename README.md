@@ -62,7 +62,8 @@ return [
                 ],/* mime types list (ext => mime), used for downloaded files mime substitution. Note: that list overrides a magic.mime file information. */
                 'defaultMimeType' => 'application/octet-stream', /* mime type, that be used for any file, which extension aren't included in mimeTypes parameter or in magic.mime */
                 'deleteTempFiles' => true /* delete php temp files after upload */
-                'instance' => null /* String: an additional instance name (useful for connection definition, if several connections are used. Null: disabled */
+                'instance' => null, /* String: an additional instance name (useful for connection definition, if several connections are used. Null: disabled */
+                'dateFormat' => 'Y-m-d H:i:s' /* timestamp date format for created_at field. Also can be set via closure like 'dateFormat' => function() => DateTimeImmutable::createFromFormat('Y-m-d H:i:s.uO', '2009-02-15') */
             ]
         ]
     ]
