@@ -74,7 +74,7 @@ class S3Helper {
 			'size' => (false === $filesize = filesize($filePath))?null:$filesize,
 			'model_name' => get_class($model),
 			'model_key' => ArrayHelper::getValue($model, 'id'),//Скорее всего, это будет ActiveRecord, но если нет - загрузим без конкретной связи
-			'instance' => $connection
+			'connection' => $connection
 		]);
 		$cloudStorage->tags = $tags??[];
 		return $cloudStorage->save();
