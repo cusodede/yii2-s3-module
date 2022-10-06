@@ -20,7 +20,7 @@ use yii\db\ActiveRecord;
  * @property null|int $size Размер файла
  * @property bool $uploaded Загружено
  * @property bool $deleted Удалено
- * @property bool $created_at Дата создания
+ * @property string $created_at Дата создания
  * @property null|string $model_name Связанный класс
  * @property null|int $model_key Ключ модели
  * @property null|string $connection Опциональное имя соединения
