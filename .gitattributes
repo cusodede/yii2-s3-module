@@ -1,1 +1,8 @@
 * text=auto eol=lf
+/.editorconfig              export-ignore
+/.gitattributes             export-ignore
+/codeception.yml            export-ignore
+/tests                      export-ignore
+/docker                     export-ignore
+/.github                    export-ignore
+/docker-compose.yml         export-ignore
