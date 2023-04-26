@@ -24,6 +24,7 @@ use yii\web\Response;
  * Class CloudStorage
  *
  * @property string[] $tags
+ * @property string $path
  */
 class CloudStorage extends CloudStorageAR {
 
