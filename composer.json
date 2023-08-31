@@ -23,7 +23,7 @@
 	"minimum-stability": "dev",
 	"require": {
 		"php": ">=8.0",
-		"aws/aws-sdk-php": "^3.208",
+		"aws/aws-sdk-php": "3.279.*",
 		"pozitronik/yii2-traits": "^1.0.5",
 		"pozitronik/yii2-badgewidget": "^2.0.0",
 		"kartik-v/yii2-widget-select2": "^2.2.3"
