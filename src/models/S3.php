@@ -222,11 +222,13 @@ class S3 extends Model {
 	 * @throws Throwable
 	 */
 	public function putObject(string $filePath, ?string &$key = null, ?string &$bucket = null, ?array $tags = null):Result {
+        $mimeContentType = mime_content_type($filePath);//mime_content_type может вернуть false
 		return $this->client->putObject([
 			'Key' => $key = $this->getKey($key??static::GetFileNameKey(PathHelper::ExtractBaseName($filePath))),
 			'Bucket' => $bucket = $this->getBucket($bucket),
 			'Body' => fopen($filePath, 'rb'),
-			'Tagging' => (string)(new ArrayTagAdapter($tags))
+			'Tagging' => (string)(new ArrayTagAdapter($tags)),
+            'ContentType' => false === $mimeContentType?'application/octet-stream':$mimeContentType,
 		]);
 	}
 
