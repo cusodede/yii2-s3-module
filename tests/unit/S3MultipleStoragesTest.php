@@ -38,7 +38,7 @@ class S3MultipleStoragesTest extends Unit {
 						'timeout' => 10,
 						'cert_path' => null,
 						'cert_password' => null,
-                        'defaultBucket' => 'firstbucket',
+						'defaultBucket' => 'firstbucket',
 					],
 					'SecondS3Connection' => [
 						'host' => $_ENV['MINIO_HOST'],//Same server used
@@ -48,7 +48,7 @@ class S3MultipleStoragesTest extends Unit {
 						'timeout' => 10,
 						'cert_path' => null,
 						'cert_password' => null,
-                        'defaultBucket' => 'secondbucket',
+						'defaultBucket' => 'secondbucket',
 					]
 				],
 				'tableName' => 'sys_cloud_storage',
