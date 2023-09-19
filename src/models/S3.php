@@ -68,7 +68,7 @@ class S3 extends Model {
 	public function getClient():S3Client {
 		return new S3Client([
 			'version' => 'latest',
-			'region' => '', // обязательный параметр. Из доки AWS: Specifies which AWS Region to send this request to.
+			'region' => 'il-central-1', // обязательный параметр. Из доки AWS: Specifies which AWS Region to send this request to.
 			'endpoint' => $this->_host,
 			'use_path_style_endpoint' => true, // определяет вид URL. Если true, то http://minio:9002/test/, иначе http://test.minio:9002/
 			'http' => $this->getHttp(),
