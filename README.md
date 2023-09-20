@@ -1,6 +1,6 @@
 # yii2-s3-module
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cusodede/yii2-s3-module/CI%20with%20PostgreSQL)
+[![Build Status](https://github.com/cusodede/yii2-s3-module/actions/workflows/ci_with_postgresql.yml/badge.svg)](https://github.com/cusodede/yii2-s3-module/actions)
 
 S3 support module (file-manager and stuff).
 
