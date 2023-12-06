@@ -278,7 +278,7 @@ class S3 extends Model {
 	 * @throws Exception
 	 */
 	public static function GetFileNameKey(string $fileName):string {
-		return implode('_', [Yii::$app->security->generateRandomString(), $fileName]);
+		return md5(Yii::$app->security->generateRandomKey() . $fileName);
 	}
 
 	/**
