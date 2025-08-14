@@ -2,8 +2,8 @@ services:
 
   php81:
     build:
-      context: .
-      dockerfile: docker/php/8.1/Dockerfile
+      context: ..
+      dockerfile: tests/docker/php/8.1/Dockerfile
     volumes:
       - ./runtime/.composer81:/root/.composer
       - ..:/code
@@ -26,8 +26,8 @@ services:
 
   php84:
     build:
-      context: .
-      dockerfile: docker/php/8.4/Dockerfile
+      context: ..
+      dockerfile: tests/docker/php/8.4/Dockerfile
     volumes:
       - ./runtime/.composer84:/root/.composer
       - ..:/code
