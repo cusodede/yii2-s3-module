@@ -22,7 +22,7 @@
 	],
 	"minimum-stability": "dev",
 	"require": {
-		"php": ">=8.0",
+		"php": ">=8.1",
 		"aws/aws-sdk-php": "^3.208",
 		"pozitronik/yii2-traits": "^1.0.5",
 		"pozitronik/yii2-badgewidget": "^2.0.0",
