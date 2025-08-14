@@ -19,17 +19,17 @@ goto :end
 :test81
 echo.
 echo Building and testing PHP 8.1...
-docker-compose -f tests/docker-compose.yml build php81
-docker-compose -f tests/docker-compose.yml run php81 vendor/bin/codecept run -v --debug
-docker-compose -f tests/docker-compose.yml down
+docker compose -f tests/docker-compose.yml build php81
+docker compose -f tests/docker-compose.yml run php81 vendor/bin/codecept run -v --debug
+docker compose -f tests/docker-compose.yml down
 goto :eof
 
 :test84
 echo.
 echo Building and testing PHP 8.4...
-docker-compose -f tests/docker-compose.yml build php84
-docker-compose -f tests/docker-compose.yml run php84 vendor/bin/codecept run -v --debug
-docker-compose -f tests/docker-compose.yml down
+docker compose -f tests/docker-compose.yml build php84
+docker compose -f tests/docker-compose.yml run php84 vendor/bin/codecept run -v --debug
+docker compose -f tests/docker-compose.yml down
 goto :eof
 
 :end

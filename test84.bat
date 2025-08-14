@@ -12,8 +12,8 @@ if not exist .env (
 )
 
 echo Building and testing PHP 8.4...
-docker-compose -f tests/docker-compose.yml build php84
-docker-compose -f tests/docker-compose.yml run php84 vendor/bin/codecept run -v --debug
-docker-compose -f tests/docker-compose.yml down
+docker compose -f tests/docker-compose.yml build php84
+docker compose -f tests/docker-compose.yml run php84 vendor/bin/codecept run -v --debug
+docker compose -f tests/docker-compose.yml down
 
 echo PHP 8.4 tests completed!
