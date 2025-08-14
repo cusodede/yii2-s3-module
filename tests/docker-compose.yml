@@ -1,11 +1,11 @@
 services:
 
-  php80:
+  php81:
     build:
       context: ..
-      dockerfile: tests/docker/php/8.0/Dockerfile
+      dockerfile: tests/docker/php/8.1/Dockerfile
     volumes:
-      - ./runtime/.composer80:/root/.composer
+      - ./runtime/.composer81:/root/.composer
       - ..:/code
     dns: &php_dns
       - 8.8.8.8
@@ -24,12 +24,12 @@ services:
     networks: &php_networks
       - net
 
-  php81:
+  php84:
     build:
       context: ..
-      dockerfile: tests/docker/php/8.1/Dockerfile
+      dockerfile: tests/docker/php/8.4/Dockerfile
     volumes:
-      - ./runtime/.composer81:/root/.composer
+      - ./runtime/.composer84:/root/.composer
       - ..:/code
     dns: *php_dns
     environment: *php_environment

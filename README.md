@@ -163,11 +163,99 @@ local table and also will be assigned to S3 object. But it works only to one sid
 not be synchronized to local table. It is possible to sync local and remote tags, see
 `CloudStorage::syncTagsFromS3()` and `CloudStorage::syncTagsToS3()` methods.
 
-# Running local tests
+# Development and Testing
 
-Copy `tests/.env.example` to `tests/.env`, and set configuration corresponding to your local environment. Then
-run `php vendor/bin/codecept run` command.
+## Prerequisites
 
-# Running test in docker
+- Docker and Docker Compose
+- PHP 8.1+ (for local development)
 
-Copy `tests/.env.example` to `tests/.env`, then run `make build && make test` command.
+## Running Tests
+
+This project supports testing with PHP 8.1 and PHP 8.4 using Docker containers.
+
+### Docker Testing (Recommended)
+
+Copy the environment configuration file:
+```bash
+cp tests/.env.example tests/.env
+```
+
+Then run tests using one of these options:
+
+```bash
+# Run all tests (PHP 8.1 and 8.4)
+make test
+
+# Run tests for specific PHP version
+make test81        # PHP 8.1 only
+make test84        # PHP 8.4 only
+
+# Quick tests (skip rebuild if images exist)
+make quick-test    # All versions
+make quick-test81  # PHP 8.1 only
+make quick-test84  # PHP 8.4 only
+
+# Initial setup (build images)
+make build
+
+# Force rebuild (use after Dockerfile changes)
+make rebuild
+```
+
+### Windows Testing
+
+For Windows systems without `make` support:
+
+```cmd
+# Run all tests
+test.bat
+
+# Run specific PHP version
+test81.bat         # PHP 8.1 only
+test84.bat         # PHP 8.4 only
+
+# Quick tests (no rebuild)
+quick-test.bat     # All versions
+```
+
+### Local Testing (Without Docker)
+
+Requirements:
+- PHP 8.1+
+- PostgreSQL
+- MinIO server
+
+1. Copy and configure environment:
+   ```bash
+   cp tests/.env.example tests/.env
+   # Edit tests/.env with your local database and MinIO settings
+   ```
+
+2. Install dependencies:
+   ```bash
+   composer install
+   ```
+
+3. Run tests:
+   ```bash
+   php vendor/bin/codecept run
+   
+   # Run specific test suites
+   php vendor/bin/codecept run unit
+   php vendor/bin/codecept run functional
+   php vendor/bin/codecept run console
+   ```
+
+## Test Environment
+
+The Docker setup includes:
+- **PHP 8.1/8.4 containers** with all required extensions
+- **PostgreSQL** for database testing
+- **MinIO** S3-compatible storage server
+
+Test configuration is defined in:
+- `codeception.yml` - Main test configuration
+- `tests/*.suite.yml` - Test suite configurations
+- `tests/.env` - Environment variables
+- `tests/docker-compose.yml` - Docker services

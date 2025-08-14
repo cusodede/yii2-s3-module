@@ -34,7 +34,7 @@
 		"codeception/codeception": "^5.0",
 		"codeception/module-asserts" : "^3.0.0",
 		"codeception/module-phpbrowser" : "^3.0.0",
-		"codeception/module-yii2" : "^v2.0.0",
+		"codeception/module-yii2" : "*",
 		"codeception/module-db" : "^3.0.0",
 		"codeception/module-filesystem" : "^3.0.0",
 		"codeception/module-rest": "^3.0.0",

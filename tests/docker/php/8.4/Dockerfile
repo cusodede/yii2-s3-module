@@ -1,4 +1,4 @@
-FROM php:8.0.17-cli
+FROM php:8.4-cli
 
 RUN apt-get update \
     && apt-get install -y curl unzip zlib1g-dev libzip-dev libicu-dev libpq-dev \
@@ -8,7 +8,6 @@ RUN apt-get update \
     && php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && rm /tmp/composer-setup.php
 
-COPY . /code
 WORKDIR /code
 
 ENTRYPOINT ["sh", "tests/docker/php/entrypoint.sh"]
