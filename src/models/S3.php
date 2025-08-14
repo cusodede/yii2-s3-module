@@ -44,10 +44,8 @@ class S3 extends Model {
 		$connections = S3Module::param('connection');
 		if (null === $this->_connection) {//use first connection in list
 			if (!isset($connections['host'])) $this->_connection = key($connections);
-		} else {
-			if (!isset($connections[$this->_connection])) {
-				throw new InvalidConfigException("Connection '{$this->_connection}' is not configured.");
-			}
+		} elseif (!isset($connections[$this->_connection])) {
+			throw new InvalidConfigException("Connection '{$this->_connection}' is not configured.");
 		}
 
 		$connectionSectionName = null === $this->_connection?'connection':"connection.{$this->_connection}";
