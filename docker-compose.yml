@@ -1,0 +1,100 @@
+services:
+  postgres:
+    image: postgres:13.4
+    container_name: yii2-s3-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
+      - ./.env:/tmp/.env.dev:ro
+      - ./tests/.env:/tmp/.env.test:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - yii2-s3-network
+
+  minio:
+    image: bitnami/minio:latest
+    container_name: yii2-s3-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_DEFAULT_BUCKETS: "dev-bucket,testbucket,first-bucket,second-bucket"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - yii2-s3-network
+
+  php-8.1:
+    build:
+      context: ./docker/php/8.1
+      dockerfile: Dockerfile
+    container_name: yii2-s3-php-8.1
+    ports:
+      - "8081:8000"
+    volumes:
+      - .:/var/www/:cached
+    working_dir: /var/www
+    environment:
+      - PHP_VERSION=8.1
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - yii2-s3-network
+    tty: true
+    stdin_open: true
+
+  php-8.4:
+    build:
+      context: ./docker/php/8.4
+      dockerfile: Dockerfile
+    container_name: yii2-s3-php-8.4
+    ports:
+      - "8084:8000"
+    volumes:
+      - .:/var/www/:cached
+    working_dir: /var/www
+    environment:
+      - PHP_VERSION=8.4
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - yii2-s3-network
+    tty: true
+    stdin_open: true
+
+volumes:
+  postgres_data:
+    driver: local
+  minio_data:
+    driver: local
+
+networks:
+  yii2-s3-network:
+    driver: bridge

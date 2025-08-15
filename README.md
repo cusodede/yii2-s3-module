@@ -176,47 +176,58 @@ This project supports testing with PHP 8.1 and PHP 8.4 using Docker containers.
 
 ### Docker Testing (Recommended)
 
-Copy the environment configuration file:
-```bash
-cp tests/.env.example tests/.env
-```
+The project uses a unified Docker environment for both development and testing. Services are started once and reused between test runs for maximum efficiency.
 
-Then run tests using one of these options:
-
+**Quick Start:**
 ```bash
+# Start the development environment (PostgreSQL + MinIO + PHP containers)
+make up
+
 # Run all tests (PHP 8.1 and 8.4)
 make test
 
-# Run tests for specific PHP version
-make test81        # PHP 8.1 only
-make test84        # PHP 8.4 only
+# Stop the environment when done
+make down
+```
 
-# Quick tests (skip rebuild if images exist)
-make quick-test    # All versions
-make quick-test81  # PHP 8.1 only
-make quick-test84  # PHP 8.4 only
+**Detailed Commands:**
+```bash
+# Environment management
+make up            # Start all services
+make down          # Stop all services  
+make restart       # Restart all services
+make status        # Show container status
 
-# Initial setup (build images)
-make build
+# Testing
+make test          # Run tests on both PHP versions
+make test81        # Run tests on PHP 8.1 only
+make test84        # Run tests on PHP 8.4 only
+make quick-test    # Quick tests (no composer install)
 
-# Force rebuild (use after Dockerfile changes)
-make rebuild
+# Development
+make shell81       # Access PHP 8.1 container shell
+make shell84       # Access PHP 8.4 container shell
+make composer-install  # Install dependencies in both containers
+
+# Setup
+make build         # Build Docker images
+make rebuild       # Force rebuild (after Dockerfile changes)
 ```
 
 ### Windows Testing
 
-For Windows systems without `make` support:
+Windows users can use the same `make` commands if they have Docker Desktop and Git Bash, or use Docker Compose directly:
 
 ```cmd
-# Run all tests
-test.bat
+# Start environment
+docker compose up -d
 
-# Run specific PHP version
-test81.bat         # PHP 8.1 only
-test84.bat         # PHP 8.4 only
+# Run tests
+docker compose exec php-8.1 vendor/bin/codecept run -v --debug
+docker compose exec php-8.4 vendor/bin/codecept run -v --debug
 
-# Quick tests (no rebuild)
-quick-test.bat     # All versions
+# Stop environment  
+docker compose down
 ```
 
 ### Local Testing (Without Docker)
@@ -266,6 +277,7 @@ The Docker setup includes:
 Test configuration is defined in:
 - `codeception.yml` - Main test configuration
 - `tests/*.suite.yml` - Test suite configurations
-- `tests/.env` - Local environment variables
+- `tests/.env` - Test environment variables
 - `tests/.env.ci` - CI environment variables
-- `tests/docker-compose.yml` - Docker services
+- `docker-compose.yml` - Unified Docker environment
+- `docker/` - PHP container definitions
