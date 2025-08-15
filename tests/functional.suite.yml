@@ -12,7 +12,8 @@ modules:
     - \Helper\Functional
     - Filesystem
     - Asserts
-    - Yii2
+    - Yii2:
+        configFile: 'tests/_app/config/main.php'
     - Db
     - Cli
     - REST:

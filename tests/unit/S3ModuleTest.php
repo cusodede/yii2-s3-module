@@ -207,7 +207,7 @@ class S3ModuleTest extends Unit {
 		$result = S3Helper::deleteFile($storage);
 
 		$this::assertEquals($storage->id, $result);
-		$this::assertEquals(true, $storage->deleted);
+		$this::assertTrue($storage->deleted);
 
 		$s3 = new S3(['storage' => $storage]);
 		$this->expectException(S3Exception::class);

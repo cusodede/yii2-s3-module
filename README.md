@@ -1,6 +1,6 @@
 # yii2-s3-module
 
-[![Build Status](https://github.com/cusodede/yii2-s3-module/actions/workflows/ci_with_postgresql.yml/badge.svg)](https://github.com/cusodede/yii2-s3-module/actions)
+[![Build Status](https://github.com/cusodede/yii2-s3-module/actions/workflows/ci.yml/badge.svg)](https://github.com/cusodede/yii2-s3-module/actions)
 
 S3 support module (file-manager and stuff).
 
@@ -163,11 +163,121 @@ local table and also will be assigned to S3 object. But it works only to one sid
 not be synchronized to local table. It is possible to sync local and remote tags, see
 `CloudStorage::syncTagsFromS3()` and `CloudStorage::syncTagsToS3()` methods.
 
-# Running local tests
+# Development and Testing
 
-Copy `tests/.env.example` to `tests/.env`, and set configuration corresponding to your local environment. Then
-run `php vendor/bin/codecept run` command.
+## Prerequisites
 
-# Running test in docker
+- Docker and Docker Compose
+- PHP 8.1+ (for local development)
 
-Copy `tests/.env.example` to `tests/.env`, then run `make build && make test` command.
+## Running Tests
+
+This project supports testing with PHP 8.1 and PHP 8.4 using Docker containers.
+
+### Docker Testing (Recommended)
+
+The project uses a unified Docker environment for both development and testing. Services are started once and reused between test runs for maximum efficiency.
+
+**Quick Start:**
+```bash
+# Start the development environment (PostgreSQL + MinIO + PHP containers)
+make up
+
+# Run all tests (PHP 8.1 and 8.4)
+make test
+
+# Stop the environment when done
+make down
+```
+
+**Detailed Commands:**
+```bash
+# Environment management
+make up            # Start all services
+make down          # Stop all services  
+make restart       # Restart all services
+make status        # Show container status
+
+# Testing
+make test          # Run tests on both PHP versions
+make test81        # Run tests on PHP 8.1 only
+make test84        # Run tests on PHP 8.4 only
+make quick-test    # Quick tests (no composer install)
+
+# Development
+make shell81       # Access PHP 8.1 container shell
+make shell84       # Access PHP 8.4 container shell
+make composer-install  # Install dependencies in both containers
+
+# Setup
+make build         # Build Docker images
+make rebuild       # Force rebuild (after Dockerfile changes)
+```
+
+### Windows Testing
+
+Windows users can use the same `make` commands if they have Docker Desktop and Git Bash, or use Docker Compose directly:
+
+```cmd
+# Start environment
+docker compose up -d
+
+# Run tests
+docker compose exec php-8.1 vendor/bin/codecept run -v --debug
+docker compose exec php-8.4 vendor/bin/codecept run -v --debug
+
+# Stop environment  
+docker compose down
+```
+
+### Local Testing (Without Docker)
+
+Requirements:
+- PHP 8.1+
+- PostgreSQL
+- MinIO server
+
+1. Copy and configure environment:
+   ```bash
+   cp tests/.env.example tests/.env
+   # Edit tests/.env with your local database and MinIO settings
+   ```
+
+2. Install dependencies:
+   ```bash
+   composer install
+   ```
+
+3. Run tests:
+   ```bash
+   php vendor/bin/codecept run
+   
+   # Run specific test suites
+   php vendor/bin/codecept run unit
+   php vendor/bin/codecept run functional
+   php vendor/bin/codecept run console
+   ```
+
+## Test Environment
+
+### Continuous Integration
+
+Tests run automatically on GitHub Actions for PHP 8.1 and 8.4 with:
+- **PostgreSQL 13.4** database service
+- **MinIO** S3-compatible storage service
+- All required PHP extensions (zip, pdo_pgsql, sockets, bcmath, pcntl, intl, mbstring)
+
+### Local Docker Testing
+
+The Docker setup includes:
+- **PHP 8.1/8.4 containers** with all required extensions
+- **PostgreSQL** for database testing
+- **MinIO** S3-compatible storage server
+
+Test configuration is defined in:
+- `codeception.yml` - Main test configuration
+- `tests/*.suite.yml` - Test suite configurations
+- `tests/.env` - Test environment variables
+- `tests/.env.ci` - CI environment variables
+- `docker-compose.yml` - Unified Docker environment
+- `docker/` - PHP container definitions

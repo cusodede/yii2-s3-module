@@ -15,7 +15,6 @@ modules:
       password: "%DB_PASS%"
     Yii2:
       parts: [ orm ]
-      configFile: 'tests/_app/config/main.php'
       transaction: true
       cleanup: true
 params:

@@ -6,6 +6,7 @@ namespace cusodede\s3\models\cloud_storage;
 use cusodede\s3\models\ArrayTagAdapter;
 use cusodede\s3\models\cloud_storage\active_record\CloudStorageTagsAR;
 use pozitronik\helpers\ArrayHelper;
+use yii\db\Exception;
 
 /**
  * Class CloudStorageTags
@@ -32,6 +33,7 @@ class CloudStorageTags extends CloudStorageTagsAR {
 	 * @param int $cloud_storage_id
 	 * @param string[]|null $tags
 	 * @return void
+	 * @throws Exception
 	 */
 	public static function assignTags(int $cloud_storage_id, ?array $tags):void {
 		$tags = (new ArrayTagAdapter($tags))->getTags();

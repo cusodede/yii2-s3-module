@@ -6,7 +6,7 @@ modules:
     - Db
     - Asserts
     - Cli
-    - \Helper\Module\Yii2Module:
+    - Yii2:
         configFile: './tests/_app/config/console.php'
         applicationClass: \yii\console\Application
         recreateApplication: true
