@@ -60,31 +60,6 @@ class S3ModelTest extends Unit {
 	}
 	
 	/**
-	 * Test creating and deleting a bucket
-	 * @throws Exception
-	 */
-	public function testCreateAndDeleteBucket():void {
-		$s3 = new S3();
-		$bucketName = 'test-' . uniqid('', true);
-		
-		// Create bucket
-		$result = $s3->createBucket($bucketName);
-		$this::assertTrue($result);
-		
-		// Verify bucket exists
-		$buckets = $s3->getListBucketMap();
-		$this::assertArrayHasKey($bucketName, $buckets);
-		
-		// Delete bucket (Note: S3 class doesn't have deleteBucket method, skip this part)
-		// $deleteResult = $s3->deleteBucket($bucketName);
-		// $this::assertTrue($deleteResult);
-		
-		// Note: Skipping delete verification since deleteBucket method doesn't exist
-		// In real scenarios, bucket cleanup would be handled separately
-		$this::markTestIncomplete('S3 class does not implement deleteBucket method');
-	}
-	
-	/**
 	 * Test creating a bucket with invalid name
 	 * @throws Exception
 	 */

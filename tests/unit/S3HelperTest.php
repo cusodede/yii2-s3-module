@@ -89,23 +89,6 @@ class S3HelperTest extends Unit {
 	}
 	
 	/**
-	 * Test FileToStorage with connection parameter
-	 * @throws Throwable
-	 */
-	public function testFileToStorageWithConnection():void {
-		$this::markTestIncomplete('Multiple S3 connections not configured in test environment');
-		
-		// This test requires multiple connections to be configured in S3Module params
-		// Currently, only one default connection is available in the test environment
-		// To properly test this functionality, we would need:
-		// - 'FirstS3Connection' configured with 'first-bucket'
-		// - Multiple connection definitions in S3Module::param('connection')
-		
-		// Clean up
-		S3Helper::deleteFile($storage->id);
-	}
-	
-	/**
 	 * Test StorageToFile method with valid storage ID
 	 * @throws Throwable
 	 */

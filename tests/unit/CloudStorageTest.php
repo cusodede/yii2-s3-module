@@ -244,42 +244,6 @@ class CloudStorageTest extends Unit {
 	}
 	
 	/**
-	 * Test uploadInstance method with resource
-	 * @throws Throwable
-	 */
-	public function testUploadInstanceWithResource():void {
-		$this::markTestIncomplete('UploadedFile::resource property is read-only and cannot be set directly in tests');
-		
-		// This test would require mocking Yii2's internal file upload mechanisms
-		// The UploadedFile::resource property uses reflection to access parent::_tempResource
-		// which is populated during actual HTTP file uploads, not available in unit tests
-		
-		// Create CloudStorage instance
-		$storage = new CloudStorage([
-			'bucket' => self::TEST_BUCKET
-		]);
-		
-		// Test upload
-		$result = $storage->uploadInstance($uploadedFile);
-		
-		$this::assertTrue($result);
-		$this::assertEquals('resource-test.txt', $storage->filename);
-		$this::assertTrue($storage->uploaded);
-		
-		// Verify content in S3
-		$s3 = new S3();
-		$downloadPath = sys_get_temp_dir() . '/resource-download-' . uniqid('', true) . '.txt';
-		$s3->getObject($storage->key, $storage->bucket, $downloadPath);
-		$this::assertEquals($content, file_get_contents($downloadPath));
-		
-		// Clean up
-		$s3->deleteObject($storage->key, $storage->bucket);
-		$storage->delete();
-		fclose($resource);
-		unlink($downloadPath);
-	}
-	
-	/**
 	 * Test uploadInstance with pre-set filename and key
 	 * @throws Throwable
 	 */
