@@ -249,6 +249,15 @@ Requirements:
 
 ## Test Environment
 
+### Continuous Integration
+
+Tests run automatically on GitHub Actions for PHP 8.1 and 8.4 with:
+- **PostgreSQL 13.4** database service
+- **MinIO** S3-compatible storage service
+- All required PHP extensions (zip, pdo_pgsql, sockets, bcmath, pcntl, intl, mbstring)
+
+### Local Docker Testing
+
 The Docker setup includes:
 - **PHP 8.1/8.4 containers** with all required extensions
 - **PostgreSQL** for database testing
@@ -257,5 +266,6 @@ The Docker setup includes:
 Test configuration is defined in:
 - `codeception.yml` - Main test configuration
 - `tests/*.suite.yml` - Test suite configurations
-- `tests/.env` - Environment variables
+- `tests/.env` - Local environment variables
+- `tests/.env.ci` - CI environment variables
 - `tests/docker-compose.yml` - Docker services
