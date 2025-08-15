@@ -4,14 +4,13 @@ declare(strict_types = 1);
 namespace unit;
 
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
 use Codeception\Test\Unit;
 use cusodede\s3\models\S3;
 use cusodede\s3\S3Module;
+use Exception;
 use pozitronik\helpers\PathHelper;
 use Throwable;
 use Yii;
-use yii\base\Exception;
 use yii\base\InvalidConfigException;
 
 /**
@@ -44,7 +43,6 @@ class S3ModelTest extends Unit {
 
 	/**
 	 * Test listing buckets
-	 * @throws Exception
 	 */
 	public function testListBuckets():void {
 		$s3 = new S3();
@@ -60,7 +58,7 @@ class S3ModelTest extends Unit {
 
 	/**
 	 * Test creating a bucket with invalid name
-	 * @throws Exception
+	 * @throws Throwable
 	 */
 	public function testCreateBucketWithInvalidName():void {
 		$s3 = new S3();
@@ -72,7 +70,7 @@ class S3ModelTest extends Unit {
 
 	/**
 	 * Test getting default bucket
-	 * @throws Exception
+	 * @throws Throwable
 	 */
 	public function testGetDefaultBucket():void {
 		$s3 = new S3();
@@ -120,7 +118,7 @@ class S3ModelTest extends Unit {
 		$content = "Test content for resource upload";
 
 		// Create resource
-		$resource = fopen('php://temp', 'r+');
+		$resource = fopen('php://temp', 'rb+');
 		fwrite($resource, $content);
 		rewind($resource);
 
@@ -310,7 +308,7 @@ class S3ModelTest extends Unit {
 			$s3->getListBucketMap();
 			// If it succeeds, we can't test timeout in this environment
 			$this::assertTrue(true);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			// If it fails due to timeout, that's expected
 			$this::assertStringContainsString('timeout', strtolower($e->getMessage()));
 		}

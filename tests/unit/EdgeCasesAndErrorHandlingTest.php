@@ -36,7 +36,7 @@ class EdgeCasesAndErrorHandlingTest extends Unit {
 		$fileSize = 1024 * 1024; // 1MB (small for testing, but still demonstrates handling)
 		
 		// Create file with random data
-		$handle = fopen($largeFile, 'w');
+		$handle = fopen($largeFile, 'wb');
 		for ($i = 0; $i < $fileSize / 1024; $i++) {
 			fwrite($handle, str_repeat('A', 1024));
 		}
@@ -226,14 +226,9 @@ class EdgeCasesAndErrorHandlingTest extends Unit {
 			$s3 = new S3();
 			
 			// This should either work (if network is very fast) or timeout
-			try {
-				$buckets = $s3->getListBucketMap();
-				// If it works, verify we get expected results
-				$this::assertIsArray($buckets);
-			} catch (Exception $e) {
-				// If it times out, verify it's a timeout-related error
-				$this::assertStringContainsString('timeout', strtolower($e->getMessage()));
-			}
+			$buckets = $s3->getListBucketMap();
+			// If it works, verify we get expected results
+			$this::assertIsArray($buckets);
 		} finally {
 			// Restore original module configuration
 			Yii::$app->setModule('s3', $originalModule);
@@ -409,7 +404,7 @@ class EdgeCasesAndErrorHandlingTest extends Unit {
 			try {
 				// Create file but don't make it too large to actually fill disk
 				$testSize = min($freeSpace / 10, 1024 * 1024); // 10% of free space or 1MB
-				$handle = fopen($largeFileName, 'w');
+				$handle = fopen($largeFileName, 'wb');
 				fwrite($handle, str_repeat('A', (int)$testSize));
 				fclose($handle);
 				

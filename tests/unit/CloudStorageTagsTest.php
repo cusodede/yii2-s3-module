@@ -8,6 +8,7 @@ use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageTags;
 use Exception;
 use Throwable;
+use yii\db\StaleObjectException;
 
 /**
  * Comprehensive test suite for CloudStorageTags model
@@ -411,10 +412,12 @@ class CloudStorageTagsTest extends Unit {
 		$this::assertTrue($storage->save());
 		return $storage;
 	}
-	
+
 	/**
 	 * Helper method to clean up test storage
 	 * @param CloudStorage $storage
+	 * @throws StaleObjectException
+	 * @throws Throwable
 	 */
 	private function cleanupStorage(CloudStorage $storage): void {
 		CloudStorageTags::deleteAll(['cloud_storage_id' => $storage->id]);
