@@ -275,29 +275,6 @@ class S3ModelTest extends Unit {
 	}
 	
 	/**
-	 * Test listing objects in bucket
-	 * @throws Throwable
-	 */
-	public function testListObjects():void {
-		$this::markTestIncomplete('S3 class does not implement listObjects method');
-		
-		// Note: This test would require implementing a listObjects method in the S3 class
-		// The current S3 implementation doesn't provide object listing functionality
-		// For now, we'll just test that objects can be uploaded and deleted
-		
-		$s3 = new S3();
-		$testKey = 'test-list-' . uniqid('', true) . '.txt';
-		$filePath = Yii::getAlias(self::SAMPLE_FILE_PATH);
-		
-		// Upload object
-		$result = $s3->putObject($filePath, $testKey, self::TEST_BUCKET);
-		$this::assertNotNull($result);
-		
-		// Clean up
-		$s3->deleteObject($testKey, self::TEST_BUCKET);
-	}
-	
-	/**
 	 * Test saveObject method with CloudStorage integration
 	 * @throws Throwable
 	 */
