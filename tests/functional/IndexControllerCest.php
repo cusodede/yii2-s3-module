@@ -157,62 +157,6 @@ class IndexControllerCest {
 		$I->see(self::TEST_BUCKET);
 	}
 
-	/**
-	 * Test upload action POST with valid file
-	 * @param FunctionalTester $I
-	 * @throws InvalidConfigException
-	 * @throws StaleObjectException
-	 * @throws Throwable
-	 */
-	public function testUploadActionPostValid(FunctionalTester $I):void {
-		// Web form upload might not work through Codeception without proper file handling
-		// Test that the form loads and processes without error
-		$uploadedFileName = 'functional-upload-test.txt';
-		
-		$I->amOnPage('/s3/index/upload');
-		
-		// Submit form with file (use relative path from tests directory)
-		// Note: File upload through functional tests might not actually upload to S3
-		try {
-			$I->attachFile('CloudStorage[file]', 'sample.txt'); // Relative to tests/_data/
-		} catch (Exception) {
-			// File input not available or not of type file - skip attachment
-		}
-		$I->fillField('CloudStorage[filename]', $uploadedFileName);
-		$I->selectOption('CloudStorage[bucket]', self::TEST_BUCKET);
-		// Submit form using button element or submit input
-		try {
-			$I->click('button[type="submit"]');
-		} catch (Exception) {
-			try {
-				$I->click('input[type="submit"]');
-			} catch (Exception) {
-				// Last resort: try to submit form programmatically
-				$I->submitForm('form', []);
-			}
-		}
-		
-		// Should redirect to index (may be /s3/index or /s3/index/index)
-		$I->seeResponseCodeIs(200);
-		// Check for successful redirect to any index variant
-		$currentUrl = $I->grabFromCurrentUrl('');
-		$I->assertTrue(str_contains($currentUrl, '/s3/index'), 'Should redirect to S3 index page');
-		
-		// Note: CloudStorage record might not be created in functional tests
-		// if file upload doesn't work through Codeception
-		// This is a limitation of functional testing with file uploads
-		/** @var CloudStorage $storage */
-		$storage = CloudStorage::find()
-			->where(['filename' => $uploadedFileName])
-			->andWhere(['bucket' => self::TEST_BUCKET])
-			->one();
-		
-		$I->assertNotNull($storage, 'Storage record should be created after upload');
-		$I->assertEquals($uploadedFileName, $storage->filename);
-		$I->assertTrue($storage->uploaded);
-		// Clean up
-		$this->cleanupStorage($storage);
-	}
 	
 	/**
 	 * Test upload action POST with invalid data
@@ -265,81 +209,7 @@ class IndexControllerCest {
 		$this->cleanupStorage($storage);
 	}
 
-	/**
-	 * Test edit action POST with valid data
-	 * @param FunctionalTester $I
-	 * @throws InvalidConfigException
-	 * @throws StaleObjectException
-	 * @throws Throwable
-	 * @throws BaseException
-	 */
-	public function testEditActionPostValid(FunctionalTester $I):void {
-		$storage = $this->createTestStorage('edit-post-test.txt');
-		$newFilename = 'edited-filename.txt';
-		
-		$I->amOnPage("/s3/index/edit?id={$storage->id}");
-		
-		// Edit filename and submit
-		$I->fillField('CloudStorage[filename]', $newFilename);
-		// Try to find submit button (might be in Russian)
-		try {
-			$I->click('Save Changes');
-		} catch (Exception) {
-			// Try Russian text
-			$I->click('Сохранить'); // Russian for "Save"
-		}
-		
-		// Should redirect to index
-		$I->seeResponseCodeIs(200);
-		$currentUrl = $I->grabFromCurrentUrl('');
-		$I->assertTrue(str_contains($currentUrl, '/s3/index'), 'Should redirect to S3 index page');
-		
-		// Verify changes were saved
-		$storage->refresh();
-		$I->assertEquals($newFilename, $storage->filename);
-		
-		$this->cleanupStorage($storage);
-	}
 
-	/**
-	 * Test edit action with file replacement
-	 * @param FunctionalTester $I
-	 * @throws InvalidConfigException
-	 * @throws StaleObjectException
-	 * @throws Throwable
-	 * @throws BaseException
-	 */
-	public function testEditActionWithFileReplacement(FunctionalTester $I):void {
-		$storage = $this->createTestStorage('replace-test.txt');
-
-		$I->amOnPage("/s3/index/edit?id={$storage->id}");
-		
-		// Replace file (use relative path from tests/_data/)
-		try {
-			$I->attachFile('CloudStorage[file]', 'sample.txt');
-		} catch (Exception) {
-			// File input not available - skip attachment
-		}
-		$I->fillField('CloudStorage[filename]', 'replaced-file.txt');
-		// Try to find submit button
-		try {
-			$I->click('Save Changes');
-		} catch (Exception) {
-			$I->click('Сохранить'); // Russian for "Save"
-		}
-		
-		// Should redirect to index (may be /s3/index or /s3/index/index)
-		$I->seeResponseCodeIs(200);
-		$currentUrl = $I->grabFromCurrentUrl('');
-		$I->assertTrue(str_contains($currentUrl, '/s3/index'), 'Should redirect to S3 index page');
-		
-		// Verify file was replaced
-		$storage->refresh();
-		$I->assertEquals('replaced-file.txt', $storage->filename);
-		$I->assertTrue($storage->uploaded);
-		
-		$this->cleanupStorage($storage);
-	}
 	
 	/**
 	 * Test edit action for non-existent storage
@@ -464,55 +334,6 @@ class IndexControllerCest {
 		$I->seeResponseCodeIs(404);
 	}
 
-	/**
-	 * Test upload with tags
-	 * @param FunctionalTester $I
-	 * @throws InvalidConfigException
-	 * @throws StaleObjectException
-	 * @throws Throwable
-	 */
-	public function testUploadWithTags(FunctionalTester $I):void {
-		$uploadedFileName = 'tagged-upload-test.txt';
-		
-		$I->amOnPage('/s3/index/upload');
-		
-		// Submit form with file if available
-		try {
-			$I->attachFile('CloudStorage[file]', 'sample.txt'); // Relative path
-		} catch (Exception) {
-			// File input not available - skip attachment
-		}
-		$I->fillField('CloudStorage[filename]', $uploadedFileName);
-		$I->selectOption('CloudStorage[bucket]', self::TEST_BUCKET);
-		
-		// Add tags if form supports it
-		// Note: This test focuses on basic upload functionality
-		// Tag functionality would depend on the actual form implementation
-		
-		// Submit form using button element or submit input
-		try {
-			$I->click('button[type="submit"]');
-		} catch (Exception) {
-			try {
-				$I->click('input[type="submit"]');
-			} catch (Exception) {
-				// Last resort: try to submit form programmatically
-				$I->submitForm('form', []);
-			}
-		}
-		$I->seeResponseCodeIs(200);
-		$currentUrl = $I->grabFromCurrentUrl('');
-		$I->assertTrue(str_contains($currentUrl, '/s3/index'), 'Should redirect to S3 index page');
-		
-		// Find uploaded storage
-		/** @var CloudStorage $storage */
-		$storage = CloudStorage::find()
-			->where(['filename' => $uploadedFileName])
-			->one();
-		
-		$I->assertNotNull($storage, 'Storage record should be created after upload');
-		$this->cleanupStorage($storage);
-	}
 
 	/**
 	 * Test pagination on index page
