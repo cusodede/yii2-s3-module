@@ -107,7 +107,7 @@ class EdgeCasesAndErrorHandlingTest extends Unit {
 			$storage = S3Helper::FileToStorage($filePath, $longFilename);
 			
 			// If it somehow succeeds (unlikely), verify the data
-			if ($storage && $storage->id) {
+			if ($storage->id > 0) {
 				$this::assertLessThanOrEqual(255, strlen($storage->filename));
 				S3Helper::deleteFile($storage->id);
 			}

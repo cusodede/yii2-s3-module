@@ -10,6 +10,7 @@ use cusodede\s3\helpers\S3Helper;
 use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageTags;
 use cusodede\s3\models\S3;
+use Exception;
 use Throwable;
 use Yii;
 
@@ -29,8 +30,9 @@ class S3HelperTest extends Unit {
 		$filePath = Yii::getAlias(self::SAMPLE_FILE_PATH);
 		
 		$storage = S3Helper::FileToStorage($filePath);
-		
-		$this::assertInstanceOf(CloudStorage::class, $storage);
+
+		$this::assertNotNull($storage->id);
+		$this::assertGreaterThan(0, $storage->id);
 		$this::assertNotEmpty($storage->key);
 		$this::assertEquals(self::TEST_BUCKET, $storage->bucket);
 		$this::assertEquals('sample.txt', $storage->filename);
@@ -84,7 +86,7 @@ class S3HelperTest extends Unit {
 	public function testFileToStorageNonExistentFile():void {
 		$nonExistentPath = '/path/to/non/existent/file.txt';
 		
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		S3Helper::FileToStorage($nonExistentPath);
 	}
 	
@@ -218,7 +220,7 @@ class S3HelperTest extends Unit {
 		]);
 		$this::assertTrue($user->save());
 		
-		$this->expectException(\Exception::class);
+		$this->expectException(Exception::class);
 		S3Helper::uploadFileFromModel($user, '/non/existent/file.txt', 'test.txt');
 		
 		// Clean up
