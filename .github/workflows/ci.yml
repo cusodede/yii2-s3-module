@@ -1,23 +1,109 @@
 name: CI
-on: [push, workflow_dispatch, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
 
-env:
-  COMPOSE_PROJECT_NAME: yii2-s3-module
-  COMPOSE_FILE: tests/docker-compose.yml
 jobs:
-  phpunit:
+  test:
     name: PHP ${{ matrix.php }}
+
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
-        php: [ 81, 84 ]
+        php:
+          - 8.1
+          - 8.4
+
+    services:
+      postgres:
+        image: postgres:13.4
+        env:
+          POSTGRES_DB: s3_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      minio:
+        image: bitnami/minio:latest
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+          MINIO_DEFAULT_BUCKETS: testbucket,first-bucket,second-bucket
+        ports:
+          - 9000:9000
+          - 9001:9001
+        options: >-
+          --health-cmd "curl -f http://localhost:9000/minio/health/live || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Build
-        run: make build
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          extensions: zip, pdo_pgsql, sockets, bcmath, pcntl, intl, mbstring
+          coverage: none
+          ini-values: memory_limit=256M
 
-      - name: PHP Codeception tests for PHP ${{ matrix.php }}
-        run: make test${{ matrix.php }}
+      - name: Check PHP and Composer
+        run: |
+          php -v
+          composer --version
+          php -m
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install composer dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Setup test environment
+        run: |
+          cp tests/.env.ci tests/.env
+          
+          # Wait for MinIO to be ready (bitnami/minio creates buckets automatically)
+          timeout 30 bash -c 'until curl -f http://127.0.0.1:9000/minio/health/live; do sleep 1; done'
+          
+          # Verify MinIO is accessible
+          curl -I http://127.0.0.1:9000
+
+      - name: Run database migrations
+        run: |
+          cd tests/_app
+          php yii migrate/up --interactive=0 --migrationPath=../../migrations
+          php yii migrate/up --interactive=0 --migrationPath=migrations
+
+      - name: Run tests
+        run: vendor/bin/codecept run -v --debug
+        env:
+          DB_DSN: pgsql:host=127.0.0.1;port=5432;dbname=s3_test
+          DB_USER: postgres
+          DB_PASS: postgres
+          MINIO_HOST: http://127.0.0.1:9000
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
