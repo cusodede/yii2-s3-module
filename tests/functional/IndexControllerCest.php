@@ -496,6 +496,54 @@ class IndexControllerCest
     }
 
     /**
+     * Test edit POST without a file goes through actionEdit's else-branch:
+     * $model->save() runs, the existing S3 object is left alone (key +
+     * content unchanged), and the user is redirected to the index page.
+     *
+     * Tag persistence (the side effect of save() firing AFTER_UPDATE) is a
+     * model-level contract — covered by CloudStorageTest / CloudStorageTagsTest
+     * — and is intentionally NOT asserted here. This test focuses on the
+     * controller-level contract: dispatch to the no-upload branch.
+     * @param FunctionalTester $I
+     * @throws InvalidConfigException
+     * @throws StaleObjectException
+     * @throws Throwable
+     * @throws BaseException
+     */
+    public function testEditActionPostWithoutFile(FunctionalTester $I): void
+    {
+        $storage = $this->createTestStorage('edit-meta-test.txt');
+        $originalKey = $storage->key;
+        $originalContent = file_get_contents(Yii::getAlias(self::SAMPLE_FILE_PATH));
+
+        $I->amOnPage("/s3/index/edit?id={$storage->id}");
+        $I->seeResponseCodeIs(200);
+
+        // No attachFile here — exercises the else-branch where getInstance
+        // returns null and save() is called instead of uploadInstance().
+        // tags is the only editable field in edit mode (bucket/key/filename
+        // are disabled); a non-empty value forces $model->load() to return
+        // true so the controller enters the if-branch.
+        $I->submitForm('form', [
+            'CloudStorage' => [
+                'tags' => ['edit-marker'],
+            ],
+        ]);
+
+        // Redirect to /s3/index proves load() returned true → if-branch ran.
+        $I->seeCurrentUrlEquals('/s3/index');
+
+        $storage->refresh();
+        $I->assertEquals($originalKey, $storage->key);
+
+        // S3 content untouched: the no-file branch must not call putObject.
+        $current = new S3()->getObject($storage->key, $storage->bucket)->get('Body')->getContents();
+        $I->assertEquals($originalContent, $current);
+
+        $this->cleanupStorage($storage);
+    }
+
+    /**
      * Helper method to create test storage with actual S3 file
      * @param string $filename
      * @return CloudStorage
