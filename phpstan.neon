@@ -15,7 +15,3 @@ parameters:
     - support/ide-helper.php
   paths:
     - src
-    - tests
-  excludePaths:
-    analyse:
-      - tests/_support/_generated (?)
