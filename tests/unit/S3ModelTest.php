@@ -310,6 +310,44 @@ class S3ModelTest extends Unit
     }
 
     /**
+     * getBucket() resolves a bucket through a four-step fallback:
+     *   (1) the $bucket argument if non-null,
+     *   (2) $this->storage->bucket if a CloudStorage is linked,
+     *   (3) the configured defaultBucket (per-connection, then global),
+     *   (4) the last bucket returned by listBuckets().
+     * This test pins step 4 — the safety net used when nothing else is
+     * available — so a refactor doesn't silently drop it.
+     * @return void
+     * @throws Throwable
+     */
+    public function testGetBucketFallsBackToLastBucketWhenNoneConfigured(): void
+    {
+        $module = Yii::$app->getModule('s3');
+        $originalDefault = $module->params['defaultBucket'] ?? null;
+
+        try {
+            // Null out the global default. The connection block in the test
+            // config has no per-connection defaultBucket either, so the
+            // constructor's _defaultBucket will resolve to null and getBucket()
+            // will fall through to the listBuckets() branch.
+            $module->params['defaultBucket'] = null;
+
+            $s3 = new S3();
+            $bucket = $s3->getBucket();
+
+            $this::assertIsString($bucket);
+            $this::assertNotEmpty($bucket);
+            $this::assertArrayHasKey($bucket, $s3->getListBucketMap());
+        } finally {
+            if ($originalDefault === null) {
+                unset($module->params['defaultBucket']);
+            } else {
+                $module->params['defaultBucket'] = $originalDefault;
+            }
+        }
+    }
+
+    /**
      * Test connection timeout handling
      * Note: This test requires a way to simulate timeout, which is complex in unit tests
      * In real scenarios, this would be tested with integration tests
