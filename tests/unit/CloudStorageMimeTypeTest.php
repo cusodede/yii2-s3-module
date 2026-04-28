@@ -12,11 +12,11 @@ use Yii;
 /**
  * Test suite for the params-based override behavior of CloudStorage::GetMimeTypeByExtension.
  *
- * The class constants MIME_TYPES + DEFAULT_MIME_TYPE only act as fallbacks; the
- * primary lookup is S3Module::param('mimeTypes') and param('defaultMimeType').
- * CLAUDE.md flags this override-first behavior as deliberate so host apps can
- * fix wrong system MIME mappings (e.g. .apk on systems where magic.mime
- * resolves it incorrectly).
+ * The class constants MIME_TYPES + DEFAULT_MIME_TYPE act only as fallbacks;
+ * the primary lookup is S3Module::param('mimeTypes') and param('defaultMimeType').
+ * This override-first behavior is intentional — host apps need a way to fix
+ * wrong system MIME mappings (e.g. .apk on systems where magic.mime resolves
+ * it incorrectly).
  */
 class CloudStorageMimeTypeTest extends Unit
 {
@@ -56,7 +56,7 @@ class CloudStorageMimeTypeTest extends Unit
 
     /**
      * params.mimeTypes wins over the class constant MIME_TYPES for an extension
-     * present in both. The override-first contract documented in CLAUDE.md.
+     * present in both. Pins the override-first lookup contract.
      * @return void
      * @throws Throwable
      */
