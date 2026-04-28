@@ -1,4 +1,6 @@
-<?php
+<?php /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
+
 
 declare(strict_types=1);
 
@@ -23,8 +25,8 @@ use yii\web\NotFoundHttpException;
  */
 class EdgeCasesAndErrorHandlingTest extends Unit
 {
-    private const SAMPLE_FILE_PATH = './tests/_data/sample.txt';
-    private const TEST_BUCKET = 'testbucket';
+    private const string SAMPLE_FILE_PATH = './tests/_data/sample.txt';
+    private const string TEST_BUCKET = 'testbucket';
 
     /**
      * Test handling of very large files (simulation)
@@ -248,23 +250,28 @@ class EdgeCasesAndErrorHandlingTest extends Unit
      */
     public function testInvalidCredentials(): void
     {
-        // Create S3 instance with invalid credentials
-        Yii::$app->setModule('s3', [
-            'class' => S3Module::class,
-            'params' => [
-                'connection' => [
-                    'host' => $_ENV['MINIO_HOST'],
-                    'login' => 'invalid-user',
-                    'password' => 'invalid-password',
-                ],
-                'defaultBucket' => 'testbucket',
-            ]
-        ]);
+        $originalModule = Yii::$app->getModule('s3');
 
-        $s3 = new S3();
+        try {
+            Yii::$app->setModule('s3', [
+                'class' => S3Module::class,
+                'params' => [
+                    'connection' => [
+                        'host' => $_ENV['MINIO_HOST'],
+                        'login' => 'invalid-user',
+                        'password' => 'invalid-password',
+                    ],
+                    'defaultBucket' => 'testbucket',
+                ]
+            ]);
 
-        $this->expectException(S3Exception::class);
-        $s3->getListBucketMap();
+            $s3 = new S3();
+
+            $this->expectException(S3Exception::class);
+            $s3->getListBucketMap();
+        } finally {
+            Yii::$app->setModule('s3', $originalModule);
+        }
     }
 
     /**

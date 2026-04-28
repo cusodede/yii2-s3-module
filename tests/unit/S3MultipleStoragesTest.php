@@ -11,15 +11,18 @@ use Throwable;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
+use yii\base\Module;
 
 /**
  * Class S3MultipleStoragesTest
  */
 class S3MultipleStoragesTest extends Unit
 {
-    private const SAMPLE_FILE_PATH = './tests/_data/sample.txt';
-    private const SAMPLE2_FILE_PATH = './tests/_data/sample2.txt';
-    private const SAMPLE3_FILE_PATH = './tests/_data/sample3.txt';
+    private const string SAMPLE_FILE_PATH = './tests/_data/sample.txt';
+    private const string SAMPLE2_FILE_PATH = './tests/_data/sample2.txt';
+    private const string SAMPLE3_FILE_PATH = './tests/_data/sample3.txt';
+
+    private ?Module $originalModule = null;
 
     /**
      * @return void
@@ -27,6 +30,8 @@ class S3MultipleStoragesTest extends Unit
     protected function _setUp(): void
     {
         parent::_setUp();
+
+        $this->originalModule = Yii::$app->getModule('s3');
 
         Yii::$app->setModule('s3', [
             'class' => S3Module::class,
@@ -62,6 +67,17 @@ class S3MultipleStoragesTest extends Unit
                 'deleteTempFiles' => true,
             ]
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    protected function _tearDown(): void
+    {
+        if (null !== $this->originalModule) {
+            Yii::$app->setModule('s3', $this->originalModule);
+        }
+        parent::_tearDown();
     }
 
     /**

@@ -12,6 +12,7 @@ use Exception;
 use pozitronik\helpers\PathHelper;
 use Throwable;
 use Yii;
+use yii\base\Exception as BaseException;
 use yii\base\InvalidConfigException;
 
 /**
@@ -20,8 +21,8 @@ use yii\base\InvalidConfigException;
  */
 class S3ModelTest extends Unit
 {
-    private const SAMPLE_FILE_PATH = './tests/_data/sample.txt';
-    private const TEST_BUCKET = 'testbucket';
+    private const string SAMPLE_FILE_PATH = './tests/_data/sample.txt';
+    private const string TEST_BUCKET = 'testbucket';
 
     /**
      * Test S3 client initialization with valid configuration
@@ -286,6 +287,7 @@ class S3ModelTest extends Unit
 
     /**
      * Test GetFileNameKey method for unique key generation
+     * @throws BaseException
      */
     public function testGetFileNameKey(): void
     {
@@ -314,20 +316,33 @@ class S3ModelTest extends Unit
      */
     public function testConnectionTimeout(): void
     {
-        // Create S3 instance with very short timeout
-        Yii::$app->setModule('s3', ['class' => S3Module::class, 'params' => ['connection' => ['host' => $_ENV['MINIO_HOST'], 'login' => $_ENV['MINIO_ROOT_USER'], 'password' => $_ENV['MINIO_ROOT_PASSWORD'], 'connect_timeout' => 0.001, // Very short timeout
-            'timeout' => 0.001,], 'defaultBucket' => 'testbucket',]]);
+        $originalModule = Yii::$app->getModule('s3');
 
-        $s3 = new S3();
-
-        // This might throw a timeout exception depending on network speed
         try {
-            $s3->getListBucketMap();
-            // If it succeeds, we can't test timeout in this environment
-            $this::assertTrue(true);
-        } catch (Exception $e) {
-            // If it fails due to timeout, that's expected
-            $this::assertStringContainsString('timeout', strtolower($e->getMessage()));
+            Yii::$app->setModule('s3', [
+                'class' => S3Module::class,
+                'params' => [
+                    'connection' => [
+                        'host' => $_ENV['MINIO_HOST'],
+                        'login' => $_ENV['MINIO_ROOT_USER'],
+                        'password' => $_ENV['MINIO_ROOT_PASSWORD'],
+                        'connect_timeout' => 0.001,
+                        'timeout' => 0.001,
+                    ],
+                    'defaultBucket' => 'testbucket',
+                ]
+            ]);
+
+            $s3 = new S3();
+
+            try {
+                $s3->getListBucketMap();
+                $this::assertTrue(true);
+            } catch (Exception $e) {
+                $this::assertStringContainsString('timeout', strtolower($e->getMessage()));
+            }
+        } finally {
+            Yii::$app->setModule('s3', $originalModule);
         }
     }
 }
