@@ -22,3 +22,10 @@ params:
 extensions:
   enabled:
     - Codeception\Extension\RunFailed
+coverage:
+  enabled: true
+  include:
+    - src/*
+  exclude:
+    - src/views/*
+    - src/widgets/files_model_list/views/*

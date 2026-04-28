@@ -61,7 +61,7 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer:v2
           extensions: zip, pdo_pgsql, sockets, bcmath, pcntl, intl, mbstring
-          coverage: none
+          coverage: pcov
           ini-values: memory_limit=256M
 
       - name: Check PHP and Composer
@@ -98,7 +98,7 @@ jobs:
           php yii migrate/up --interactive=0 --migrationPath=migrations
 
       - name: Run tests
-        run: vendor/bin/codecept run -v --debug
+        run: vendor/bin/codecept run -v --debug --coverage --coverage-xml --coverage-html
         env:
           DB_DSN: pgsql:host=127.0.0.1;port=5432;dbname=s3_test
           DB_USER: postgres
@@ -106,3 +106,15 @@ jobs:
           MINIO_HOST: http://127.0.0.1:9000
           MINIO_ROOT_USER: minioadmin
           MINIO_ROOT_PASSWORD: minioadmin
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-php-${{ matrix.php }}
+          path: tests/_output/coverage*
+          retention-days: 7
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
