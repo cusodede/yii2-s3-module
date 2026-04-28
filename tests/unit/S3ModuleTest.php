@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace unit;
+
 use Aws\S3\Exception\S3Exception;
 use Codeception\Test\Unit;
 use cusodede\s3\helpers\S3Helper;

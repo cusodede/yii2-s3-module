@@ -250,7 +250,9 @@ class CloudStorageTest extends Unit
         // Clean up
         $s3->deleteObject($storage->key, $storage->bucket);
         $storage->delete();
-        if (file_exists($downloadPath)) unlink($downloadPath);
+        if (file_exists($downloadPath)) {
+            unlink($downloadPath);
+        }
     }
 
     /**

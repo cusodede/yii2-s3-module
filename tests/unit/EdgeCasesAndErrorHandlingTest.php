@@ -124,7 +124,7 @@ class EdgeCasesAndErrorHandlingTest extends Unit
                 str_contains($errorMessage, 'characters') ||
                 str_contains($errorMessage, 'string') ||
                 str_contains($errorMessage, 'validation'),
-                "Expected length/validation error, got: " . $e->getMessage()
+                'Expected length/validation error, got: ' . $e->getMessage()
             );
         }
     }

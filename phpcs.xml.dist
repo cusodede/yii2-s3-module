@@ -17,7 +17,23 @@
     <exclude-pattern>/*\.php$</exclude-pattern>
   </rule>
 
+  <rule ref="PSR2.Files.ClosingTag.NotAllowed">
+    <exclude-pattern>/views*\.php$</exclude-pattern>
+  </rule>
+
   <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
     <exclude-pattern>/helpers/S3Helper\.php$</exclude-pattern>
+  </rule>
+
+  <rule ref="Squiz.Classes.ValidClassName.NotPascalCase">
+    <exclude-pattern>/migrations*\.php$</exclude-pattern>
+  </rule>
+
+  <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+    <exclude-pattern>/tests/_support*\.php$</exclude-pattern>
+  </rule>
+
+  <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+    <exclude-pattern>/tests*\.php$</exclude-pattern>
   </rule>
 </ruleset>

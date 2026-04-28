@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace unit;
+
 use Codeception\Test\Unit;
 use cusodede\s3\helpers\S3Helper;
 use cusodede\s3\S3Module;

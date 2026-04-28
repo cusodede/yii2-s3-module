@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace app\controllers;
 
@@ -10,18 +11,18 @@ use yii\web\Controller;
 /**
  * class SiteController
  */
-class SiteController extends Controller {
+class SiteController extends Controller
+{
+    /**
+     * @return string
+     */
+    public function actionError(): string
+    {
+        $exception = Yii::$app->errorHandler->exception;
 
-	/**
-	 * @return string
-	 */
-	public function actionError():string {
-		$exception = Yii::$app->errorHandler->exception;
-
-		if (null !== $exception) {
-			return Html::encode($exception->getMessage());
-		}
-		return "Status: {$exception->statusCode}";
-	}
+        if (null !== $exception) {
+            return Html::encode($exception->getMessage());
+        }
+        return "Status: {$exception->statusCode}";
+    }
 }
-

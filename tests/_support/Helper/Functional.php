@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Helper;
 
@@ -11,5 +12,6 @@ use Codeception\Module;
 /**
  * class Functional
  */
-class Functional extends Module {
+class Functional extends Module
+{
 }

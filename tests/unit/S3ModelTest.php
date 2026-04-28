@@ -94,7 +94,7 @@ class S3ModelTest extends Unit
     public function testPutAndGetObject(): void
     {
         $s3 = new S3();
-        $testKey = 'test-file-'.uniqid('', true).'.txt';
+        $testKey = 'test-file-' . uniqid('', true) . '.txt';
         $filePath = Yii::getAlias(self::SAMPLE_FILE_PATH);
 
         // Upload object
@@ -123,8 +123,8 @@ class S3ModelTest extends Unit
     public function testPutResourceObject(): void
     {
         $s3 = new S3();
-        $testKey = 'test-resource-'.uniqid('', true).'.txt';
-        $content = "Test content for resource upload";
+        $testKey = 'test-resource-' . uniqid('', true) . '.txt';
+        $content = 'Test content for resource upload';
 
         // Create resource
         $resource = fopen('php://temp', 'rb+');
@@ -158,7 +158,7 @@ class S3ModelTest extends Unit
         $tempFile = PathHelper::GetTempFileName();
 
         $this->expectException(S3Exception::class);
-        $s3->getObject('non-existent-key-'.uniqid('', true), self::TEST_BUCKET, $tempFile);
+        $s3->getObject('non-existent-key-' . uniqid('', true), self::TEST_BUCKET, $tempFile);
     }
 
     /**
@@ -170,7 +170,7 @@ class S3ModelTest extends Unit
         $s3 = new S3();
 
         // S3 doesn't throw error when deleting non-existent objects
-        $result = $s3->deleteObject('non-existent-key-'.uniqid('', true), self::TEST_BUCKET);
+        $result = $s3->deleteObject('non-existent-key-' . uniqid('', true), self::TEST_BUCKET);
         $this::assertNotNull($result);
     }
 
@@ -181,7 +181,7 @@ class S3ModelTest extends Unit
     public function testObjectTagging(): void
     {
         $s3 = new S3();
-        $testKey = 'test-tags-'.uniqid('', true).'.txt';
+        $testKey = 'test-tags-' . uniqid('', true) . '.txt';
         $filePath = Yii::getAlias(self::SAMPLE_FILE_PATH);
 
         // Upload object with tags
@@ -245,7 +245,7 @@ class S3ModelTest extends Unit
     public function testOperationsWithNonExistentBucket(): void
     {
         $s3 = new S3();
-        $nonExistentBucket = 'non-existent-bucket-'.uniqid('', true);
+        $nonExistentBucket = 'non-existent-bucket-' . uniqid('', true);
         $testKey = 'test-file.txt';
         $filePath = Yii::getAlias(self::SAMPLE_FILE_PATH);
 
@@ -261,7 +261,7 @@ class S3ModelTest extends Unit
     {
         $s3 = new S3();
         $filePath = Yii::getAlias(self::SAMPLE_FILE_PATH);
-        $fileName = 'test-save-'.uniqid('', true).'.txt';
+        $fileName = 'test-save-' . uniqid('', true) . '.txt';
         $tags = ['TestTag' => 'TestValue'];
 
         // Save object
