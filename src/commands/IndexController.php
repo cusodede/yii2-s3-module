@@ -14,8 +14,7 @@ use yii\helpers\Console;
  */
 class IndexController extends Controller
 {
-    /** @var S3 $s3 */
-    private $s3 = null;
+    private ?S3 $s3 = null;
 
     /**
      * Сохраняет файл в Minio
@@ -48,7 +47,7 @@ class IndexController extends Controller
         try {
             $savePath = implode('/', [$filepath, $key]);
             $res = $this->s3->client->getObject(['Bucket' => $this->s3->getBucket($bucket), 'Key' => $key, 'SaveAs' => $savePath]);
-            Console::output('Saving file in path:'.$savePath);
+            Console::output('Saving file in path:' . $savePath);
             $this->outputResult($res->toArray());
         } catch (Throwable $e) {
             $this->outputResult($e->getMessage());
@@ -99,7 +98,7 @@ class IndexController extends Controller
     {
         try {
             $res = $this->s3->client->listObjects(['Bucket' => $this->s3->getBucket($bucket)])->toArray();
-            $this->outputResult('Quantity of objects '.count($res['Contents']));
+            $this->outputResult('Quantity of objects ' . count($res['Contents']));
             foreach ($res['Contents'] as $content) {
                 Console::output("{$content['Key']} {$content['Size']} bytes");
             }
@@ -117,7 +116,7 @@ class IndexController extends Controller
     {
         try {
             $res = $this->s3->client->listBuckets()->toArray();
-            $this->outputResult('Quantity of buckets '.count($res['Buckets']));
+            $this->outputResult('Quantity of buckets ' . count($res['Buckets']));
             foreach ($res['Buckets'] as $bucket) {
                 Console::output("{$bucket['Name']} created at {$bucket['CreationDate']}");
             }
@@ -131,7 +130,7 @@ class IndexController extends Controller
      */
     private function outputResult(mixed $data): void
     {
-        Console::output(is_string($data)?$data:json_encode($data, JSON_PRETTY_PRINT));
+        Console::output(is_string($data) ? $data : json_encode($data, JSON_PRETTY_PRINT));
     }
 
     /**

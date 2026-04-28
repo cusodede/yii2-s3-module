@@ -23,7 +23,7 @@ class UploadedFile extends YiiUploadedFile
      */
     public function getResource()
     {
-        return ([] === $resource = ReflectionHelper::getValue(parent::class, '_tempResource', $this))?null:$resource;
+        return ([] === $resource = ReflectionHelper::getValue(parent::class, '_tempResource', $this)) ? null : $resource;
     }
 
     /**

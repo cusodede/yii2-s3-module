@@ -80,12 +80,12 @@ class CloudStorageAR extends ActiveRecord
      */
     public function behaviors(): array
     {
-        $dateFormat = S3Module::param("dateFormat", "Y-m-d H:i:s");
+        $dateFormat = S3Module::param('dateFormat', 'Y-m-d H:i:s');
         return [
             [
                 'class' => TimestampBehavior::class,
                 'updatedAtAttribute' => false,
-                'value' => (is_callable($dateFormat))?$dateFormat():date($dateFormat)
+                'value' => (is_callable($dateFormat)) ? $dateFormat() : date($dateFormat)
             ]
         ];
     }

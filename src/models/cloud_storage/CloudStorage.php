@@ -82,7 +82,9 @@ class CloudStorage extends CloudStorageAR
             $ext = strtolower($ext);
             return ArrayHelper::getValue(S3Module::param('mimeTypes', static::MIME_TYPES), $ext, S3Module::param('defaultMimeType', static::DEFAULT_MIME_TYPE));
         }
-        if (null !== $result = FileHelper::getMimeTypeByExtension($fileName)) return $result;
+        if (null !== $result = FileHelper::getMimeTypeByExtension($fileName)) {
+            return $result;
+        }
         return S3Module::param('defaultMimeType', static::DEFAULT_MIME_TYPE);
     }
 
@@ -103,7 +105,7 @@ class CloudStorage extends CloudStorageAR
                 $body = $result->get('Body');
                 $body->rewind();
                 return Yii::$app->response->sendContentAsFile($body->getContents(), $model->filename, [
-                    'mimeType' => $mime??static::GetMimeTypeByExtension($model->filename)
+                    'mimeType' => $mime ?? static::GetMimeTypeByExtension($model->filename)
                 ]);
             } catch (S3Exception $e) {
                 throw new NotFoundHttpException("Error in storage: {$e->getMessage()}");
@@ -123,17 +125,19 @@ class CloudStorage extends CloudStorageAR
     {
         try {
             $s3 = new S3();
-            $this->filename = empty($this->filename)?$instance->name:$this->filename;
-            $key = empty($this->key)?S3::GetFileNameKey($this->filename):$this->key;
-            $bucket = empty($this->bucket)?$s3->getBucket($this->bucket):$this->bucket;
+            $this->filename = empty($this->filename) ? $instance->name : $this->filename;
+            $key = empty($this->key) ? S3::GetFileNameKey($this->filename) : $this->key;
+            $bucket = empty($this->bucket) ? $s3->getBucket($this->bucket) : $this->bucket;
             $storageResponse = (null === $resource = $instance->resource)
-                ?$s3->putObject($instance->tempName, $key, $bucket)
-                :$s3->putResource($resource, $instance->name, $key, $bucket);
+                ? $s3->putObject($instance->tempName, $key, $bucket)
+                : $s3->putResource($resource, $instance->name, $key, $bucket);
             /*Передать атрибуты напрямую не выйдет*/
             $this->key = $key;
             $this->bucket = $bucket;
             $this->size = $instance->size;
-            if (S3Module::param('deleteTempFiles', true)) $instance->deleteTempFile();
+            if (S3Module::param('deleteTempFiles', true)) {
+                $instance->deleteTempFile();
+            }
             $this->uploaded = null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL');
             return $this->uploaded && $this->save();
         } catch (S3Exception $e) {
@@ -156,7 +160,7 @@ class CloudStorage extends CloudStorageAR
      */
     public function getTags(): array
     {
-        return (new ArrayTagAdapter($this->_tags))->getTags();
+        return new ArrayTagAdapter($this->_tags)->getTags();
     }
 
     /**
@@ -164,9 +168,11 @@ class CloudStorage extends CloudStorageAR
      */
     public function setTags(mixed $tags): void
     {
-        if (empty($tags)) $tags = [];
+        if (empty($tags)) {
+            $tags = [];
+        }
         $this->_tags = $tags;
-        $this->on($this->isNewRecord?static::EVENT_AFTER_INSERT:static::EVENT_AFTER_UPDATE, function(Event $event) {
+        $this->on($this->isNewRecord ? static::EVENT_AFTER_INSERT : static::EVENT_AFTER_UPDATE, function (Event $event) {
             CloudStorageTags::assignTags($this->id, $event->data);
         }, $this->tags);
     }
@@ -178,7 +184,7 @@ class CloudStorage extends CloudStorageAR
      */
     public function syncTagsFromS3(): void
     {
-        $remoteTags = (new S3())->getTagsArray($this->key, $this->bucket);
+        $remoteTags = new S3()->getTagsArray($this->key, $this->bucket);
         CloudStorageTags::clearTags($this->id);
         CloudStorageTags::assignTags($this->id, $remoteTags);
         $this->_tags = CloudStorageTags::retrieveTags($this->id);
@@ -192,6 +198,6 @@ class CloudStorage extends CloudStorageAR
     public function syncTagsToS3(): void
     {
         $tags = CloudStorageTags::retrieveTags($this->id);
-        (new S3())->setObjectTagging($this->key, $this->bucket, $tags);
+        new S3()->setObjectTagging($this->key, $this->bucket, $tags);
     }
 }
