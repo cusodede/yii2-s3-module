@@ -22,7 +22,7 @@ services:
       - yii2-s3-network
 
   minio:
-    image: bitnami/minio:latest
+    image: minio/minio:latest
     container_name: yii2-s3-minio
     environment:
       MINIO_ROOT_USER: minioadmin
