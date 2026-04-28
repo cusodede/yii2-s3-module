@@ -1,6 +1,6 @@
-# yii2-s3-module
+# S3
 
-[![Build Status](https://github.com/cusodede/yii2-s3-module/actions/workflows/ci.yml/badge.svg)](https://github.com/cusodede/yii2-s3-module/actions)
+[![Build Status](https://github.com/cusodede/yii2-s3-module/actions/workflows/build.yml/badge.svg)](https://github.com/cusodede/yii2-s3-module/actions)
 
 S3 support module (file-manager and stuff).
 
