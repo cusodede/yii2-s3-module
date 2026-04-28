@@ -1,6 +1,7 @@
 # yii2-s3-module
 
 [![Build Status](https://github.com/cusodede/yii2-s3-module/actions/workflows/ci.yml/badge.svg)](https://github.com/cusodede/yii2-s3-module/actions)
+[![Linter Status](https://github.com/cusodede/yii2-s3-module/actions/workflows/linter.yml/badge.svg)](https://github.com/cusodede/yii2-s3-module/actions)
 
 S3 support module (file-manager and stuff).
 
