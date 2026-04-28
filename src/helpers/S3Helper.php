@@ -29,9 +29,11 @@ class S3Helper
     public static function StorageToFile(int $storageId, ?string $filePath = null): ?string
     {
         /** @var CloudStorage $storage */
-        if (null === $storage = CloudStorage::find()->where(['id' => $storageId])->active()->one()) return null;
-        $filePath = $filePath??PathHelper::GetTempFileName(sprintf('%s_%s_%s', $storage->key, Yii::$app->security->generateRandomString(6), $storage->filename));
-        (new S3(['connection' => $storage->connection]))->getObject($storage->key, $storage->bucket, $filePath);
+        if (null === $storage = CloudStorage::find()->where(['id' => $storageId])->active()->one()) {
+            return null;
+        }
+        $filePath = $filePath ?? PathHelper::GetTempFileName(sprintf('%s_%s_%s', $storage->key, Yii::$app->security->generateRandomString(6), $storage->filename));
+        new S3(['connection' => $storage->connection])->getObject($storage->key, $storage->bucket, $filePath);
         return $filePath;
     }
 
@@ -49,7 +51,7 @@ class S3Helper
     public static function FileToStorage(string $filePath, ?string $fileName = null, ?string $bucket = null, ?array $tags = null, ?string $connection = null): CloudStorage
     {
         $s3 = new S3(['connection' => $connection]);
-        $s3->saveObject($filePath, $bucket, $fileName??PathHelper::ExtractBaseName($filePath)??PathHelper::GetRandomTempFileName(), $tags);
+        $s3->saveObject($filePath, $bucket, $fileName ?? PathHelper::ExtractBaseName($filePath) ?? PathHelper::GetRandomTempFileName(), $tags);
         return $s3->storage;
     }
 
@@ -68,19 +70,19 @@ class S3Helper
     public static function uploadFileFromModel(Model $model, string $filePath, string $fileName, ?string $bucket = null, ?array $tags = null, ?string $connection = null): bool
     {
         $key = S3::GetFileNameKey($fileName);
-        $storageResponse = (new S3(['connection' => $connection]))->putObject($filePath, $key, $bucket, $tags);
+        $storageResponse = new S3(['connection' => $connection])->putObject($filePath, $key, $bucket, $tags);
 
         $cloudStorage = new CloudStorage([
             'bucket' => $bucket,
             'key' => $key,
             'filename' => $fileName,
             'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
-            'size' => (false === $filesize = filesize($filePath))?null:$filesize,
+            'size' => (false === $filesize = filesize($filePath)) ? null : $filesize,
             'model_name' => get_class($model),
             'model_key' => ArrayHelper::getValue($model, 'id'),//Скорее всего, это будет ActiveRecord, но если нет - загрузим без конкретной связи
             'connection' => $connection
         ]);
-        $cloudStorage->tags = $tags??[];
+        $cloudStorage->tags = $tags ?? [];
         return $cloudStorage->save();
     }
 
@@ -93,13 +95,17 @@ class S3Helper
      */
     public static function deleteFile(CloudStorage|int $storage, ?string $bucket = null): ?int
     {
-        if (null === $storageModel = (is_int($storage))
-                ?CloudStorage::find()->where(['id' => $storage])->active()->one()
-                :$storage) return null;
+        if (
+            null === $storageModel = (is_int($storage))
+            ? CloudStorage::find()->where(['id' => $storage])->active()->one()
+            : $storage
+        ) {
+            return null;
+        }
         $storageModel->deleted = true;
         $storageModel->save();
 
-        (new S3(['connection' => $storageModel->connection]))->deleteObject($storageModel->key, $bucket);
+        new S3(['connection' => $storageModel->connection])->deleteObject($storageModel->key, $bucket);
         return $storageModel->id;
     }
 }
