@@ -55,6 +55,12 @@ quick-test84:
 	@echo "Quick test with PHP 8.4..."
 	@docker compose exec php-8.4 vendor/bin/codecept run -v --debug
 
+# Coverage (requires PCOV — rebuild image if you don't have it: make rebuild)
+coverage:
+	@echo "Running tests with coverage on PHP 8.4..."
+	@docker compose exec php-8.4 vendor/bin/codecept run --coverage --coverage-xml --coverage-html
+	@echo "HTML report: tests/_output/coverage/index.html"
+
 # Shell access to containers
 shell81:
 	@echo "Opening shell in PHP 8.1 container..."
@@ -123,6 +129,7 @@ help:
 	@echo "  test81          - Run tests on PHP 8.1"
 	@echo "  test84          - Run tests on PHP 8.4"
 	@echo "  quick-test      - Quick test (no composer install)"
+	@echo "  coverage        - Run tests with code coverage report (PHP 8.4)"
 	@echo "  shell81         - Shell access to PHP 8.1 container"
 	@echo "  shell84         - Shell access to PHP 8.4 container"
 	@echo "  composer-install - Install composer dependencies"
@@ -135,4 +142,4 @@ help:
 	@echo "  logs            - Show all container logs"
 	@echo "  help            - Show this help"
 
-.PHONY: up down restart build rebuild test test81 test84 quick-test quick-test81 quick-test84 shell81 shell84 composer-install composer-update db-migrate db-reset clean clean-all status logs logs-postgres logs-minio help
+.PHONY: up down restart build rebuild test test81 test84 quick-test quick-test81 quick-test84 coverage shell81 shell84 composer-install composer-update db-migrate db-reset clean clean-all status logs logs-postgres logs-minio help
