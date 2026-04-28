@@ -129,12 +129,15 @@ class S3 extends Model
     }
 
     /**
-     * Сохраняем объект в хранилище
+     * Сохраняем объект в хранилище.
+     * Если CloudStorage::save() не проходит валидацию, S3-объект удаляется
+     * (откатывается заливка), а валидационная ошибка пробрасывается наверх,
+     * чтобы не оставлять «осиротевший» файл в облаке.
      * @param string $filePath path to the file we want to upload
      * @param string|null $bucket
      * @param string|null $fileName
      * @param string[]|null $tags
-     * @throws Exception
+     * @throws Exception when CloudStorage row validation fails
      * @throws Throwable
      */
     public function saveObject(string $filePath, ?string $bucket = null, ?string $fileName = null, ?array $tags = null): void
@@ -153,7 +156,16 @@ class S3 extends Model
             'connection' => $this->_connection
         ]);
         $this->storage->tags = $tags ?? [];
-        $this->storage->save();
+        if (!$this->storage->save()) {
+            // Roll back the S3 upload so the failed save doesn't leave an
+            // orphaned object in the bucket. Cleanup is best-effort: the
+            // validation error is the more useful signal to surface.
+            try {
+                $this->deleteObject($key, $this->storage->bucket);
+            } catch (Throwable) {
+            }
+            throw new Exception(sprintf('Failed to persist CloudStorage row: %s', implode('; ', $this->storage->getFirstErrors())));
+        }
     }
 
     /**

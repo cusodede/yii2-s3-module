@@ -24,8 +24,8 @@ use yii\db\StaleObjectException;
  */
 class IndexControllerCest
 {
-    private const SAMPLE_FILE_PATH = './tests/_data/sample.txt';
-    private const TEST_BUCKET = 'testbucket';
+    private const string SAMPLE_FILE_PATH = './tests/_data/sample.txt';
+    private const string TEST_BUCKET = 'testbucket';
 
     /**
      * Test index action displays storage list
@@ -414,6 +414,133 @@ class IndexControllerCest
         // Clean up
         $this->cleanupStorage($searchableStorage);
         $this->cleanupStorage($otherStorage);
+    }
+
+    /**
+     * Test upload POST happy path: file attached + bucket selected → controller
+     * uploads to S3, persists a CloudStorage row, redirects to the index page.
+     * @param FunctionalTester $I
+     * @throws InvalidConfigException
+     * @throws StaleObjectException
+     * @throws Throwable
+     */
+    public function testUploadActionPostWithFile(FunctionalTester $I): void
+    {
+        $expectedFilename = 'happy-upload-' . uniqid() . '.txt';
+
+        $I->amOnPage('/s3/index/upload');
+        $I->seeResponseCodeIs(200);
+
+        $I->attachFile('#cloudstorage-file', 'sample.txt');
+        $I->submitForm('form', [
+            'CloudStorage' => [
+                'bucket' => self::TEST_BUCKET,
+                'filename' => $expectedFilename,
+            ],
+        ]);
+
+        $I->seeResponseCodeIs(200);
+        /** @var CloudStorage $storage */
+        $storage = CloudStorage::find()->where(['filename' => $expectedFilename])->one();
+        $I->assertNotNull($storage);
+        $I->assertEquals(self::TEST_BUCKET, $storage->bucket);
+        $I->assertTrue($storage->uploaded);
+        $I->assertGreaterThan(0, $storage->size);
+
+        $this->cleanupStorage($storage);
+    }
+
+    /**
+     * Test edit POST with a new file overwrites the underlying S3 object in
+     * place: uploadInstance preserves the existing key (does NOT generate a
+     * fresh one when key is already set), the bucket stays the same (its form
+     * field is disabled in edit mode), and the S3 object at that key now
+     * contains the replacement content.
+     * @param FunctionalTester $I
+     * @throws InvalidConfigException
+     * @throws StaleObjectException
+     * @throws Throwable
+     * @throws BaseException
+     */
+    public function testEditActionPostWithFile(FunctionalTester $I): void
+    {
+        $storage = $this->createTestStorage('edit-replace-test.txt');
+        $originalKey = $storage->key;
+
+        $I->amOnPage("/s3/index/edit?id={$storage->id}");
+        $I->seeResponseCodeIs(200);
+
+        $I->attachFile('#cloudstorage-file', 'sample2.txt');
+        $I->submitForm('form', [
+            'CloudStorage' => [
+                // tags is the only editable form field besides file on the
+                // edit form (bucket/key/filename are disabled). Submitting a
+                // non-empty value forces $model->load() to return true so the
+                // controller enters the if-branch where getInstance is called.
+                'tags' => ['edit-marker'],
+            ],
+        ]);
+
+        $I->seeResponseCodeIs(200);
+
+        $storage->refresh();
+        $I->assertEquals($originalKey, $storage->key);
+        $I->assertTrue($storage->uploaded);
+        $I->assertEquals(self::TEST_BUCKET, $storage->bucket);
+
+        $expected = file_get_contents(Yii::getAlias('./tests/_data/sample2.txt'));
+        $downloaded = new S3()->getObject($storage->key, $storage->bucket)->get('Body')->getContents();
+        $I->assertEquals($expected, $downloaded);
+
+        $this->cleanupStorage($storage);
+    }
+
+    /**
+     * Test edit POST without a file goes through actionEdit's else-branch:
+     * $model->save() runs, the existing S3 object is left alone (key +
+     * content unchanged), and the user is redirected to the index page.
+     *
+     * Tag persistence (the side effect of save() firing AFTER_UPDATE) is a
+     * model-level contract — covered by CloudStorageTest / CloudStorageTagsTest
+     * — and is intentionally NOT asserted here. This test focuses on the
+     * controller-level contract: dispatch to the no-upload branch.
+     * @param FunctionalTester $I
+     * @throws InvalidConfigException
+     * @throws StaleObjectException
+     * @throws Throwable
+     * @throws BaseException
+     */
+    public function testEditActionPostWithoutFile(FunctionalTester $I): void
+    {
+        $storage = $this->createTestStorage('edit-meta-test.txt');
+        $originalKey = $storage->key;
+        $originalContent = file_get_contents(Yii::getAlias(self::SAMPLE_FILE_PATH));
+
+        $I->amOnPage("/s3/index/edit?id={$storage->id}");
+        $I->seeResponseCodeIs(200);
+
+        // No attachFile here — exercises the else-branch where getInstance
+        // returns null and save() is called instead of uploadInstance().
+        // tags is the only editable field in edit mode (bucket/key/filename
+        // are disabled); a non-empty value forces $model->load() to return
+        // true so the controller enters the if-branch.
+        $I->submitForm('form', [
+            'CloudStorage' => [
+                'tags' => ['edit-marker'],
+            ],
+        ]);
+
+        // Redirect to /s3/index proves load() returned true → if-branch ran.
+        $I->seeCurrentUrlEquals('/s3/index');
+
+        $storage->refresh();
+        $I->assertEquals($originalKey, $storage->key);
+
+        // S3 content untouched: the no-file branch must not call putObject.
+        $current = new S3()->getObject($storage->key, $storage->bucket)->get('Body')->getContents();
+        $I->assertEquals($originalContent, $current);
+
+        $this->cleanupStorage($storage);
     }
 
     /**
