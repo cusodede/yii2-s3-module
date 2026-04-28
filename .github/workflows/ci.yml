@@ -1,4 +1,4 @@
-name: Build
+name: CI
 on:
   push:
     branches: [ master ]
@@ -16,8 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         php:
+          - 8.1
           - 8.4
-          - 8.5
 
     services:
       postgres:
@@ -33,25 +33,27 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      
-      minio:
-        image: minio/minio:latest
-        env:
-          MINIO_ROOT_USER: minioadmin
-          MINIO_ROOT_PASSWORD: minioadmin
-          MINIO_DEFAULT_BUCKETS: testbucket,first-bucket,second-bucket
-        ports:
-          - 9000:9000
-          - 9001:9001
-        options: >-
-          --health-cmd "curl -f http://localhost:9000/minio/health/live || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Start MinIO
+        run: |
+          docker run -d --name minio \
+            -p 9000:9000 -p 9001:9001 \
+            -e MINIO_ROOT_USER=minioadmin \
+            -e MINIO_ROOT_PASSWORD=minioadmin \
+            minio/minio:latest server /data --console-address ":9001"
+
+          timeout 30 bash -c 'until curl -fs http://127.0.0.1:9000/minio/health/live; do sleep 1; done'
+
+      - name: Create MinIO buckets
+        run: |
+          docker run --rm --network host --entrypoint /bin/sh minio/mc:latest -c "
+            mc alias set local http://127.0.0.1:9000 minioadmin minioadmin &&
+            mc mb -p local/testbucket local/first-bucket local/second-bucket
+          "
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -85,10 +87,7 @@ jobs:
       - name: Setup test environment
         run: |
           cp tests/.env.ci tests/.env
-          
-          # Wait for MinIO to be ready (bitnami/minio creates buckets automatically)
-          timeout 30 bash -c 'until curl -f http://127.0.0.1:9000/minio/health/live; do sleep 1; done'
-          
+
           # Verify MinIO is accessible
           curl -I http://127.0.0.1:9000
 

@@ -1,4 +1,3 @@
----
 services:
   postgres:
     image: postgres:13.4
@@ -25,10 +24,10 @@ services:
   minio:
     image: minio/minio:latest
     container_name: yii2-s3-minio
+    command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
-      MINIO_DEFAULT_BUCKETS: "dev-bucket,testbucket,first-bucket,second-bucket"
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -42,9 +41,48 @@ services:
     networks:
       - yii2-s3-network
 
+  minio-init:
+    image: minio/mc:latest
+    container_name: yii2-s3-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 minioadmin minioadmin &&
+      mc mb -p local/dev-bucket local/testbucket local/first-bucket local/second-bucket
+      "
+    networks:
+      - yii2-s3-network
+    restart: "no"
+
+  php-8.1:
+    build:
+      context: ./docker/php/8.1
+      dockerfile: Dockerfile
+    container_name: yii2-s3-php-8.1
+    ports:
+      - "8081:8000"
+    volumes:
+      - .:/var/www/:cached
+    working_dir: /var/www
+    environment:
+      - PHP_VERSION=8.1
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - yii2-s3-network
+    tty: true
+    stdin_open: true
+
   php-8.4:
     build:
-      context: .
+      context: ./docker/php/8.4
       dockerfile: Dockerfile
     container_name: yii2-s3-php-8.4
     ports:

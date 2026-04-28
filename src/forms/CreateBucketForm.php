@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace cusodede\s3\forms;
 
@@ -12,43 +11,39 @@ use Throwable;
 /**
  * Class CreateBucketForm
  */
-class CreateBucketForm extends Model
-{
-    public ?string $name = null;
+class CreateBucketForm extends Model {
+	public ?string $name = null;
 
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            ['name', 'required'],
-            ['name', 'match', 'pattern' => '/^[A-Za-z0-9\-]+$/'],
-            ['name', 'checkNameUnique']
-        ];
-    }
+	/**
+	 * @return array
+	 */
+	public function rules():array {
+		return [
+			['name', 'required'],
+			['name', 'match', 'pattern' => '/^[A-Za-z0-9\-]+$/'],
+			['name', 'checkNameUnique']
+		];
+	}
 
-    /**
-     * @param string $attribute
-     * @return bool
-     * @throws Throwable
-     */
-    public function checkNameUnique(string $attribute): bool
-    {
-        if (in_array(ArrayHelper::getValue($this->getAttributes([$attribute]), $attribute), ArrayHelper::getColumn(ArrayHelper::getValue((new S3())->client->listBuckets()->toArray(), 'Buckets'), 'Name'), true)) {
-            $this->addErrors(['name' => 'Наименование должно быть уникальным']);
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * @param string $attribute
+	 * @return bool
+	 * @throws Throwable
+	 */
+	public function checkNameUnique(string $attribute):bool {
+		if (in_array(ArrayHelper::getValue($this->getAttributes([$attribute]), $attribute), ArrayHelper::getColumn(ArrayHelper::getValue((new S3())->client->listBuckets()->toArray(), 'Buckets'), 'Name'), true)) {
+			$this->addErrors(['name' => 'Наименование должно быть уникальным']);
+			return true;
+		}
+		return false;
+	}
 
-    /**
-     * @return array
-     */
-    public function attributeLabels(): array
-    {
-        return [
-            'name' => 'Название',
-        ];
-    }
+	/**
+	 * @return array
+	 */
+	public function attributeLabels():array {
+		return [
+			'name' => 'Название',
+		];
+	}
 }
