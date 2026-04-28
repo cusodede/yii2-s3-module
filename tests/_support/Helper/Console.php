@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Helper;
 
@@ -14,18 +15,20 @@ use Yii;
 /**
  * class Console
  */
-class Console extends Module {
-	/**
-	 * **HOOK** executed before test
-	 * @param TestInterface $test
-	 * @throws JsonException
-	 */
-	public function _before(TestInterface $test):void {
-		parent::_before($test);
+class Console extends Module
+{
+    /**
+     * **HOOK** executed before test
+     * @param TestInterface $test
+     * @throws JsonException
+     */
+    public function _before(TestInterface $test): void
+    {
+        parent::_before($test);
 
-		$this->debugSection("Cache", "Clear cache");
-		if (Yii::$app && Yii::$app->cache) {
-			Yii::$app->cache->flush();
-		}
-	}
+        $this->debugSection('Cache', 'Clear cache');
+        if (Yii::$app && Yii::$app->cache) {
+            Yii::$app->cache->flush();
+        }
+    }
 }
