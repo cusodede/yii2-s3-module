@@ -1,0 +1,2857 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: src/S3Module.php
+
+		-
+			message: '#^Instanceof between BaseApplication and yii\\console\\Application will always evaluate to false\.$#'
+			identifier: instanceof.alwaysFalse
+			count: 1
+			path: src/S3Module.php
+
+		-
+			message: '#^Cannot access property \$client on cusodede\\s3\\models\\S3\|null\.$#'
+			identifier: property.nonObject
+			count: 6
+			path: src/commands/IndexController.php
+
+		-
+			message: '#^Cannot call method getBucket\(\) on cusodede\\s3\\models\\S3\|null\.$#'
+			identifier: method.nonObject
+			count: 4
+			path: src/commands/IndexController.php
+
+		-
+			message: '#^Method cusodede\\s3\\components\\web\\UploadedFile\:\:getInstance\(\) should return cusodede\\s3\\components\\web\\UploadedFile\|null but returns yii\\web\\UploadedFile\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/components/web/UploadedFile.php
+
+		-
+			message: '#^Access to an undefined property yii\\console\\Request\|yii\\web\\Request\:\:\$isPost\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/controllers/IndexController.php
+
+		-
+			message: '#^Access to an undefined property yii\\console\\Request\|yii\\web\\Request\:\:\$isPut\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/controllers/IndexController.php
+
+		-
+			message: '#^Access to an undefined property yii\\console\\Request\|yii\\web\\Request\:\:\$queryParams\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/controllers/IndexController.php
+
+		-
+			message: '#^Call to an undefined method yii\\console\\Request\|yii\\web\\Request\:\:getBodyParams\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/controllers/IndexController.php
+
+		-
+			message: '#^Call to an undefined method yii\\console\\Request\|yii\\web\\Request\:\:post\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/controllers/IndexController.php
+
+		-
+			message: '#^Parameter \#1 \$data of method yii\\base\\Model\:\:load\(\) expects array, array\|object given\.$#'
+			identifier: argument.type
+			count: 5
+			path: src/controllers/IndexController.php
+
+		-
+			message: '#^Parameter \#1 \$name of method cusodede\\s3\\models\\S3\:\:createBucket\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/controllers/IndexController.php
+
+		-
+			message: '#^Method cusodede\\s3\\forms\\CreateBucketForm\:\:attributeLabels\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/forms/CreateBucketForm.php
+
+		-
+			message: '#^Method cusodede\\s3\\forms\\CreateBucketForm\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/forms/CreateBucketForm.php
+
+		-
+			message: '#^Cannot access property \$connection on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Cannot access property \$deleted on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Cannot access property \$id on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Cannot access property \$key on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Cannot call method save\(\) on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Method cusodede\\s3\\helpers\\S3Helper\:\:FileToStorage\(\) should return cusodede\\s3\\models\\cloud_storage\\CloudStorage but returns cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Method cusodede\\s3\\helpers\\S3Helper\:\:uploadFileFromModel\(\) has parameter \$tags with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Variable \$storage in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\ArrayTagAdapter\:\:tagSet\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/ArrayTagAdapter.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:deleteObject\(\) return type has no value type specified in iterable type Aws\\Result\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:getHttp\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:getKey\(\) should return string but returns string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:getListBucketMap\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:getObject\(\) return type has no value type specified in iterable type Aws\\Result\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:getObjectTagging\(\) return type has no value type specified in iterable type Aws\\Result\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:getTagsArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:putObject\(\) return type has no value type specified in iterable type Aws\\Result\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:putResource\(\) return type has no value type specified in iterable type Aws\\Result\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:setObjectTagging\(\) has parameter \$tags with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\S3\:\:setObjectTagging\(\) return type has no value type specified in iterable type Aws\\Result\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/S3.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type \$this\(cusodede\\s3\\models\\S3\)\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/models/S3.php
+
+		-
+			message: '#^Call to an undefined method yii\\console\\Response\|yii\\web\\Response\:\:sendContentAsFile\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/models/cloud_storage/CloudStorage.php
+
+		-
+			message: '#^Property cusodede\\s3\\models\\cloud_storage\\CloudStorage\:\:\$file has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/models/cloud_storage/CloudStorage.php
+
+		-
+			message: '#^Property cusodede\\s3\\models\\cloud_storage\\active_record\\CloudStorageAR\:\:\$bucket \(string\) does not accept string\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/models/cloud_storage/CloudStorage.php
+
+		-
+			message: '#^Property cusodede\\s3\\models\\cloud_storage\\active_record\\CloudStorageAR\:\:\$key \(string\) does not accept string\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/models/cloud_storage/CloudStorage.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\cloud_storage\\CloudStorageSearch\:\:search\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/models/cloud_storage/CloudStorageSearch.php
+
+		-
+			message: '#^Method cusodede\\s3\\models\\cloud_storage\\CloudStorageSearch\:\:setSort\(\) has parameter \$dataProvider with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/models/cloud_storage/CloudStorageSearch.php
+
+		-
+			message: '#^Possibly invalid array key type array\<string\>\|string\.$#'
+			identifier: array.invalidKey
+			count: 6
+			path: src/models/cloud_storage/CloudStorageSearch.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$buckets has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/views/index/edit.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$controller has invalid type pozitronik\\traits\\traits\\ControllerTrait\.$#'
+			identifier: varTag.trait
+			count: 1
+			path: src/views/index/index.php
+
+		-
+			message: '#^Class limion\\jqueryfileupload\\JQueryFileUpload not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/views/index/put.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$buckets has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/views/index/put.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$buckets has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/views/index/subviews/editPanelBody.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$buckets has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/views/index/upload.php
+
+		-
+			message: '#^Access to an undefined property yii\\base\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/widgets/files_model_list/S3FilesModelListWidget.php
+
+		-
+			message: '#^Cannot access property \$statusCode on null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/_app/controllers/SiteController.php
+
+		-
+			message: '#^Method app\\models\\Users\:\:CreateUser\(\) should return static\(app\\models\\Users\) but returns app\\models\\Users\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/_app/models/Users.php
+
+		-
+			message: '#^Method ConsoleTester\:\:assertArrayHasKey\(\) has parameter \$array with generic interface ArrayAccess but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:assertArrayHasKey\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:assertArrayNotHasKey\(\) has parameter \$array with generic interface ArrayAccess but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:assertArrayNotHasKey\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:attachFile\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSee\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeNumRecords\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeNumberOfElements\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:canSeeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSee\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:cantSeeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:checkOption\(\) has parameter \$option with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:click\(\) has parameter \$context with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:click\(\) has parameter \$link with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSee\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:dontSeeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:fillField\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:fillField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabAttributeFrom\(\) has parameter \$cssOrXpath with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabColumnFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabColumnFromDatabase\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabCookie\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabEntriesFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabEntryFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabEntryFromDatabase\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabFixtures\(\) has invalid return type _generated\\Fixture\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabMultiple\(\) has parameter \$cssOrXpath with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabNumRecords\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabRecord\(\) has invalid return type _generated\\ActiveRecordInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabRecord\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabSentEmails\(\) has invalid return type _generated\\MessageInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabTextFrom\(\) has parameter \$cssOrXPathOrRegex with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:grabValueFrom\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:haveInDatabase\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:performInDatabase\(\) has parameter \$actions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:performInDatabase\(\) has parameter \$databaseKey with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:resetCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:resetCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:see\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeNumRecords\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeNumberOfElements\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:seeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:selectOption\(\) has parameter \$option with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:selectOption\(\) has parameter \$select with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:sendAjaxGetRequest\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:sendAjaxPostRequest\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:sendAjaxRequest\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:setServerParameters\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:submitForm\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:submitForm\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:uncheckOption\(\) has parameter \$option with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:updateInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method ConsoleTester\:\:updateInDatabase\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$array with type _generated\\ArrayAccess\<mixed, mixed\>\|array\<mixed\> is not subtype of native type array\|ArrayAccess\.$#'
+			identifier: parameter.phpDocType
+			count: 2
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^PHPDoc tag @return with type _generated\\ActiveRecordInterface\|array\<string, mixed\>\|null is not subtype of native type array\|yii\\db\\ActiveRecordInterface\|null\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^PHPDoc tag @throws with type _generated\\Exception\|_generated\\PDOException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 2
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^PHPDoc tag @throws with type _generated\\ModuleConfigException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 2
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Parameter \$actions of method ConsoleTester\:\:performInDatabase\(\) has invalid type _generated\\ActionSequence\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Parameter \$array of method ConsoleTester\:\:assertArrayHasKey\(\) has invalid type _generated\\ArrayAccess\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Parameter \$array of method ConsoleTester\:\:assertArrayNotHasKey\(\) has invalid type _generated\\ArrayAccess\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/ConsoleTester.php
+
+		-
+			message: '#^Method Extensions\\DatabaseMigrationExtension\:\:beforeSuite\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/_support/Extensions/DatabaseMigrationExtension.php
+
+		-
+			message: '#^Property Extensions\\DatabaseMigrationExtension\:\:\$events has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/_support/Extensions/DatabaseMigrationExtension.php
+
+		-
+			message: '#^Method FunctionalTester\:\:amAWSAuthenticated\(\) has parameter \$additionalAWSConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:assertArrayHasKey\(\) has parameter \$array with generic interface ArrayAccess but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:assertArrayHasKey\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:assertArrayNotHasKey\(\) has parameter \$array with generic interface ArrayAccess but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:assertArrayNotHasKey\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:attachFile\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSee\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeHttpHeader\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeNumRecords\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeNumberOfElements\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeResponseContainsJson\(\) has parameter \$json with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeResponseEquals\(\) has parameter \$expected with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeResponseJsonXpathEvaluatesTo\(\) has parameter \$expected with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:canSeeResponseMatchesJsonType\(\) has parameter \$jsonType with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSee\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeHttpHeader\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeResponseContainsJson\(\) has parameter \$json with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeResponseJsonXpathEvaluatesTo\(\) has parameter \$expected with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:cantSeeResponseMatchesJsonType\(\) has parameter \$jsonType with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:checkOption\(\) has parameter \$option with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:click\(\) has parameter \$context with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:click\(\) has parameter \$link with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSee\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeHttpHeader\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeResponseContainsJson\(\) has parameter \$json with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeResponseJsonXpathEvaluatesTo\(\) has parameter \$expected with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:dontSeeResponseMatchesJsonType\(\) has parameter \$jsonType with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:fillField\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:fillField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabAttributeFrom\(\) has parameter \$cssOrXpath with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabColumnFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabColumnFromDatabase\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabCookie\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabDataFromResponseByJsonPath\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabEntriesFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabEntryFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabEntryFromDatabase\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabFixtures\(\) has invalid return type _generated\\Fixture\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabHttpHeader\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabMultiple\(\) has parameter \$cssOrXpath with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabNumRecords\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabRecord\(\) has invalid return type _generated\\ActiveRecordInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabRecord\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabSentEmails\(\) has invalid return type _generated\\MessageInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabTextFrom\(\) has parameter \$cssOrXPathOrRegex with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:grabValueFrom\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:haveInDatabase\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:haveServerParameter\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:haveServerParameter\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:performInDatabase\(\) has parameter \$actions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:performInDatabase\(\) has parameter \$databaseKey with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:resetCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:resetCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:see\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeHttpHeader\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeNumRecords\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeNumberOfElements\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeResponseContainsJson\(\) has parameter \$json with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeResponseEquals\(\) has parameter \$expected with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeResponseJsonXpathEvaluatesTo\(\) has parameter \$expected with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:seeResponseMatchesJsonType\(\) has parameter \$jsonType with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:selectOption\(\) has parameter \$option with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:selectOption\(\) has parameter \$select with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:send\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:send\(\) has parameter \$files with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:send\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendAjaxGetRequest\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendAjaxPostRequest\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendAjaxRequest\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendDelete\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendDelete\(\) has parameter \$files with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendDelete\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendGet\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendGet\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendHead\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendHead\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendLink\(\) has parameter \$linkEntries with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendOptions\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendPatch\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendPatch\(\) has parameter \$files with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendPatch\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendPost\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendPost\(\) has parameter \$files with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendPost\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendPut\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendPut\(\) has parameter \$files with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendPut\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:sendUnlink\(\) has parameter \$linkEntries with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:setServerParameters\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:submitForm\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:submitForm\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:uncheckOption\(\) has parameter \$option with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:updateInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Method FunctionalTester\:\:updateInDatabase\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$array with type _generated\\ArrayAccess\<mixed, mixed\>\|array\<mixed\> is not subtype of native type array\|ArrayAccess\.$#'
+			identifier: parameter.phpDocType
+			count: 2
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^PHPDoc tag @return with type _generated\\ActiveRecordInterface\|array\<string, mixed\>\|null is not subtype of native type array\|yii\\db\\ActiveRecordInterface\|null\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^PHPDoc tag @throws with type _generated\\Exception\|_generated\\PDOException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 2
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^PHPDoc tag @throws with type _generated\\ModuleConfigException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 2
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Parameter \$actions of method FunctionalTester\:\:performInDatabase\(\) has invalid type _generated\\ActionSequence\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Parameter \$array of method FunctionalTester\:\:assertArrayHasKey\(\) has invalid type _generated\\ArrayAccess\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Parameter \$array of method FunctionalTester\:\:assertArrayNotHasKey\(\) has invalid type _generated\\ArrayAccess\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/FunctionalTester.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: tests/_support/Helper/Console.php
+
+		-
+			message: '#^Method UnitTester\:\:assertArrayHasKey\(\) has parameter \$array with generic interface ArrayAccess but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:assertArrayHasKey\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:assertArrayNotHasKey\(\) has parameter \$array with generic interface ArrayAccess but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:assertArrayNotHasKey\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:attachFile\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSee\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeNumRecords\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeNumberOfElements\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:canSeeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSee\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:cantSeeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:checkOption\(\) has parameter \$option with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:click\(\) has parameter \$context with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:click\(\) has parameter \$link with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSee\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:dontSeeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:fillField\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:fillField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabAttributeFrom\(\) has parameter \$cssOrXpath with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabColumnFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabColumnFromDatabase\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabCookie\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabEntriesFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabEntryFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabEntryFromDatabase\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabFixtures\(\) has invalid return type _generated\\Fixture\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabFromDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabMultiple\(\) has parameter \$cssOrXpath with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabNumRecords\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabRecord\(\) has invalid return type _generated\\ActiveRecordInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabRecord\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabSentEmails\(\) has invalid return type _generated\\MessageInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabTextFrom\(\) has parameter \$cssOrXPathOrRegex with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:grabValueFrom\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:haveInDatabase\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:performInDatabase\(\) has parameter \$actions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:performInDatabase\(\) has parameter \$databaseKey with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:resetCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:resetCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:see\(\) has parameter \$selector with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeCheckboxIsChecked\(\) has parameter \$checkbox with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeCookie\(\) has parameter \$cookie with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeCookie\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeElement\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeElement\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeInField\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeInField\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeInFormFields\(\) has parameter \$formSelector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeInFormFields\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeInTitle\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeNumRecords\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeNumberOfElements\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeOptionIsSelected\(\) has parameter \$optionText with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:seeOptionIsSelected\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:selectOption\(\) has parameter \$option with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:selectOption\(\) has parameter \$select with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:sendAjaxGetRequest\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:sendAjaxPostRequest\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:sendAjaxRequest\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:setServerParameters\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:submitForm\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:submitForm\(\) has parameter \$selector with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:uncheckOption\(\) has parameter \$option with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:updateInDatabase\(\) has parameter \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Method UnitTester\:\:updateInDatabase\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$array with type _generated\\ArrayAccess\<mixed, mixed\>\|array\<mixed\> is not subtype of native type array\|ArrayAccess\.$#'
+			identifier: parameter.phpDocType
+			count: 2
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^PHPDoc tag @return with type _generated\\ActiveRecordInterface\|array\<string, mixed\>\|null is not subtype of native type array\|yii\\db\\ActiveRecordInterface\|null\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^PHPDoc tag @throws with type _generated\\Exception\|_generated\\PDOException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 2
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^PHPDoc tag @throws with type _generated\\ModuleConfigException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 2
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Parameter \$actions of method UnitTester\:\:performInDatabase\(\) has invalid type _generated\\ActionSequence\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Parameter \$array of method UnitTester\:\:assertArrayHasKey\(\) has invalid type _generated\\ArrayAccess\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Parameter \$array of method UnitTester\:\:assertArrayNotHasKey\(\) has invalid type _generated\\ArrayAccess\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/_support/UnitTester.php
+
+		-
+			message: '#^Call to method ConsoleTester\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 12
+			path: tests/console/commands/IndexControllerImprovedCest.php
+
+		-
+			message: '#^Call to method FunctionalTester\:\:assertTrue\(\) with true and ''Invalid bucket name…'' will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/functional/IndexControllerCest.php
+
+		-
+			message: '#^Call to method FunctionalTester\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/functional/IndexControllerCest.php
+
+		-
+			message: '#^Parameter \#2 \$tags of static method cusodede\\s3\\models\\cloud_storage\\CloudStorageTags\:\:assignTags\(\) expects array\<string\>\|null, array\<string, string\|null\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/unit/CloudStorageTagsTest.php
+
+		-
+			message: '#^Cannot access property \$bucket on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Cannot access property \$filename on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Cannot access property \$id on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: property.nonObject
+			count: 4
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Cannot access property \$key on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: property.nonObject
+			count: 5
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Cannot access property \$tags on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Cannot call method delete\(\) on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Cannot call method syncTagsFromS3\(\) on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Cannot call method syncTagsToS3\(\) on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Property yii\\web\\UploadedFile\:\:\$size \(int\) does not accept int\<0, max\>\|false\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: tests/unit/CloudStorageTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertIsArray\(\) with array\<array\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/unit/EdgeCasesAndErrorHandlingTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertIsArray\(\) with array\{valid\-tag\: ''valid\-value'', ''''\: ''empty\-key'', null\-value\: null, 123\: ''numeric\-key''\} will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/unit/EdgeCasesAndErrorHandlingTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Aws\\Result will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/unit/EdgeCasesAndErrorHandlingTest.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fclose expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/unit/EdgeCasesAndErrorHandlingTest.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fwrite expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/unit/EdgeCasesAndErrorHandlingTest.php
+
+		-
+			message: '#^Property cusodede\\s3\\models\\cloud_storage\\CloudStorage\:\:\$tags \(array\<string\>\) does not accept array\<int\|string, string\|null\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/unit/EdgeCasesAndErrorHandlingTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with int will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Cannot access property \$bucket on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Cannot access property \$filename on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Cannot access property \$id on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Cannot access property \$model_key on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Cannot access property \$model_name on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Cannot access property \$size on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Cannot access property \$tags on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Cannot access property \$uploaded on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Cannot call method delete\(\) on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/unit/S3HelperTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertIsArray\(\) with array\<array\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/unit/S3ModelTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Aws\\Api\\Service will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/unit/S3ModelTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Aws\\Result will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 4
+			path: tests/unit/S3ModelTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/unit/S3ModelTest.php
+
+		-
+			message: '#^Parameter \#1 \$resource of method cusodede\\s3\\models\\S3\:\:putResource\(\) expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/unit/S3ModelTest.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fclose expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/unit/S3ModelTest.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function fwrite expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/unit/S3ModelTest.php
+
+		-
+			message: '#^Parameter \#1 \$stream of function rewind expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/unit/S3ModelTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertEmpty\(\) with array\{\} will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^Cannot access property \$id on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^Cannot access property \$tags on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: property.nonObject
+			count: 4
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^Cannot call method syncTagsFromS3\(\) on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^Cannot call method syncTagsToS3\(\) on cusodede\\s3\\models\\cloud_storage\\CloudStorage\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^PHPDoc tag @throws with type unit\\Throwable is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^PHPDoc tag @throws with type unit\\Throwable\|yii\\base\\Exception is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 7
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^Parameter \#1 \$storageId of static method cusodede\\s3\\helpers\\S3Helper\:\:StorageToFile\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^Parameter \#2 \$actual of static method PHPUnit\\Framework\\Assert\:\:assertFileEquals\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^Parameter \#4 \$tags of static method cusodede\\s3\\helpers\\S3Helper\:\:FileToStorage\(\) expects array\<string\>\|null, array\<int\|string, string\|null\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/unit/S3ModuleTest.php
+
+		-
+			message: '#^Parameter \#2 \$actual of static method PHPUnit\\Framework\\Assert\:\:assertFileEquals\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 4
+			path: tests/unit/S3MultipleStoragesTest.php

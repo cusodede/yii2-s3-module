@@ -7,6 +7,7 @@ namespace cusodede\s3\models\cloud_storage;
 use cusodede\s3\models\cloud_storage\active_record\CloudStorageTagsAR;
 use Throwable;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveQueryInterface;
 
 /**
  * Class CloudStorageSearch
@@ -68,12 +69,7 @@ class CloudStorageSearch extends CloudStorage
         return $dataProvider;
     }
 
-    /**
-     * @param $query
-     * @return void
-     * @throws Throwable
-     */
-    private function filterData($query): void
+    private function filterData(ActiveQueryInterface $query): void
     {
         $query->andFilterWhere([self::fieldName('id') => $this->id]);
         $query->andFilterWhere([self::fieldName('deleted') => $this->deleted]);

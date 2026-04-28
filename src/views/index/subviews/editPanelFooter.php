@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @var View $this
  * @var CloudStorage $model
- * @var ActiveForm| $form
+ * @var ActiveForm $form
  */
 
 use cusodede\s3\models\cloud_storage\CloudStorage;
