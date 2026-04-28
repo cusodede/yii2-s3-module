@@ -46,12 +46,14 @@ class S3 extends Model
 
         $connections = S3Module::param('connection');
         if (null === $this->_connection) {//use first connection in list
-            if (!isset($connections['host'])) $this->_connection = key($connections);
+            if (!isset($connections['host'])) {
+                $this->_connection = key($connections);
+            }
         } elseif (!isset($connections[$this->_connection])) {
             throw new InvalidConfigException("Connection '{$this->_connection}' is not configured.");
         }
 
-        $connectionSectionName = null === $this->_connection?'connection':"connection.{$this->_connection}";
+        $connectionSectionName = null === $this->_connection ? 'connection' : "connection.{$this->_connection}";
 
         $this->_host = S3Module::param("$connectionSectionName.host");
         $this->_login = S3Module::param("$connectionSectionName.login");
@@ -60,7 +62,7 @@ class S3 extends Model
         $this->_timeout = (int)S3Module::param("$connectionSectionName.timeout", $this->_timeout);
         $this->_certPath = S3Module::param("$connectionSectionName.cert_path");
         $this->_certPassword = S3Module::param("$connectionSectionName.cert_password");
-        $this->_defaultBucket = S3Module::param("$connectionSectionName.defaultBucket", S3Module::param("defaultBucket"));//корзина может быть переопределена в настройках соединения
+        $this->_defaultBucket = S3Module::param("$connectionSectionName.defaultBucket", S3Module::param('defaultBucket'));//корзина может быть переопределена в настройках соединения
     }
 
     /**
@@ -92,7 +94,7 @@ class S3 extends Model
         ];
 
         if (null !== $this->_certPath) {
-            $http[] = [$this->_certPath, $this->_certPassword??'']; // второй элемент пароль, не думаю что будем его использовать
+            $http[] = [$this->_certPath, $this->_certPassword ?? '']; // второй элемент пароль, не думаю что будем его использовать
         }
 
         return $http;
@@ -113,7 +115,7 @@ class S3 extends Model
         }
         $buckets = ArrayHelper::getValue($this->client->listBuckets()->toArray(), 'Buckets', []);
         $latestBucket = count($buckets) - 1;
-        return ArrayHelper::getValue($buckets, $latestBucket.'.Name', new NotFoundHttpException("No buckets configured/found"));
+        return ArrayHelper::getValue($buckets, $latestBucket . '.Name', new NotFoundHttpException('No buckets configured/found'));
     }
 
     /**
@@ -123,7 +125,7 @@ class S3 extends Model
      */
     public function getKey(?string $key = null): string
     {
-        return $key??$this?->storage?->key;
+        return $key ?? $this?->storage?->key;
     }
 
     /**
@@ -147,10 +149,10 @@ class S3 extends Model
             'key' => $this->getKey($key),
             'filename' => $fileName,
             'uploaded' => null !== ArrayHelper::getValue($storageResponse->toArray(), 'ObjectURL'),
-            'size' => (false === $filesize = filesize($filePath))?null:$filesize,
+            'size' => (false === $filesize = filesize($filePath)) ? null : $filesize,
             'connection' => $this->_connection
         ]);
-        $this->storage->tags = $tags??[];
+        $this->storage->tags = $tags ?? [];
         $this->storage->save();
     }
 
@@ -197,11 +199,11 @@ class S3 extends Model
     public function setObjectTagging(?string $key = null, ?string $bucket = null, ?array $tags = null): Result
     {
         return null === $tags
-            ?$this->client->deleteObjectTagging([
+            ? $this->client->deleteObjectTagging([
                 'Key' => $this->getKey($key),
                 'Bucket' => $this->getBucket($bucket)
             ])
-            :$this->client->putObjectTagging([
+            : $this->client->putObjectTagging([
                 'Key' => $this->getKey($key),
                 'Bucket' => $this->getBucket($bucket),
                 'Tagging' => ['TagSet' => (new ArrayTagAdapter($tags))->tagSet()]
@@ -237,11 +239,11 @@ class S3 extends Model
     {
         $mimeContentType = mime_content_type($filePath);//mime_content_type может вернуть false
         return $this->client->putObject([
-            'Key' => $key = $this->getKey($key??static::GetFileNameKey(PathHelper::ExtractBaseName($filePath))),
+            'Key' => $key = $this->getKey($key ?? static::GetFileNameKey(PathHelper::ExtractBaseName($filePath))),
             'Bucket' => $bucket = $this->getBucket($bucket),
             'Body' => fopen($filePath, 'rb'),
             'Tagging' => (string)(new ArrayTagAdapter($tags)),
-            'ContentType' => false === $mimeContentType?'application/octet-stream':$mimeContentType,
+            'ContentType' => false === $mimeContentType ? 'application/octet-stream' : $mimeContentType,
         ]);
     }
 
@@ -257,7 +259,7 @@ class S3 extends Model
     public function putResource($resource, string $fileName, ?string &$key = null, ?string &$bucket = null): Result
     {
         return $this->client->putObject([
-            'Key' => $key = $this->getKey($key??static::GetFileNameKey($fileName)),
+            'Key' => $key = $this->getKey($key ?? static::GetFileNameKey($fileName)),
             'Bucket' => $bucket = $this->getBucket($bucket),
             'Body' => $resource
         ]);

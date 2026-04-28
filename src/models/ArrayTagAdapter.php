@@ -29,7 +29,7 @@ class ArrayTagAdapter
     {
         if (null !== $tags) {
             foreach ($tags as $tag => $value) {
-                $this->setTag(is_string($tag)?$tag:$value, $value);
+                $this->setTag(is_string($tag) ? $tag : $value, $value);
             }
         }
     }
@@ -42,7 +42,7 @@ class ArrayTagAdapter
      */
     public function setTag(string $name, ?string $value = null): void
     {
-        $this->_tags[$name] = $value??$name;
+        $this->_tags[$name] = $value ?? $name;
     }
 
     /**
@@ -61,7 +61,9 @@ class ArrayTagAdapter
      */
     public function addTag(string $name, ?string $value = null): bool
     {
-        if (isset($this->_tags[$name])) return false;
+        if (isset($this->_tags[$name])) {
+            return false;
+        }
         $this->setTag($name, $value);
         return true;
     }

@@ -59,7 +59,9 @@ class CloudStorageSearch extends CloudStorage
         $this->setSort($dataProvider);
         $this->load($params);
 
-        if (!$this->validate()) return $dataProvider;
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
 
         $this->filterData($query);
 
@@ -103,8 +105,8 @@ class CloudStorageSearch extends CloudStorage
                 'model_key',
                 'connection',
                 'tagsFilter' => [
-                    'asc' => [CloudStorageTagsAR::tableName().'.tag_key' => SORT_ASC],
-                    'desc' => [CloudStorageTagsAR::tableName().'.tag_key' => SORT_DESC]
+                    'asc' => [CloudStorageTagsAR::tableName() . '.tag_key' => SORT_ASC],
+                    'desc' => [CloudStorageTagsAR::tableName() . '.tag_key' => SORT_DESC]
                 ]
             ]
         ]);
