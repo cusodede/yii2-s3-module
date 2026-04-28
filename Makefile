@@ -32,28 +32,28 @@ rebuild:
 	docker compose build --no-cache
 
 # Test commands (runs in existing containers)
-test: test81 test84
-
-test81:
-	@echo "Running tests with PHP 8.1..."
-	@docker compose exec php-8.1 composer install --no-dev --optimize-autoloader
-	@docker compose exec php-8.1 vendor/bin/codecept run -v --debug
+test: test84 test85
 
 test84:
 	@echo "Running tests with PHP 8.4..."
 	@docker compose exec php-8.4 composer install --no-dev --optimize-autoloader
 	@docker compose exec php-8.4 vendor/bin/codecept run -v --debug
 
-# Quick test - assumes composer dependencies are already installed
-quick-test: quick-test81 quick-test84
+test85:
+	@echo "Running tests with PHP 8.5..."
+	@docker compose exec php-8.5 composer install --no-dev --optimize-autoloader
+	@docker compose exec php-8.5 vendor/bin/codecept run -v --debug
 
-quick-test81:
-	@echo "Quick test with PHP 8.1..."
-	@docker compose exec php-8.1 vendor/bin/codecept run -v --debug
+# Quick test - assumes composer dependencies are already installed
+quick-test: quick-test84 quick-test85
 
 quick-test84:
 	@echo "Quick test with PHP 8.4..."
 	@docker compose exec php-8.4 vendor/bin/codecept run -v --debug
+
+quick-test85:
+	@echo "Quick test with PHP 8.5..."
+	@docker compose exec php-8.5 vendor/bin/codecept run -v --debug
 
 # Coverage (requires PCOV — rebuild image if you don't have it: make rebuild)
 coverage:
@@ -62,29 +62,29 @@ coverage:
 	@echo "HTML report: tests/_output/coverage/index.html"
 
 # Shell access to containers
-shell81:
-	@echo "Opening shell in PHP 8.1 container..."
-	docker compose exec php-8.1 bash
-
 shell84:
 	@echo "Opening shell in PHP 8.4 container..."
 	docker compose exec php-8.4 bash
 
+shell85:
+	@echo "Opening shell in PHP 8.5 container..."
+	docker compose exec php-8.5 bash
+
 # Development utilities
 composer-install:
 	@echo "Installing composer dependencies in both PHP versions..."
-	docker compose exec php-8.1 composer install
 	docker compose exec php-8.4 composer install
+	docker compose exec php-8.5 composer install
 
 composer-update:
 	@echo "Updating composer dependencies in both PHP versions..."
-	docker compose exec php-8.1 composer update
 	docker compose exec php-8.4 composer update
+	docker compose exec php-8.5 composer update
 
 # Database operations
 db-migrate:
 	@echo "Running database migrations..."
-	docker compose exec php-8.1 ./yii migrate --interactive=0
+	docker compose exec php-8.4 ./yii migrate --interactive=0
 
 db-reset:
 	@echo "Resetting databases (dev and test)..."
@@ -126,12 +126,12 @@ help:
 	@echo "  build           - Build Docker images"
 	@echo "  rebuild         - Rebuild Docker images from scratch"
 	@echo "  test            - Run tests on both PHP versions"
-	@echo "  test81          - Run tests on PHP 8.1"
 	@echo "  test84          - Run tests on PHP 8.4"
+	@echo "  test85          - Run tests on PHP 8.5"
 	@echo "  quick-test      - Quick test (no composer install)"
 	@echo "  coverage        - Run tests with code coverage report (PHP 8.4)"
-	@echo "  shell81         - Shell access to PHP 8.1 container"
 	@echo "  shell84         - Shell access to PHP 8.4 container"
+	@echo "  shell85         - Shell access to PHP 8.5 container"
 	@echo "  composer-install - Install composer dependencies"
 	@echo "  composer-update  - Update composer dependencies"
 	@echo "  db-migrate      - Run database migrations"
@@ -142,4 +142,4 @@ help:
 	@echo "  logs            - Show all container logs"
 	@echo "  help            - Show this help"
 
-.PHONY: up down restart build rebuild test test81 test84 quick-test quick-test81 quick-test84 coverage shell81 shell84 composer-install composer-update db-migrate db-reset clean clean-all status logs logs-postgres logs-minio help
+.PHONY: up down restart build rebuild test test84 test85 quick-test quick-test84 quick-test85 coverage shell84 shell85 composer-install composer-update db-migrate db-reset clean clean-all status logs logs-postgres logs-minio help

@@ -1,4 +1,4 @@
-FROM php:8.1-cli
+FROM php:8.5-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -23,6 +23,9 @@ RUN docker-php-ext-configure intl \
         pcntl \
         intl \
         mbstring
+
+# Install PCOV for code coverage
+RUN pecl install pcov && docker-php-ext-enable pcov
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

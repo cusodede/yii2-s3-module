@@ -170,11 +170,11 @@ not be synchronized to local table. It is possible to sync local and remote tags
 ## Prerequisites
 
 - Docker and Docker Compose
-- PHP 8.1+ (for local development)
+- PHP 8.4+ (for local development)
 
 ## Running Tests
 
-This project supports testing with PHP 8.1 and PHP 8.4 using Docker containers.
+This project supports testing with PHP 8.4 and PHP 8.5 using Docker containers.
 
 ### Docker Testing (Recommended)
 
@@ -185,7 +185,7 @@ The project uses a unified Docker environment for both development and testing. 
 # Start the development environment (PostgreSQL + MinIO + PHP containers)
 make up
 
-# Run all tests (PHP 8.1 and 8.4)
+# Run all tests (PHP 8.4 and 8.5)
 make test
 
 # Stop the environment when done
@@ -202,13 +202,14 @@ make status        # Show container status
 
 # Testing
 make test          # Run tests on both PHP versions
-make test81        # Run tests on PHP 8.1 only
 make test84        # Run tests on PHP 8.4 only
+make test85        # Run tests on PHP 8.5 only
 make quick-test    # Quick tests (no composer install)
+make coverage      # Run tests with code coverage report (PHP 8.4)
 
 # Development
-make shell81       # Access PHP 8.1 container shell
 make shell84       # Access PHP 8.4 container shell
+make shell85       # Access PHP 8.5 container shell
 make composer-install  # Install dependencies in both containers
 
 # Setup
@@ -225,8 +226,8 @@ Windows users can use the same `make` commands if they have Docker Desktop and G
 docker compose up -d
 
 # Run tests
-docker compose exec php-8.1 vendor/bin/codecept run -v --debug
 docker compose exec php-8.4 vendor/bin/codecept run -v --debug
+docker compose exec php-8.5 vendor/bin/codecept run -v --debug
 
 # Stop environment  
 docker compose down
@@ -235,7 +236,7 @@ docker compose down
 ### Local Testing (Without Docker)
 
 Requirements:
-- PHP 8.1+
+- PHP 8.4+
 - PostgreSQL
 - MinIO server
 
@@ -264,7 +265,7 @@ Requirements:
 
 ### Continuous Integration
 
-Tests run automatically on GitHub Actions for PHP 8.1 and 8.4 with:
+Tests run automatically on GitHub Actions for PHP 8.4 and 8.5 with:
 - **PostgreSQL 13.4** database service
 - **MinIO** S3-compatible storage service
 - All required PHP extensions (zip, pdo_pgsql, sockets, bcmath, pcntl, intl, mbstring)
@@ -272,7 +273,7 @@ Tests run automatically on GitHub Actions for PHP 8.1 and 8.4 with:
 ### Local Docker Testing
 
 The Docker setup includes:
-- **PHP 8.1/8.4 containers** with all required extensions
+- **PHP 8.4/8.5 containers** with all required extensions
 - **PostgreSQL** for database testing
 - **MinIO** S3-compatible storage server
 
