@@ -440,12 +440,57 @@ class IndexControllerCest
         ]);
 
         $I->seeResponseCodeIs(200);
-
+        /** @var CloudStorage $storage */
         $storage = CloudStorage::find()->where(['filename' => $expectedFilename])->one();
         $I->assertNotNull($storage);
         $I->assertEquals(self::TEST_BUCKET, $storage->bucket);
         $I->assertTrue($storage->uploaded);
         $I->assertGreaterThan(0, $storage->size);
+
+        $this->cleanupStorage($storage);
+    }
+
+    /**
+     * Test edit POST with a new file overwrites the underlying S3 object in
+     * place: uploadInstance preserves the existing key (does NOT generate a
+     * fresh one when key is already set), the bucket stays the same (its form
+     * field is disabled in edit mode), and the S3 object at that key now
+     * contains the replacement content.
+     * @param FunctionalTester $I
+     * @throws InvalidConfigException
+     * @throws StaleObjectException
+     * @throws Throwable
+     * @throws BaseException
+     */
+    public function testEditActionPostWithFile(FunctionalTester $I): void
+    {
+        $storage = $this->createTestStorage('edit-replace-test.txt');
+        $originalKey = $storage->key;
+
+        $I->amOnPage("/s3/index/edit?id={$storage->id}");
+        $I->seeResponseCodeIs(200);
+
+        $I->attachFile('#cloudstorage-file', 'sample2.txt');
+        $I->submitForm('form', [
+            'CloudStorage' => [
+                // tags is the only editable form field besides file on the
+                // edit form (bucket/key/filename are disabled). Submitting a
+                // non-empty value forces $model->load() to return true so the
+                // controller enters the if-branch where getInstance is called.
+                'tags' => ['edit-marker'],
+            ],
+        ]);
+
+        $I->seeResponseCodeIs(200);
+
+        $storage->refresh();
+        $I->assertEquals($originalKey, $storage->key);
+        $I->assertTrue($storage->uploaded);
+        $I->assertEquals(self::TEST_BUCKET, $storage->bucket);
+
+        $expected = file_get_contents(Yii::getAlias('./tests/_data/sample2.txt'));
+        $downloaded = new S3()->getObject($storage->key, $storage->bucket)->get('Body')->getContents();
+        $I->assertEquals($expected, $downloaded);
 
         $this->cleanupStorage($storage);
     }
