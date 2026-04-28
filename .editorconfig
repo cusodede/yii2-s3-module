@@ -17,7 +17,7 @@ trim_trailing_whitespace = false
 ij_php_space_before_short_closure_left_parenthesis = false
 ij_php_space_after_type_cast = true
 
-[{*.yml, *.yaml, *.neon}]
+[{*.yml,*.yaml,*.neon}]
 indent_size = 2
 
 [*.xml.dist]
