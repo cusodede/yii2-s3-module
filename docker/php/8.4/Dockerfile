@@ -24,6 +24,9 @@ RUN docker-php-ext-configure intl \
         intl \
         mbstring
 
+# Install PCOV for code coverage
+RUN pecl install pcov && docker-php-ext-enable pcov
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
