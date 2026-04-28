@@ -24,8 +24,8 @@ use yii\db\StaleObjectException;
  */
 class IndexControllerCest
 {
-    private const SAMPLE_FILE_PATH = './tests/_data/sample.txt';
-    private const TEST_BUCKET = 'testbucket';
+    private const string SAMPLE_FILE_PATH = './tests/_data/sample.txt';
+    private const string TEST_BUCKET = 'testbucket';
 
     /**
      * Test index action displays storage list
@@ -414,6 +414,40 @@ class IndexControllerCest
         // Clean up
         $this->cleanupStorage($searchableStorage);
         $this->cleanupStorage($otherStorage);
+    }
+
+    /**
+     * Test upload POST happy path: file attached + bucket selected → controller
+     * uploads to S3, persists a CloudStorage row, redirects to the index page.
+     * @param FunctionalTester $I
+     * @throws InvalidConfigException
+     * @throws StaleObjectException
+     * @throws Throwable
+     */
+    public function testUploadActionPostWithFile(FunctionalTester $I): void
+    {
+        $expectedFilename = 'happy-upload-' . uniqid() . '.txt';
+
+        $I->amOnPage('/s3/index/upload');
+        $I->seeResponseCodeIs(200);
+
+        $I->attachFile('#cloudstorage-file', 'sample.txt');
+        $I->submitForm('form', [
+            'CloudStorage' => [
+                'bucket' => self::TEST_BUCKET,
+                'filename' => $expectedFilename,
+            ],
+        ]);
+
+        $I->seeResponseCodeIs(200);
+
+        $storage = CloudStorage::find()->where(['filename' => $expectedFilename])->one();
+        $I->assertNotNull($storage);
+        $I->assertEquals(self::TEST_BUCKET, $storage->bucket);
+        $I->assertTrue($storage->uploaded);
+        $I->assertGreaterThan(0, $storage->size);
+
+        $this->cleanupStorage($storage);
     }
 
     /**
