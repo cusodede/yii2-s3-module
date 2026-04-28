@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace cusodede\s3\commands;
 
 use cusodede\s3\models\S3;
+use JsonException;
 use Throwable;
 use yii\console\Controller;
 use yii\helpers\Console;
@@ -27,7 +28,11 @@ class IndexController extends Controller
     public function actionPut(string $filepath, string $key, ?string $bucket = null): void
     {
         try {
-            $res = $this->s3->client->putObject(['Bucket' => $this->s3->getBucket($bucket), 'Key' => $key, 'Body' => fopen($filepath, 'rb')]);
+            $res = $this->s3->client->putObject([
+                'Bucket' => $this->s3->getBucket($bucket),
+                'Key' => $key,
+                'Body' => fopen($filepath, 'rb')
+            ]);
             $this->outputResult($res->toArray());
         } catch (Throwable $e) {
             $this->outputResult($e->getMessage());
@@ -46,7 +51,10 @@ class IndexController extends Controller
     {
         try {
             $savePath = implode('/', [$filepath, $key]);
-            $res = $this->s3->client->getObject(['Bucket' => $this->s3->getBucket($bucket), 'Key' => $key, 'SaveAs' => $savePath]);
+            $res = $this->s3->client->getObject([
+                'Bucket' => $this->s3->getBucket($bucket),
+                'Key' => $key, 'SaveAs' => $savePath
+            ]);
             Console::output('Saving file in path:' . $savePath);
             $this->outputResult($res->toArray());
         } catch (Throwable $e) {
@@ -126,11 +134,13 @@ class IndexController extends Controller
     }
 
     /**
-     * @param array $data
+     * @param mixed $data
+     * @return void
+     * @throws JsonException
      */
     private function outputResult(mixed $data): void
     {
-        Console::output(is_string($data) ? $data : json_encode($data, JSON_PRETTY_PRINT));
+        Console::output(is_string($data) ? $data : json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
     }
 
     /**

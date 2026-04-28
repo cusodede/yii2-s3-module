@@ -5,3 +5,4 @@
 - Version `aws/aws-sdk-php` raised to `3.379` (@s1lver)
 - Version `yiisoft/yii2` raised to `2.0.54` (@s1lver)
 - Coding style aligned with PSR (@s1lver)
+- Added stricter code typing for PHP (@s1lver)
