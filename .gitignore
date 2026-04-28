@@ -4,3 +4,7 @@
 ./tests/runtime/*
 !./tests/runtime/.gitkeep
 /composer.lock
+/tests/_app/assets/
+/tests/_data/test_key
+/tests/_support/_generated/
+/vendor
