@@ -164,8 +164,7 @@ class S3 extends Model
                 $this->deleteObject($key, $this->storage->bucket);
             } catch (Throwable) {
             }
-            throw new Exception(sprintf('Failed to persist CloudStorage row: %s', implode('; ', $this->storage->getFirstErrors())
-            ));
+            throw new Exception(sprintf('Failed to persist CloudStorage row: %s', implode('; ', $this->storage->getFirstErrors())));
         }
     }
 
