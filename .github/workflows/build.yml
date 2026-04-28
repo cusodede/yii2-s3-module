@@ -1,4 +1,4 @@
-name: CI
+name: Build
 on:
   push:
     branches: [ master ]
@@ -16,8 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         php:
-          - 8.1
           - 8.4
+          - 8.5
 
     services:
       postgres:
@@ -35,7 +35,7 @@ jobs:
           - 5432:5432
       
       minio:
-        image: bitnami/minio:latest
+        image: minio/minio:latest
         env:
           MINIO_ROOT_USER: minioadmin
           MINIO_ROOT_PASSWORD: minioadmin

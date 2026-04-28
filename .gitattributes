@@ -1,10 +1,12 @@
+# Autodetect text files
 * text=auto eol=lf
 
-/.github                    export-ignore
-/tests                      export-ignore
-/.gitattributes             export-ignore
-/.editorconfig              export-ignore
-/.gitignore                 export-ignore
-/codeception.yml            export-ignore
-/Makefile                   export-ignore
-/.env.example               export-ignore
+# Ignore all test and documentation for archive
+/Makefile           export-ignore
+/tests              export-ignore
+/docs               export-ignore
+/support            export-ignore
+.*                  export-ignore
+*.dist              export-ignore
+*.neon              export-ignore
+*.yml               export-ignore

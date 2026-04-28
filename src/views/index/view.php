@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 /**
  * @var View $this
@@ -16,29 +17,29 @@ use yii\widgets\DetailView;
 ?>
 
 <?= DetailView::widget([
-	'model' => $model,
-	'attributes' => [
-		'id',
-		'bucket',
-		'key',
-		[
-			'attribute' => 'filename',
-			'format' => 'raw',
-			'value' => static fn(CloudStorage $model) => BadgeWidget::widget([
-				'items' => $model->filename,
-				'urlScheme' => [S3Module::to(['/index/download']), 'id' => $model->id]
-			])
-		],
-		'created_at',
-		'deleted:boolean',
-		'uploaded:boolean',
-		[
-			'attribute' => 'tags',
-			'format' => 'raw',
-			'value' => static fn(CloudStorage $model) => BadgeWidget::widget([
-				'items' => $model->tags,
-				'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item):string => $keyAttributeValue.":"
-			])
-		]
-	]
+    'model' => $model,
+    'attributes' => [
+        'id',
+        'bucket',
+        'key',
+        [
+            'attribute' => 'filename',
+            'format' => 'raw',
+            'value' => static fn(CloudStorage $model) => BadgeWidget::widget([
+                'items' => $model->filename,
+                'urlScheme' => [S3Module::to(['/index/download']), 'id' => $model->id]
+            ])
+        ],
+        'created_at',
+        'deleted:boolean',
+        'uploaded:boolean',
+        [
+            'attribute' => 'tags',
+            'format' => 'raw',
+            'value' => static fn(CloudStorage $model) => BadgeWidget::widget([
+                'items' => $model->tags,
+                'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item):string => $keyAttributeValue.":"
+            ])
+        ]
+    ]
 ]) ?>
