@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 use Aws\S3\Exception\S3Exception;
 use Codeception\Test\Unit;
@@ -14,204 +15,207 @@ use yii\helpers\ArrayHelper;
 /**
  * Class S3ModuleTest
  */
-class S3ModuleTest extends Unit {
-	private const SAMPLE_FILE_PATH = './tests/_data/sample.txt';
+class S3ModuleTest extends Unit
+{
+    private const SAMPLE_FILE_PATH = './tests/_data/sample.txt';
 
-	/**
-	 * @return void
-	 * @throws Throwable
-	 * @throws Exception
-	 */
-	public function testUploadDownload():void {
+    /**
+     * @return void
+     * @throws Throwable
+     * @throws Exception
+     */
+    public function testUploadDownload(): void
+    {
+        $storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
 
-		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
+        $downloadFilePath = S3Helper::StorageToFile($storage->id);
+        $this::assertFileEquals(self::SAMPLE_FILE_PATH, $downloadFilePath);
+    }
 
-		$downloadFilePath = S3Helper::StorageToFile($storage->id);
-		$this::assertFileEquals(self::SAMPLE_FILE_PATH, $downloadFilePath);
+    /**
+     * @return void
+     * @throws Exception
+     * @throws Throwable
+     */
+    public function testTagsBinding(): void
+    {
+        $storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, [
+            'tag1' => 'tag1value', 'tag2', 'emptyTag' => null
+        ]);
 
-	}
+        /*Проверим присвоение тегов объекту*/
+        $this::assertEquals($storage->tags, [
+            'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
+        ]);
 
-	/**
-	 * @return void
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public function testTagsBinding():void {
+        /*Проверим соответствие тегов в S3*/
+        $result = (new S3())->getTagsArray($storage->key);
+        $this::assertEquals($result, [
+            'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
+        ]);
 
-		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, [
-			'tag1' => 'tag1value', 'tag2', 'emptyTag' => null
-		]);
+        $this::assertEquals($result['tag1'], 'tag1value');
+        $this::assertEquals($result['tag2'], 'tag2');
+        $this::assertEquals($result['emptyTag'], 'emptyTag');
 
-		/*Проверим присвоение тегов объекту*/
-		$this::assertEquals($storage->tags, [
-			'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
-		]);
+        /*Проверим соответствие тегов в БД*/
+        $tags = ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key');
 
-		/*Проверим соответствие тегов в S3*/
-		$result = (new S3())->getTagsArray($storage->key);
-		$this::assertEquals($result, [
-			'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
-		]);
+        $this::assertEquals($tags, [
+            'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
+        ]);
 
-		$this::assertEquals($result['tag1'], 'tag1value');
-		$this::assertEquals($result['tag2'], 'tag2');
-		$this::assertEquals($result['emptyTag'], 'emptyTag');
+        /** @var CloudStorage $newStorage */
+        $newStorage = CloudStorage::find()->where(['key' => $storage->key])->one();
+        /*Перепроверим присвоение сохранённых тегов после переинициализации объекта*/
+        $this::assertEquals($newStorage->tags, [
+            'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
+        ]);
+    }
 
-		/*Проверим соответствие тегов в БД*/
-		$tags = ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key');
+    /**
+     * @return void
+     * @throws Exception
+     * @throws Throwable
+     */
+    public function testEmptyTags(): void
+    {
+        $storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
 
-		$this::assertEquals($tags, [
-			'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
-		]);
+        $this::assertEquals($storage->tags, []);
 
-		/** @var CloudStorage $newStorage */
-		$newStorage = CloudStorage::find()->where(['key' => $storage->key])->one();
-		/*Перепроверим присвоение сохранённых тегов после переинициализации объекта*/
-		$this::assertEquals($newStorage->tags, [
-			'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
-		]);
-	}
+        $result = (new S3())->getTagsArray($storage->key);
+        $this::assertEquals($result, []);
+        $this::assertEquals(ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key'), []);
+    }
 
-	/**
-	 * @return void
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public function testEmptyTags():void {
-		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
+    /**
+     * @return void
+     * @throws Exception
+     * @throws Throwable
+     */
+    public function testSyncFromS3(): void
+    {
+        $s3 = new S3();
+        /*Закинем файл без тегов*/
+        $s3->saveObject(Yii::getAlias(self::SAMPLE_FILE_PATH));
+        $this::assertEmpty($s3->getTagsArray());
 
-		$this::assertEquals($storage->tags, []);
+        /*Установим в S3 тег, и проверим, что он присвоился*/
+        $s3->setObjectTagging(null, null, ['someTag' => 'someTagValue']);
+        $this::assertEquals($s3->getTagsArray(), ['someTag' => 'someTagValue']);
 
-		$result = (new S3())->getTagsArray($storage->key);
-		$this::assertEquals($result, []);
-		$this::assertEquals(ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key'), []);
-	}
+        /*Убедимся, что локальные теги пустые*/
+        $this::assertEmpty($s3->storage->tags);
 
-	/**
-	 * @return void
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public function testSyncFromS3():void {
-		$s3 = new S3();
-		/*Закинем файл без тегов*/
-		$s3->saveObject(Yii::getAlias(self::SAMPLE_FILE_PATH));
-		$this::assertEmpty($s3->getTagsArray());
+        /*Синхронизируем из S3*/
+        $s3->storage->syncTagsFromS3();
 
-		/*Установим в S3 тег, и проверим, что он присвоился*/
-		$s3->setObjectTagging(null, null, ['someTag' => 'someTagValue']);
-		$this::assertEquals($s3->getTagsArray(), ['someTag' => 'someTagValue']);
+        $this::assertEquals($s3->storage->tags, ['someTag' => 'someTagValue']);
 
-		/*Убедимся, что локальные теги пустые*/
-		$this::assertEmpty($s3->storage->tags);
+        /*Дропнем теги в хранилище, проверим*/
+        $s3->setObjectTagging();
+        $this::assertEmpty($s3->getTagsArray());
 
-		/*Синхронизируем из S3*/
-		$s3->storage->syncTagsFromS3();
+        /*Синхронизируем из S3, проверим, что локальные теги опустели*/
+        $s3->storage->syncTagsFromS3();
+        $this::assertEmpty($s3->storage->tags);
+    }
 
-		$this::assertEquals($s3->storage->tags, ['someTag' => 'someTagValue']);
+    /**
+     * @return void
+     * @throws Exception
+     * @throws Throwable
+     */
+    public function testSyncToS3(): void
+    {
+        $s3 = new S3();
+        /*Закинем файл без тегов*/
+        $s3->saveObject(Yii::getAlias(self::SAMPLE_FILE_PATH));
+        $this::assertEmpty($s3->getTagsArray());
 
-		/*Дропнем теги в хранилище, проверим*/
-		$s3->setObjectTagging();
-		$this::assertEmpty($s3->getTagsArray());
+        /*Установим локальный тег, и убедимся, что он присвоился*/
+        CloudStorageTags::assignTags($s3->storage->id, ['someTag' => 'someTagValue']);
+        $this::assertEquals(CloudStorageTags::retrieveTags($s3->storage->id), ['someTag' => 'someTagValue']);
 
-		/*Синхронизируем из S3, проверим, что локальные теги опустели*/
-		$s3->storage->syncTagsFromS3();
-		$this::assertEmpty($s3->storage->tags);
-	}
+        /*Синхронизируем в S3 (теги уйдут в облако, но не будут присвоены объекту $storage, это нормально в нашем тесте)*/
+        $s3->storage->syncTagsToS3();
 
-	/**
-	 * @return void
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public function testSyncToS3():void {
-		$s3 = new S3();
-		/*Закинем файл без тегов*/
-		$s3->saveObject(Yii::getAlias(self::SAMPLE_FILE_PATH));
-		$this::assertEmpty($s3->getTagsArray());
+        /*Проверяем, что тег установился в облаке*/
+        $this::assertEquals($s3->getTagsArray(), ['someTag' => 'someTagValue']);
+    }
 
-		/*Установим локальный тег, и убедимся, что он присвоился*/
-		CloudStorageTags::assignTags($s3->storage->id, ['someTag' => 'someTagValue']);
-		$this::assertEquals(CloudStorageTags::retrieveTags($s3->storage->id), ['someTag' => 'someTagValue']);
+    /**
+     * @return void
+     * @throws Exception
+     * @throws Throwable
+     */
+    public function testTagsManipulations(): void
+    {
+        $storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, ['tag1' => 'tag1value']);
+        $s3 = new S3(['storage' => $storage]);
+        $result = $s3->getTagsArray();
+        $this::assertEquals($result, ['tag1' => 'tag1value']);
 
-		/*Синхронизируем в S3 (теги уйдут в облако, но не будут присвоены объекту $storage, это нормально в нашем тесте)*/
-		$s3->storage->syncTagsToS3();
+        $storage->tags = ['newTagName' => 'newTagValue'];
+        $storage->save();
 
-		/*Проверяем, что тег установился в облаке*/
-		$this::assertEquals($s3->getTagsArray(), ['someTag' => 'someTagValue']);
-	}
+        $this::assertEquals($storage->tags, ['newTagName' => 'newTagValue']);
 
-	/**
-	 * @return void
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public function testTagsManipulations():void {
-		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH), null, null, ['tag1' => 'tag1value']);
-		$s3 = new S3(['storage' => $storage]);
-		$result = $s3->getTagsArray();
-		$this::assertEquals($result, ['tag1' => 'tag1value']);
+        $result = $s3->getTagsArray();
 
-		$storage->tags = ['newTagName' => 'newTagValue'];
-		$storage->save();
+        /*Прямое изменение тегов в хранилище НЕ МЕНЯЕТ теги в S3*/
+        $this::assertEquals($result, ['tag1' => 'tag1value']);
+        /*После синхронизации теги появятся в S3*/
+        $storage->syncTagsToS3();
+        $result = $s3->getTagsArray();
+        $this::assertEquals($result, ['newTagName' => 'newTagValue']);
 
-		$this::assertEquals($storage->tags, ['newTagName' => 'newTagValue']);
+        /*Добавим тег в S3 + перезапишем имеющийся*/
+        $s3->setObjectTagging(null, null, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
+        $result = $s3->getTagsArray();
 
-		$result = $s3->getTagsArray();
+        $this::assertEquals($result, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
+        $s3->storage->syncTagsFromS3();
 
-		/*Прямое изменение тегов в хранилище НЕ МЕНЯЕТ теги в S3*/
-		$this::assertEquals($result, ['tag1' => 'tag1value']);
-		/*После синхронизации теги появятся в S3*/
-		$storage->syncTagsToS3();
-		$result = $s3->getTagsArray();
-		$this::assertEquals($result, ['newTagName' => 'newTagValue']);
+        $this::assertEquals($s3->storage->tags, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
+    }
 
-		/*Добавим тег в S3 + перезапишем имеющийся*/
-		$s3->setObjectTagging(null, null, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
-		$result = $s3->getTagsArray();
+    /**
+     * @return void
+     * @throws Throwable
+     */
+    public function testDeleteFile(): void
+    {
+        $storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
+        $result = S3Helper::deleteFile($storage->id);
+        $result2 = S3Helper::deleteFile(10);
+        $result3 = S3Helper::StorageToFile($result);
 
-		$this::assertEquals($result, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
-		$s3->storage->syncTagsFromS3();
+        $this::assertEquals($storage->id, $result);
+        $this::assertNull($result2);
+        $this::assertNull($result3);
 
-		$this::assertEquals($s3->storage->tags, ['someTag' => 'someTagValue', 'newTagName' => 'otherTagValue']);
+        $s3 = new S3(['storage' => $storage]);
+        $this->expectException(S3Exception::class);
+        $s3->getObject(null, null, PathHelper::GetTempFileName());
+    }
 
-	}
+    /**
+     * @return void
+     * @throws Exception
+     * @throws Throwable
+     */
+    public function testDeleteStorageFile(): void
+    {
+        $storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
+        $result = S3Helper::deleteFile($storage);
 
-	/**
-	 * @return void
-	 * @throws Throwable
-	 */
-	public function testDeleteFile():void {
-		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
-		$result = S3Helper::deleteFile($storage->id);
-		$result2 = S3Helper::deleteFile(10);
-		$result3 = S3Helper::StorageToFile($result);
+        $this::assertEquals($storage->id, $result);
+        $this::assertTrue($storage->deleted);
 
-		$this::assertEquals($storage->id, $result);
-		$this::assertNull($result2);
-		$this::assertNull($result3);
-
-		$s3 = new S3(['storage' => $storage]);
-		$this->expectException(S3Exception::class);
-		$s3->getObject(null, null, PathHelper::GetTempFileName());
-
-	}
-
-	/**
-	 * @return void
-	 * @throws Exception
-	 * @throws Throwable
-	 */
-	public function testDeleteStorageFile():void {
-		$storage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE_FILE_PATH));
-		$result = S3Helper::deleteFile($storage);
-
-		$this::assertEquals($storage->id, $result);
-		$this::assertTrue($storage->deleted);
-
-		$s3 = new S3(['storage' => $storage]);
-		$this->expectException(S3Exception::class);
-		$s3->getObject(null, null, PathHelper::GetTempFileName());
-	}
-
+        $s3 = new S3(['storage' => $storage]);
+        $this->expectException(S3Exception::class);
+        $s3->getObject(null, null, PathHelper::GetTempFileName());
+    }
 }
