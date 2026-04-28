@@ -1,6 +1,7 @@
 <?php
 
 /** Пример кода, демонстрирующий отправку файлов через PUT **/
+
 declare(strict_types=1);
 
 /**
@@ -15,7 +16,7 @@ use limion\jqueryfileupload\JQueryFileUpload;
 use yii\bootstrap4\ActiveForm;
 use yii\web\View;
 
-$isDisabled = $model->isNewRecord?false:'disabled';
+$isDisabled = $model->isNewRecord ? false : 'disabled';
 ?>
 
 <?php $form = ActiveForm::begin(); ?>

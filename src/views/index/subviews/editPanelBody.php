@@ -14,7 +14,7 @@ use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
 use yii\web\View;
 
-$isDisabled = $model->isNewRecord?false:'disabled';
+$isDisabled = $model->isNewRecord ? false : 'disabled';
 ?>
 
 <div class="row">

@@ -31,7 +31,7 @@ use yii\web\View;
     <div class="panel-container show">
         <div class="panel-content">
             <?= GridView::widget([
-                'id' => "cloud-storage-index-grid",
+                'id' => 'cloud-storage-index-grid',
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'filterOnFocusOut' => false,
@@ -42,10 +42,10 @@ use yii\web\View;
                         'class' => ActionColumn::class,
                         'template' => '<div class="btn-group">{edit}{view}{download}{delete}</div>',
                         'buttons' => [
-                            'edit' => static fn(string $url):string => Html::a('<i class="fa fa-edit"></i>', $url),
-                            'view' => static fn(string $url):string => Html::a('<i class="fa fa-eye"></i>', $url),
-                            'download' => static fn(string $url):string => Html::a('<i class="fa fa-download"></i>', $url),
-                            'delete' => static fn(string $url):string => Html::a('<i class="fa fa-trash"></i>', $url),
+                            'edit' => static fn(string $url): string => Html::a('<i class="fa fa-edit"></i>', $url),
+                            'view' => static fn(string $url): string => Html::a('<i class="fa fa-eye"></i>', $url),
+                            'download' => static fn(string $url): string => Html::a('<i class="fa fa-download"></i>', $url),
+                            'delete' => static fn(string $url): string => Html::a('<i class="fa fa-trash"></i>', $url),
                         ],
                     ],
                     'id',
@@ -70,7 +70,7 @@ use yii\web\View;
                         'format' => 'raw',
                         'value' => static fn(CloudStorageSearch $model) => BadgeWidget::widget([
                             'items' => $model->tags,
-                            'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item):string => $keyAttributeValue.":"
+                            'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item): string => $keyAttributeValue . ':'
                         ])
                     ],
                     'connection'

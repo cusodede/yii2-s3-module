@@ -78,7 +78,7 @@ class IndexController extends Controller
     public function actionDownload(int $id, ?string $mime = null): Response
     {
         if (null === $response = CloudStorage::Download($id, $mime)) {
-            throw new NotFoundHttpException("Model is not found!");
+            throw new NotFoundHttpException('Model is not found!');
         }
         return $response;
     }
@@ -127,7 +127,7 @@ class IndexController extends Controller
             }
             return $this->redirect(S3Module::to('index'));
         }
-        return $this->render('edit', ['model' => $model, 'buckets' => (new S3())->getListBucketMap()]);
+        return $this->render('edit', ['model' => $model, 'buckets' => new S3()->getListBucketMap()]);
     }
     /**
      * @return string
@@ -137,7 +137,7 @@ class IndexController extends Controller
     {
         $createBucketForm = new CreateBucketForm();
         $isCreated = false;
-        if (true === Yii::$app->request->isPost && true === $createBucketForm->load(Yii::$app->request->post()) && $createBucketForm->validate() && true === $isCreated = (new S3())->createBucket($createBucketForm->name)) {
+        if (true === Yii::$app->request->isPost && true === $createBucketForm->load(Yii::$app->request->post()) && $createBucketForm->validate() && true === $isCreated = new S3()->createBucket($createBucketForm->name)) {
             $createBucketForm = new CreateBucketForm();
         }
         return $this->render('create-bucket', compact('createBucketForm', 'isCreated'));

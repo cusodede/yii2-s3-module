@@ -38,7 +38,7 @@ use yii\widgets\DetailView;
             'format' => 'raw',
             'value' => static fn(CloudStorage $model) => BadgeWidget::widget([
                 'items' => $model->tags,
-                'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item):string => $keyAttributeValue.":"
+                'innerPrefix' => fn(string $keyAttributeValue, ?DynamicModel $item): string => $keyAttributeValue . ':'
             ])
         ]
     ]
