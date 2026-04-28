@@ -11,6 +11,7 @@ use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\cloud_storage\CloudStorageTags;
 use cusodede\s3\models\S3;
 use pozitronik\helpers\PathHelper;
+use Yii;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
@@ -51,7 +52,7 @@ class S3ModuleTest extends Unit
         ]);
 
         /*Проверим соответствие тегов в S3*/
-        $result = (new S3())->getTagsArray($storage->key);
+        $result = new S3()->getTagsArray($storage->key);
         $this::assertEquals($result, [
             'tag1' => 'tag1value', 'tag2' => 'tag2', 'emptyTag' => 'emptyTag'
         ]);
@@ -86,7 +87,7 @@ class S3ModuleTest extends Unit
 
         $this::assertEquals($storage->tags, []);
 
-        $result = (new S3())->getTagsArray($storage->key);
+        $result = new S3()->getTagsArray($storage->key);
         $this::assertEquals($result, []);
         $this::assertEquals(ArrayHelper::map($storage->relatedTags, 'tag_label', 'tag_key'), []);
     }

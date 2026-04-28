@@ -23,7 +23,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.4",
-        "yiisoft/yii2": "^2.0.54",
+        "yiisoft/yii2": "~2.0.54",
         "yiisoft/yii2-bootstrap4": "^2.0.10",
         "aws/aws-sdk-php": "^3.379",
         "pozitronik/yii2-traits": "^1.0.5",
