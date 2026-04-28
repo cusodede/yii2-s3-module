@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace cusodede\s3\components\web;
 
@@ -14,35 +13,32 @@ use yii\web\UploadedFile as YiiUploadedFile;
  * Перекрытие стандартного компонента для доступа к _tempResource
  * @property-read ?resource $resource
  */
-class UploadedFile extends YiiUploadedFile
-{
-    /**
-     * @return ?resource
-     * @throws ReflectionException
-     * @throws UnknownClassException
-     */
-    public function getResource()
-    {
-        return ([] === $resource = ReflectionHelper::getValue(parent::class, '_tempResource', $this))?null:$resource;
-    }
+class UploadedFile extends YiiUploadedFile {
 
-    /**
-     * @inheritDoc
-     * Для приведения типа
-     */
-    public static function getInstance($model, $attribute): ?self
-    {
-        return parent::getInstance($model, $attribute);
-    }
+	/**
+	 * @return ?resource
+	 * @throws ReflectionException
+	 * @throws UnknownClassException
+	 */
+	public function getResource() {
+		return ([] === $resource = ReflectionHelper::getValue(parent::class, '_tempResource', $this))?null:$resource;
+	}
 
-    /**
-     * @return bool
-     */
-    public function deleteTempFile(): bool
-    {
-        if (file_exists($this->tempName)) {
-            return unlink($this->tempName);
-        }
-        return false;
-    }
+	/**
+	 * @inheritDoc
+	 * Для приведения типа
+	 */
+	public static function getInstance($model, $attribute):?self {
+		return parent::getInstance($model, $attribute);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function deleteTempFile():bool {
+		if (file_exists($this->tempName)) {
+			return unlink($this->tempName);
+		}
+		return false;
+	}
 }

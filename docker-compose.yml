@@ -1,4 +1,3 @@
----
 services:
   postgres:
     image: postgres:13.4
@@ -23,7 +22,7 @@ services:
       - yii2-s3-network
 
   minio:
-    image: minio/minio:latest
+    image: bitnami/minio:latest
     container_name: yii2-s3-minio
     environment:
       MINIO_ROOT_USER: minioadmin
@@ -42,9 +41,33 @@ services:
     networks:
       - yii2-s3-network
 
+  php-8.1:
+    build:
+      context: ./docker/php/8.1
+      dockerfile: Dockerfile
+    container_name: yii2-s3-php-8.1
+    ports:
+      - "8081:8000"
+    volumes:
+      - .:/var/www/:cached
+    working_dir: /var/www
+    environment:
+      - PHP_VERSION=8.1
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - yii2-s3-network
+    tty: true
+    stdin_open: true
+
   php-8.4:
     build:
-      context: .
+      context: ./docker/php/8.4
       dockerfile: Dockerfile
     container_name: yii2-s3-php-8.4
     ports:

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * @var View $this
@@ -16,24 +15,24 @@ use yii\web\View;
 ?>
 
 <?php $form = ActiveForm::begin(['id' => 'create-bucket']); ?>
-    <div class="panel">
-        <div class="panel-hdr">
-        </div>
-        <div class="panel-container show">
-            <div class="panel-content">
-                <?php if (true === $isCreated): ?>
-                    <div class="alert alert-info" role="alert">Корзина создана!</div>
-                <?php endif; ?>
-                <div class="row">
-                    <div class="col-md-6">
-                        <?= $form->field($createBucketForm, 'name')->textInput() ?>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-content">
-                <?= Html::submitButton('Создать', ['class' => 'btn btn-success float-right']) ?>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
+	<div class="panel">
+		<div class="panel-hdr">
+		</div>
+		<div class="panel-container show">
+			<div class="panel-content">
+				<?php if (true === $isCreated): ?>
+					<div class="alert alert-info" role="alert">Корзина создана!</div>
+				<?php endif; ?>
+				<div class="row">
+					<div class="col-md-6">
+						<?= $form->field($createBucketForm, 'name')->textInput() ?>
+					</div>
+				</div>
+			</div>
+			<div class="panel-content">
+				<?= Html::submitButton('Создать', ['class' => 'btn btn-success float-right']) ?>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
 <?php ActiveForm::end(); ?>

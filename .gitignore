@@ -1,6 +1,6 @@
 .idea
-vendor
-composer.lock
-.phpunit.result.cache
 .env
-coverage.xml
+./tests/.env
+./tests/runtime/*
+!./tests/runtime/.gitkeep
+/composer.lock
