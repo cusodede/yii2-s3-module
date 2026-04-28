@@ -1,4 +1,7 @@
-<?php /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
+<?php
+
+/** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
+
 /** @noinspection PhpUnhandledExceptionInspection */
 
 
