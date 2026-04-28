@@ -1,0 +1,26 @@
+---
+
+name: static analysis
+
+permissions:
+  contents: read
+
+on:
+  pull_request: &ignore-paths
+    paths-ignore:
+      - '.github/CONTRIBUTING.md'
+      - '.github/FUNDING.yml'
+      - '.github/SECURITY.md'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'LICENSE.md'
+      - 'UPGRADE.md'
+      - '.gitignore'
+      - '.gitattributes'
+      - '.editorconfig'
+
+  push: *ignore-paths
+
+jobs:
+  phpstan:
+    uses: yii2-framework/actions/.github/workflows/phpstan.yml@v1

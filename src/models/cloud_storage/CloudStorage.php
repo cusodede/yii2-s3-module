@@ -29,11 +29,11 @@ use yii\web\Response;
  */
 class CloudStorage extends CloudStorageAR
 {
-    public const DEFAULT_MIME_TYPE = 'application/octet-stream';
+    public const string DEFAULT_MIME_TYPE = 'application/octet-stream';
     /**
      * ext => mime
      */
-    public const MIME_TYPES = [
+    public const array MIME_TYPES = [
         'apk' => 'application/vnd.android.package-archive',
         'ipa' => 'application/octet-stream'
     ];

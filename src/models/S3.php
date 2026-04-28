@@ -206,7 +206,7 @@ class S3 extends Model
             : $this->client->putObjectTagging([
                 'Key' => $this->getKey($key),
                 'Bucket' => $this->getBucket($bucket),
-                'Tagging' => ['TagSet' => (new ArrayTagAdapter($tags))->tagSet()]
+                'Tagging' => ['TagSet' => new ArrayTagAdapter($tags)->tagSet()]
             ]);
     }
 
@@ -242,7 +242,7 @@ class S3 extends Model
             'Key' => $key = $this->getKey($key ?? static::GetFileNameKey(PathHelper::ExtractBaseName($filePath))),
             'Bucket' => $bucket = $this->getBucket($bucket),
             'Body' => fopen($filePath, 'rb'),
-            'Tagging' => (string)(new ArrayTagAdapter($tags)),
+            'Tagging' => (string) new ArrayTagAdapter($tags),
             'ContentType' => false === $mimeContentType ? 'application/octet-stream' : $mimeContentType,
         ]);
     }
