@@ -18,4 +18,4 @@ parameters:
     - tests
   excludePaths:
     analyse:
-      - tests/_support/_generated
+      - tests/_support/_generated (?)
