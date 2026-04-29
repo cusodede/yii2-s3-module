@@ -303,28 +303,31 @@ Available stages:
 ### Configuration
 
 ```php
+use Aws\CommandInterface;
+use Psr\Http\Message\RequestInterface;
+
 $params = [
     ...
     'params' => [
         ...
         'attemptMiddleware' => [
-            'middleware' => function () {},
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
             'name' => 'test', // Optional middleware name
         ],
         'signMiddleware' => [
-            'middleware' => function () {},
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
             'name' => 'test', // Optional middleware name
         ],
         'buildMiddleware' => [
-            'middleware' => function () {},
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
             'name' => 'test', // Optional middleware name
         ],
         'initMiddleware' => [
-            'middleware' => function () {},
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
             'name' => 'test', // Optional middleware name
         ],
         'validateMiddleware' => [
-            'middleware' => function () {},
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
             'name' => 'test', // Optional middleware name
         ],
     ]

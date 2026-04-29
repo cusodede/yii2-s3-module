@@ -103,7 +103,7 @@ trait S3MiddlewareTrait
 
             $signMiddleware = $this->getSignMiddleware();
             if (null !== $signMiddleware->middleware) {
-                $client->getHandlerList()->appendValidate($signMiddleware->middleware, $signMiddleware->name);
+                $client->getHandlerList()->appendSign($signMiddleware->middleware, $signMiddleware->name);
             }
 
             $buildMiddleware = $this->getBuildMiddleware();
