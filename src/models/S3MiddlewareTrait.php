@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace cusodede\s3\models;
 
 use Aws\S3\S3Client;
+use Closure;
 use cusodede\s3\S3Module;
 use Throwable;
 use Yii;
@@ -20,63 +21,63 @@ trait S3MiddlewareTrait
      */
     public function getAttemptMiddleware(): S3MiddlewareDTO
     {
-        /** @var array{middleware:callable, name:string} $param */
+        /** @var array{middleware?:Closure, name?:string} $param */
         $param = S3Module::param('attemptMiddleware');
 
         return new S3MiddlewareDTO($param['middleware'] ?? null, $param['name'] ?? 'attemptMiddleware');
     }
 
     /**
-     * Sign stage — Signing the HTTP request (SigV4)
-     * @return S3MiddlewareDTO
-     * @throws InvalidConfigException
-     * @throws Throwable
-     */
+      * Sign stage — Signing the HTTP request (SigV4)
+      * @return S3MiddlewareDTO
+      * @throws InvalidConfigException
+      * @throws Throwable
+      */
     public function getSignMiddleware(): S3MiddlewareDTO
     {
-        /** @var array{middleware:callable, name:string} $param */
+        /** @var array{middleware?:Closure, name?:string} $param */
         $param = S3Module::param('signMiddleware');
 
         return new S3MiddlewareDTO($param['middleware'] ?? null, $param['name'] ?? 'signMiddleware');
     }
 
     /**
-     * Build stage — Serializing the command into an HTTP request
-     * @return S3MiddlewareDTO
-     * @throws InvalidConfigException
-     * @throws Throwable
-     */
+      * Build stage — Serializing the command into an HTTP request
+      * @return S3MiddlewareDTO
+      * @throws InvalidConfigException
+      * @throws Throwable
+      */
     public function getBuildMiddleware(): S3MiddlewareDTO
     {
-        /** @var array{middleware:callable, name:string} $param */
+        /** @var array{middleware?:Closure, name?:string} $param */
         $param = S3Module::param('buildMiddleware');
 
         return new S3MiddlewareDTO($param['middleware'] ?? null, $param['name'] ?? 'buildMiddleware');
     }
 
     /**
-     * Init stage — Initializing the command, adding default parameters
-     * @return S3MiddlewareDTO
-     * @throws InvalidConfigException
-     * @throws Throwable
-     */
+      * Init stage — Initializing the command, adding default parameters
+      * @return S3MiddlewareDTO
+      * @throws InvalidConfigException
+      * @throws Throwable
+      */
     public function getInitMiddleware(): S3MiddlewareDTO
     {
-        /** @var array{middleware:callable, name:string} $param */
+        /** @var array{middleware?:Closure, name?:string} $param */
         $param = S3Module::param('initMiddleware');
 
         return new S3MiddlewareDTO($param['middleware'] ?? null, $param['name'] ?? 'initMiddleware');
     }
 
     /**
-     * Validate stage — Validating the command's input parameters
-     * @return S3MiddlewareDTO
-     * @throws InvalidConfigException
-     * @throws Throwable
-     */
+      * Validate stage — Validating the command's input parameters
+      * @return S3MiddlewareDTO
+      * @throws InvalidConfigException
+      * @throws Throwable
+      */
     public function getValidateMiddleware(): S3MiddlewareDTO
     {
-        /** @var array{middleware:callable, name:string} $param */
+        /** @var array{middleware?:Closure, name?:string} $param */
         $param = S3Module::param('validateMiddleware');
 
         return new S3MiddlewareDTO($param['middleware'] ?? null, $param['name'] ?? 'validateMiddleware');
