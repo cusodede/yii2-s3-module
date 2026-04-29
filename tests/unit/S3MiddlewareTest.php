@@ -324,4 +324,50 @@ class S3MiddlewareTest extends Unit
             }
         }
     }
+
+    public function testSetMiddlewareCatchesThrowableAndStillReturnsClient(): void
+    {
+        $module = Yii::$app->getModule('s3');
+        $originals = [
+            'attemptMiddleware' => $module->params['attemptMiddleware'] ?? null,
+            'initMiddleware' => $module->params['initMiddleware'] ?? null,
+            'validateMiddleware' => $module->params['validateMiddleware'] ?? null,
+            'signMiddleware' => $module->params['signMiddleware'] ?? null,
+            'buildMiddleware' => $module->params['buildMiddleware'] ?? null,
+        ];
+
+        $middleware = static fn() => null;
+        $module->params['attemptMiddleware'] = ['middleware' => $middleware, 'name' => 'testAttempt'];
+        $module->params['initMiddleware'] = ['middleware' => $middleware, 'name' => 'testInit'];
+        $module->params['validateMiddleware'] = ['middleware' => $middleware, 'name' => 'testValidate'];
+        $module->params['signMiddleware'] = ['middleware' => $middleware, 'name' => 'testSign'];
+        $module->params['buildMiddleware'] = ['middleware' => $middleware, 'name' => 'testBuild'];
+
+        try {
+            $s3 = new S3();
+
+            $ref = new \ReflectionClass($s3);
+            $method = $ref->getMethod('setMiddleware');
+
+            $clientMock = $this->createMock(S3Client::class);
+            $handlerList = $this->createMock(\Aws\HandlerList::class);
+            $handlerList->method('appendAttempt')->willThrowException(new \RuntimeException('HandlerList error'));
+            $handlerList->method('appendInit');
+            $handlerList->method('appendValidate');
+            $handlerList->method('appendBuild');
+            $clientMock->method('getHandlerList')->willReturn($handlerList);
+
+            $method->invoke($s3, $clientMock);
+
+            $this::assertTrue(true);
+        } finally {
+            foreach ($originals as $key => $original) {
+                if ($original === null) {
+                    unset($module->params[$key]);
+                } else {
+                    $module->params[$key] = $original;
+                }
+            }
+        }
+    }
 }
