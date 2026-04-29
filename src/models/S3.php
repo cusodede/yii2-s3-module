@@ -26,6 +26,8 @@ use yii\web\NotFoundHttpException;
  */
 class S3 extends Model
 {
+    use S3MiddlewareTrait;
+
     public ?CloudStorage $storage = null;
     private string $_host;
     private string $_login;
@@ -70,7 +72,7 @@ class S3 extends Model
      */
     public function getClient(): S3Client
     {
-        return new S3Client([
+        $client = new S3Client([
             'version' => 'latest',
             'region' => 'il-central-1', // обязательный параметр. Из доки AWS: Specifies which AWS Region to send this request to.
             'endpoint' => $this->_host,
@@ -81,6 +83,9 @@ class S3 extends Model
                 'secret' => $this->_password
             ]
         ]);
+        $this->setMiddleware($client);
+
+        return $client;
     }
 
     /**
@@ -162,7 +167,8 @@ class S3 extends Model
             // validation error is the more useful signal to surface.
             try {
                 $this->deleteObject($key, $this->storage->bucket);
-            } catch (Throwable) {
+            } catch (Throwable $throwable) {
+                Yii::error($throwable);
             }
             throw new Exception(sprintf('Failed to persist CloudStorage row: %s', implode('; ', $this->storage->getFirstErrors())));
         }
