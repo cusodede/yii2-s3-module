@@ -6,6 +6,9 @@ namespace unit;
 
 use Codeception\Test\Unit;
 use cusodede\s3\helpers\S3Helper;
+use cusodede\s3\models\cloud_storage\CloudStorage;
+use cusodede\s3\models\cloud_storage\CloudStorageTags;
+use cusodede\s3\models\S3;
 use cusodede\s3\S3Module;
 use Throwable;
 use Yii;
@@ -121,5 +124,99 @@ class S3MultipleStoragesTest extends Unit
         $defaultStorage = S3Helper::FileToStorage(Yii::getAlias(self::SAMPLE3_FILE_PATH), connection: 'ThisConnectionNotExists');
         $this::assertFileEquals(self::SAMPLE3_FILE_PATH, S3Helper::StorageToFile($defaultStorage->id));
         $this::assertEquals('FirstS3Connection', $defaultStorage->connection);
+    }
+
+    /**
+     * CloudStorage::Download must route through $model->connection rather than
+     * defaulting to the first connection in the map. Sabotages FirstS3Connection's
+     * password so any wrongly-routed call auth-fails; uploads via SecondS3Connection
+     * (un-sabotaged) and verifies the download still succeeds.
+     * @return void
+     * @throws Throwable
+     * @throws Exception
+     */
+    public function testDownloadUsesStorageConnection(): void
+    {
+        $storage = S3Helper::FileToStorage(
+            Yii::getAlias(self::SAMPLE_FILE_PATH),
+            connection: 'SecondS3Connection'
+        );
+        $module = Yii::$app->getModule('s3');
+        $originalPassword = $module->params['connection']['FirstS3Connection']['password'];
+        $module->params['connection']['FirstS3Connection']['password'] = 'sabotaged-' . uniqid();
+
+        try {
+            $response = CloudStorage::Download($storage->id);
+
+            $this::assertNotNull($response);
+            $this::assertEquals(
+                file_get_contents(Yii::getAlias(self::SAMPLE_FILE_PATH)),
+                $response->content
+            );
+        } finally {
+            $module->params['connection']['FirstS3Connection']['password'] = $originalPassword;
+            new S3(['connection' => 'SecondS3Connection'])->deleteObject($storage->key, $storage->bucket);
+            $storage->delete();
+        }
+    }
+
+    /**
+     * CloudStorage::syncTagsFromS3 must route through $this->connection. Same
+     * sabotage pattern as testDownloadUsesStorageConnection.
+     * @return void
+     * @throws Throwable
+     * @throws Exception
+     */
+    public function testSyncTagsFromS3UsesStorageConnection(): void
+    {
+        $s3 = new S3(['connection' => 'SecondS3Connection']);
+        $s3->saveObject(Yii::getAlias(self::SAMPLE_FILE_PATH));
+        $storage = $s3->storage;
+        $s3->setObjectTagging($storage->key, $storage->bucket, ['env' => 'remote']);
+
+        $module = Yii::$app->getModule('s3');
+        $originalPassword = $module->params['connection']['FirstS3Connection']['password'];
+        $module->params['connection']['FirstS3Connection']['password'] = 'sabotaged-' . uniqid();
+
+        try {
+            $storage->syncTagsFromS3();
+            $this::assertEquals(['env' => 'remote'], $storage->tags);
+        } finally {
+            $module->params['connection']['FirstS3Connection']['password'] = $originalPassword;
+            new S3(['connection' => 'SecondS3Connection'])->deleteObject($storage->key, $storage->bucket);
+            CloudStorageTags::deleteAll(['cloud_storage_id' => $storage->id]);
+            $storage->delete();
+        }
+    }
+
+    /**
+     * CloudStorage::syncTagsToS3 must route through $this->connection. Same
+     * sabotage pattern as testDownloadUsesStorageConnection.
+     * @return void
+     * @throws Throwable
+     * @throws Exception
+     */
+    public function testSyncTagsToS3UsesStorageConnection(): void
+    {
+        $s3 = new S3(['connection' => 'SecondS3Connection']);
+        $s3->saveObject(Yii::getAlias(self::SAMPLE_FILE_PATH));
+        $storage = $s3->storage;
+        CloudStorageTags::assignTags($storage->id, ['env' => 'local']);
+
+        $module = Yii::$app->getModule('s3');
+        $originalPassword = $module->params['connection']['FirstS3Connection']['password'];
+        $module->params['connection']['FirstS3Connection']['password'] = 'sabotaged-' . uniqid();
+
+        try {
+            $storage->syncTagsToS3();
+            $remoteTags = new S3(['connection' => 'SecondS3Connection'])
+                ->getTagsArray($storage->key, $storage->bucket);
+            $this::assertEquals(['env' => 'local'], $remoteTags);
+        } finally {
+            $module->params['connection']['FirstS3Connection']['password'] = $originalPassword;
+            new S3(['connection' => 'SecondS3Connection'])->deleteObject($storage->key, $storage->bucket);
+            CloudStorageTags::deleteAll(['cloud_storage_id' => $storage->id]);
+            $storage->delete();
+        }
     }
 }

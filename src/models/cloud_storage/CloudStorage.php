@@ -99,7 +99,7 @@ class CloudStorage extends CloudStorageAR
     {
         if (null !== $model = static::findOne($id)) {
             try {
-                $s3 = new S3();
+                $s3 = new S3(['connection' => $model->connection]);
                 $result = $s3->getObject($model->key, $model->bucket);
                 /** @var Stream $body */
                 $body = $result->get('Body');
@@ -184,7 +184,7 @@ class CloudStorage extends CloudStorageAR
      */
     public function syncTagsFromS3(): void
     {
-        $remoteTags = new S3()->getTagsArray($this->key, $this->bucket);
+        $remoteTags = new S3(['connection' => $this->connection])->getTagsArray($this->key, $this->bucket);
         CloudStorageTags::clearTags($this->id);
         CloudStorageTags::assignTags($this->id, $remoteTags);
         $this->_tags = CloudStorageTags::retrieveTags($this->id);
@@ -198,6 +198,6 @@ class CloudStorage extends CloudStorageAR
     public function syncTagsToS3(): void
     {
         $tags = CloudStorageTags::retrieveTags($this->id);
-        new S3()->setObjectTagging($this->key, $this->bucket, $tags);
+        new S3(['connection' => $this->connection])->setObjectTagging($this->key, $this->bucket, $tags);
     }
 }
