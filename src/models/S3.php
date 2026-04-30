@@ -10,6 +10,7 @@ use Aws\S3\S3Client;
 use cusodede\s3\S3Module;
 use pozitronik\helpers\ArrayHelper;
 use pozitronik\helpers\PathHelper;
+use pozitronik\helpers\Utils;
 use Throwable;
 use Yii;
 use yii\base\Exception;
@@ -170,7 +171,7 @@ class S3 extends Model
             } catch (Throwable $throwable) {
                 Yii::error($throwable);
             }
-            throw new Exception(sprintf('Failed to persist CloudStorage row: %s', implode('; ', $this->storage->getFirstErrors())));
+            throw new Exception(sprintf('Failed to persist CloudStorage row: %s', Utils::Errors2String($this->storage->getFirstErrors())));
         }
     }
 

@@ -85,6 +85,12 @@ parameters:
 			path: src/forms/CreateBucketForm.php
 
 		-
+			message: '#^Cannot access property \$bucket on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
 			message: '#^Cannot access property \$connection on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
 			identifier: property.nonObject
 			count: 1
@@ -105,6 +111,12 @@ parameters:
 		-
 			message: '#^Cannot access property \$key on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
 			identifier: property.nonObject
+			count: 1
+			path: src/helpers/S3Helper.php
+
+		-
+			message: '#^Cannot call method getFirstErrors\(\) on array\<mixed\>\|yii\\db\\ActiveRecord\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: src/helpers/S3Helper.php
 

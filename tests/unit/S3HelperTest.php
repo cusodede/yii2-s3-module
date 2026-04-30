@@ -190,9 +190,7 @@ class S3HelperTest extends Unit
         $fileName = 'user-file-' . uniqid('', true) . '.txt';
         $tags = ['user_id' => (string)$user->id, 'type' => 'document'];
 
-        $result = S3Helper::uploadFileFromModel($user, $filePath, $fileName, self::TEST_BUCKET, $tags);
-
-        $this::assertTrue($result);
+        S3Helper::uploadFileFromModel($user, $filePath, $fileName, self::TEST_BUCKET, $tags);
 
         // Find the created storage
         $storage = CloudStorage::find()
@@ -320,6 +318,95 @@ class S3HelperTest extends Unit
 
         // Clean up
         $storage->delete();
+    }
+
+    /**
+     * deleteFile() must throw when CloudStorage save() fails — and crucially,
+     * must NOT proceed to delete the S3 object when DB persistence failed.
+     * Otherwise the DB row stays "active" while S3 has lost the file, causing
+     * the inverse of saveObject's orphan bug: dangling references.
+     * @throws Throwable
+     */
+    public function testDeleteFileThrowsOnSaveFailure(): void
+    {
+        $filePath = Yii::getAlias(self::SAMPLE_FILE_PATH);
+        $storage = S3Helper::FileToStorage($filePath, 'delete-save-fail-' . uniqid() . '.txt');
+        $originalBucket = $storage->bucket;
+        $key = $storage->key;
+
+        // Force CloudStorageAR's `bucket required` rule to fail at save time.
+        $storage->bucket = null;
+
+        try {
+            S3Helper::deleteFile($storage);
+            $this::fail('Expected exception when CloudStorage save fails');
+        } catch (Exception $e) {
+            $this::assertStringContainsString('CloudStorage', $e->getMessage());
+        }
+
+        // S3 object must still exist — a failed DB save must not delete from S3.
+        $head = new S3()->client->headObject(['Bucket' => $originalBucket, 'Key' => $key]);
+        $this::assertNotNull($head);
+
+        // Clean up: restore bucket so we can hard-delete via the helper, plus
+        // remove the surviving S3 object.
+        $storage->bucket = $originalBucket;
+        new S3()->deleteObject($key, $originalBucket);
+        $storage->delete();
+    }
+
+    /**
+     * uploadFileFromModel() throws when the CloudStorage row fails validation,
+     * rather than silently returning false and leaving an orphaned S3 upload.
+     * @throws Throwable
+     */
+    public function testUploadFileFromModelThrowsOnValidationFailure(): void
+    {
+        $username = 'testuser-throw-' . uniqid('', true);
+        $user = new Users(['username' => $username, 'login' => $username, 'password' => 'pw']);
+        $this::assertTrue($user->save());
+
+        // CloudStorageAR enforces 255-char max on `filename`; this trips the
+        // string validator at save() time. The S3 putObject itself succeeds
+        // because the object key is an MD5 hash, independent of filename length.
+        $longFilename = str_repeat('x', 300) . '.txt';
+
+        try {
+            $this->expectException(Exception::class);
+            $this->expectExceptionMessage('Failed to persist CloudStorage row');
+            S3Helper::uploadFileFromModel($user, Yii::getAlias(self::SAMPLE_FILE_PATH), $longFilename, self::TEST_BUCKET);
+        } finally {
+            $user->delete();
+        }
+    }
+
+    /**
+     * When CloudStorage validation fails, uploadFileFromModel() rolls back the
+     * S3 upload before throwing — the bucket must not accumulate orphaned
+     * objects that the database has no record of.
+     * @throws Throwable
+     */
+    public function testUploadFileFromModelRollsBackUploadOnValidationFailure(): void
+    {
+        $username = 'testuser-rollback-' . uniqid('', true);
+        $user = new Users(['username' => $username, 'login' => $username, 'password' => 'pw']);
+        $this::assertTrue($user->save());
+
+        $s3 = new S3();
+        $countBefore = count($s3->client->listObjects(['Bucket' => self::TEST_BUCKET])->get('Contents') ?? []);
+
+        $longFilename = str_repeat('x', 300) . '.txt';
+
+        try {
+            S3Helper::uploadFileFromModel($user, Yii::getAlias(self::SAMPLE_FILE_PATH), $longFilename, self::TEST_BUCKET);
+        } catch (Exception) {
+            // expected — see testUploadFileFromModelThrowsOnValidationFailure
+        }
+
+        $countAfter = count($s3->client->listObjects(['Bucket' => self::TEST_BUCKET])->get('Contents') ?? []);
+        $this::assertEquals($countBefore, $countAfter);
+
+        $user->delete();
     }
 
     /**

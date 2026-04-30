@@ -26,8 +26,8 @@ class S3Module extends YiiModule
 
         try {
             if (Yii::$app instanceof Application) {
-                $this->controllerNamespace = 'vendor\cusodede\s3\commands';
-                $this->setControllerPath('@vendor/cusodede/yii2-s3-module/src/controllers');
+                $this->controllerNamespace = 'cusodede\s3\commands';
+                $this->setControllerPath('@vendor/cusodede/yii2-s3-module/src/commands');
             }
         } catch (Exception $e) {
             Yii::error($e->getTraceAsString(), 's3');
