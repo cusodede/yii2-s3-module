@@ -8,6 +8,7 @@ use cusodede\s3\models\cloud_storage\CloudStorage;
 use cusodede\s3\models\S3;
 use pozitronik\helpers\ArrayHelper;
 use pozitronik\helpers\PathHelper;
+use pozitronik\helpers\Utils;
 use Throwable;
 use Yii;
 use yii\base\Exception;
@@ -93,7 +94,7 @@ class S3Helper
             } catch (Throwable $throwable) {
                 Yii::error($throwable);
             }
-            throw new Exception(sprintf('Failed to persist CloudStorage row: %s', implode('; ', $cloudStorage->getFirstErrors())));
+            throw new Exception(sprintf('Failed to persist CloudStorage row: %s', Utils::Errors2String($cloudStorage->getFirstErrors())));
         }
     }
 
@@ -118,11 +119,9 @@ class S3Helper
         }
         $storageModel->deleted = true;
         if (!$storageModel->save()) {
-            throw new Exception(sprintf('Failed to mark CloudStorage row as deleted: %s', implode('; ', $storageModel->getFirstErrors())));
+            throw new Exception(sprintf('Failed to mark CloudStorage row as deleted: %s', Utils::Errors2String($storageModel->getFirstErrors())));
         }
-
-        new S3(['connection' => $storageModel->connection])
-            ->deleteObject($storageModel->key, $storageModel->bucket);
+        new S3(['connection' => $storageModel->connection])->deleteObject($storageModel->key, $storageModel->bucket);
         return $storageModel->id;
     }
 }
