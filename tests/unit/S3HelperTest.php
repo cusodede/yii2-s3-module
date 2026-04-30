@@ -323,6 +323,41 @@ class S3HelperTest extends Unit
     }
 
     /**
+     * deleteFile() must throw when CloudStorage save() fails — and crucially,
+     * must NOT proceed to delete the S3 object when DB persistence failed.
+     * Otherwise the DB row stays "active" while S3 has lost the file, causing
+     * the inverse of saveObject's orphan bug: dangling references.
+     * @throws Throwable
+     */
+    public function testDeleteFileThrowsOnSaveFailure(): void
+    {
+        $filePath = Yii::getAlias(self::SAMPLE_FILE_PATH);
+        $storage = S3Helper::FileToStorage($filePath, 'delete-save-fail-' . uniqid() . '.txt');
+        $originalBucket = $storage->bucket;
+        $key = $storage->key;
+
+        // Force CloudStorageAR's `bucket required` rule to fail at save time.
+        $storage->bucket = null;
+
+        try {
+            S3Helper::deleteFile($storage);
+            $this::fail('Expected exception when CloudStorage save fails');
+        } catch (Exception $e) {
+            $this::assertStringContainsString('CloudStorage', $e->getMessage());
+        }
+
+        // S3 object must still exist — a failed DB save must not delete from S3.
+        $head = new S3()->client->headObject(['Bucket' => $originalBucket, 'Key' => $key]);
+        $this::assertNotNull($head);
+
+        // Clean up: restore bucket so we can hard-delete via the helper, plus
+        // remove the surviving S3 object.
+        $storage->bucket = $originalBucket;
+        new S3()->deleteObject($key, $originalBucket);
+        $storage->delete();
+    }
+
+    /**
      * Test FileToStorage with empty filename
      * @throws Throwable
      */

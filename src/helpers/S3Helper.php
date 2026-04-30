@@ -87,9 +87,13 @@ class S3Helper
     }
 
     /**
-     * Метод для удаления файлов
+     * Метод для удаления файлов.
+     * Если CloudStorage::save() не проходит при пометке записи удалённой,
+     * метод бросает исключение и НЕ выполняет удаление в S3 — иначе DB и S3
+     * разъезжаются (БД считает файл активным, а в S3 его уже нет).
      * @param CloudStorage|int $storage
      * @return int|null
+     * @throws Exception when CloudStorage row save fails
      * @throws Throwable
      */
     public static function deleteFile(CloudStorage|int $storage): ?int
@@ -102,7 +106,9 @@ class S3Helper
             return null;
         }
         $storageModel->deleted = true;
-        $storageModel->save();
+        if (!$storageModel->save()) {
+            throw new Exception(sprintf('Failed to mark CloudStorage row as deleted: %s', implode('; ', $storageModel->getFirstErrors())));
+        }
 
         new S3(['connection' => $storageModel->connection])
             ->deleteObject($storageModel->key, $storageModel->bucket);
