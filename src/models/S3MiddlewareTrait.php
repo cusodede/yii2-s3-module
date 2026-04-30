@@ -83,6 +83,10 @@ trait S3MiddlewareTrait
         return new S3MiddlewareDTO($param['middleware'] ?? null, $param['name'] ?? 'validateMiddleware');
     }
 
+    /**
+     * @param S3Client $client
+     * @return void
+     */
     protected function setMiddleware(S3Client $client): void
     {
         try {

@@ -21,9 +21,10 @@ class IndexController extends Controller
      * Сохраняет файл в Minio
      * command yii s3/index/put /my/path/file.txt fileKey [my-bucket]
      * @param string $filepath
-     * @param null|string $bucket
      * @param string $key
+     * @param null|string $bucket
      * @return void
+     * @throws JsonException
      */
     public function actionPut(string $filepath, string $key, ?string $bucket = null): void
     {
@@ -42,10 +43,11 @@ class IndexController extends Controller
     /**
      * Скачивает и сохраняет файл из Minio
      * command yii s3/index/get fileKey [my-bucket] [/path/to/save]
-     * @param string $filepath
-     * @param null|string $bucket
      * @param string $key
+     * @param null|string $bucket
+     * @param string $filepath
      * @return void
+     * @throws JsonException
      */
     public function actionGet(string $key, ?string $bucket = null, string $filepath = '/tmp'): void
     {
@@ -65,9 +67,10 @@ class IndexController extends Controller
     /**
      * Инфо о файле
      * command yii s3/index/head fileKey [my-bucket]
-     * @param null|string $bucket
      * @param string $key
+     * @param null|string $bucket
      * @return void
+     * @throws JsonException
      */
     public function actionHead(string $key, ?string $bucket = null): void
     {
@@ -85,6 +88,7 @@ class IndexController extends Controller
      * @param string $bucket
      * @param string $key
      * @return void
+     * @throws JsonException
      */
     public function actionDelete(string $bucket, string $key): void
     {
@@ -101,6 +105,7 @@ class IndexController extends Controller
      * command yii s3/index/list [my-bucket]
      * @param null|string $bucket
      * @return void
+     * @throws JsonException
      */
     public function actionList(?string $bucket = null): void
     {
@@ -119,6 +124,7 @@ class IndexController extends Controller
      * Показать все ведерки
      * command yii s3/index/listBuckets
      * @return void
+     * @throws JsonException
      */
     public function actionListBuckets(): void
     {
