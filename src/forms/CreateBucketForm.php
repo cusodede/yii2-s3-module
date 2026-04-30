@@ -23,7 +23,7 @@ class CreateBucketForm extends Model
     {
         return [
             ['name', 'required'],
-            ['name', 'match', 'pattern' => '/^[A-Za-z0-9\-]+$/'],
+            ['name', 'match', 'pattern' => '/^[a-z0-9][a-z0-9.\-]{1,61}[a-z0-9]$/'],
             ['name', 'checkNameUnique']
         ];
     }

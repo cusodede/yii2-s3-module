@@ -56,10 +56,8 @@ class CreateBucketFormTest extends Unit
     }
 
     /**
-     * Names containing characters outside [A-Za-z0-9-] fail the `match` rule.
-     * Note: the regex permits uppercase even though S3 itself rejects upper-case
-     * bucket names — that mismatch is pre-existing and out of scope here; this
-     * test pins the regex contract as written.
+     * Names containing characters outside the allowed set (lowercase letters,
+     * digits, dots, hyphens) fail the `match` rule.
      * @return void
      */
     public function testValidateRejectsBadCharacters(): void
@@ -68,6 +66,81 @@ class CreateBucketFormTest extends Unit
 
         $this::assertFalse($form->validate());
         $this::assertArrayHasKey('name', $form->errors);
+    }
+
+    /**
+     * S3 bucket names must be lowercase. Uppercase is now rejected client-side
+     * rather than round-tripping to AWS for an InvalidBucketName response.
+     * @return void
+     */
+    public function testValidateRejectsUppercase(): void
+    {
+        $form = new CreateBucketForm(['name' => 'INVALID-BUCKET']);
+
+        $this::assertFalse($form->validate());
+        $this::assertArrayHasKey('name', $form->errors);
+    }
+
+    /**
+     * S3 requires bucket names to be at least 3 characters long.
+     * @return void
+     */
+    public function testValidateRejectsTooShort(): void
+    {
+        $form = new CreateBucketForm(['name' => 'ab']);
+
+        $this::assertFalse($form->validate());
+        $this::assertArrayHasKey('name', $form->errors);
+    }
+
+    /**
+     * S3 caps bucket names at 63 characters.
+     * @return void
+     */
+    public function testValidateRejectsTooLong(): void
+    {
+        $form = new CreateBucketForm(['name' => str_repeat('a', 64)]);
+
+        $this::assertFalse($form->validate());
+        $this::assertArrayHasKey('name', $form->errors);
+    }
+
+    /**
+     * S3 disallows hyphens at the start of a bucket name.
+     * @return void
+     */
+    public function testValidateRejectsLeadingHyphen(): void
+    {
+        $form = new CreateBucketForm(['name' => '-bucket']);
+
+        $this::assertFalse($form->validate());
+        $this::assertArrayHasKey('name', $form->errors);
+    }
+
+    /**
+     * S3 disallows hyphens at the end of a bucket name.
+     * @return void
+     */
+    public function testValidateRejectsTrailingHyphen(): void
+    {
+        $form = new CreateBucketForm(['name' => 'bucket-']);
+
+        $this::assertFalse($form->validate());
+        $this::assertArrayHasKey('name', $form->errors);
+    }
+
+    /**
+     * Lowercase names with embedded dots are valid S3 bucket names — the
+     * regex must not accidentally exclude them.
+     * @return void
+     * @throws Throwable
+     */
+    public function testValidateAcceptsLowercaseWithDots(): void
+    {
+        $form = new CreateBucketForm(['name' => 'foo.bar.' . uniqid()]);
+
+        $this::assertTrue($form->validate());
+        $this::assertEmpty($form->errors);
     }
 
     /**
