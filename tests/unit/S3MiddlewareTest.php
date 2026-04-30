@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace unit;
 
+use Aws\HandlerList;
 use Aws\S3\S3Client;
 use Codeception\Test\Unit;
 use cusodede\s3\models\S3;
 use cusodede\s3\models\S3MiddlewareDTO;
+use ReflectionMethod;
+use RuntimeException;
 use Yii;
 
 class S3MiddlewareTest extends Unit
@@ -241,7 +244,7 @@ class S3MiddlewareTest extends Unit
         }
     }
 
-    public function testSetMiddlewareAppendsConfiguredMiddlewaresToClient(): void
+    public function testSetMiddlewareCallsCorrectHandlerListMethodPerStage(): void
     {
         $module = Yii::$app->getModule('s3');
         $originals = [
@@ -266,16 +269,57 @@ class S3MiddlewareTest extends Unit
 
         try {
             $s3 = new S3();
-            $client = $s3->getClient();
 
-            $this::assertInstanceOf(S3Client::class, $client);
+            $calls = [
+                'appendAttempt' => [],
+                'appendInit' => [],
+                'appendValidate' => [],
+                'appendSign' => [],
+                'appendBuild' => [],
+            ];
 
-            $handlerList = $client->getHandlerList();
-            $this::assertStringContainsString('testAttempt', $handlerList->__toString());
-            $this::assertStringContainsString('testInit', $handlerList->__toString());
-            $this::assertStringContainsString('testValidate', $handlerList->__toString());
-            $this::assertStringContainsString('testSign', $handlerList->__toString());
-            $this::assertStringContainsString('testBuild', $handlerList->__toString());
+            $handlerList = $this->createMock(HandlerList::class);
+            $handlerList->method('appendAttempt')->willReturnCallback(function ($mw, $name) use (&$calls) {
+                $calls['appendAttempt'][] = ['middleware' => $mw, 'name' => $name];
+            });
+            $handlerList->method('appendInit')->willReturnCallback(function ($mw, $name) use (&$calls) {
+                $calls['appendInit'][] = ['middleware' => $mw, 'name' => $name];
+            });
+            $handlerList->method('appendValidate')->willReturnCallback(function ($mw, $name) use (&$calls) {
+                $calls['appendValidate'][] = ['middleware' => $mw, 'name' => $name];
+            });
+            $handlerList->method('appendSign')->willReturnCallback(function ($mw, $name) use (&$calls) {
+                $calls['appendSign'][] = ['middleware' => $mw, 'name' => $name];
+            });
+            $handlerList->method('appendBuild')->willReturnCallback(function ($mw, $name) use (&$calls) {
+                $calls['appendBuild'][] = ['middleware' => $mw, 'name' => $name];
+            });
+
+            $client = $this->createMock(S3Client::class);
+            $client->method('getHandlerList')->willReturn($handlerList);
+
+            $ref = new \ReflectionMethod($s3, 'setMiddleware');
+            $ref->invoke($s3, $client);
+
+            $this::assertCount(1, $calls['appendAttempt']);
+            $this::assertSame($attemptMw, $calls['appendAttempt'][0]['middleware']);
+            $this::assertEquals('testAttempt', $calls['appendAttempt'][0]['name']);
+
+            $this::assertCount(1, $calls['appendInit']);
+            $this::assertSame($initMw, $calls['appendInit'][0]['middleware']);
+            $this::assertEquals('testInit', $calls['appendInit'][0]['name']);
+
+            $this::assertCount(1, $calls['appendValidate']);
+            $this::assertSame($validateMw, $calls['appendValidate'][0]['middleware']);
+            $this::assertEquals('testValidate', $calls['appendValidate'][0]['name']);
+
+            $this::assertCount(1, $calls['appendSign']);
+            $this::assertSame($signMw, $calls['appendSign'][0]['middleware']);
+            $this::assertEquals('testSign', $calls['appendSign'][0]['name']);
+
+            $this::assertCount(1, $calls['appendBuild']);
+            $this::assertSame($buildMw, $calls['appendBuild'][0]['middleware']);
+            $this::assertEquals('testBuild', $calls['appendBuild'][0]['name']);
         } finally {
             foreach ($originals as $key => $original) {
                 if ($original === null) {
@@ -325,48 +369,40 @@ class S3MiddlewareTest extends Unit
         }
     }
 
-    public function testSetMiddlewareCatchesThrowableAndStillReturnsClient(): void
+    public function testSetMiddlewareCatchesThrowableAndClientStillWorks(): void
     {
         $module = Yii::$app->getModule('s3');
-        $originals = [
-            'attemptMiddleware' => $module->params['attemptMiddleware'] ?? null,
-            'initMiddleware' => $module->params['initMiddleware'] ?? null,
-            'validateMiddleware' => $module->params['validateMiddleware'] ?? null,
-            'signMiddleware' => $module->params['signMiddleware'] ?? null,
-            'buildMiddleware' => $module->params['buildMiddleware'] ?? null,
-        ];
+        $original = $module->params['attemptMiddleware'] ?? null;
 
         $middleware = static fn() => null;
         $module->params['attemptMiddleware'] = ['middleware' => $middleware, 'name' => 'testAttempt'];
-        $module->params['initMiddleware'] = ['middleware' => $middleware, 'name' => 'testInit'];
-        $module->params['validateMiddleware'] = ['middleware' => $middleware, 'name' => 'testValidate'];
-        $module->params['signMiddleware'] = ['middleware' => $middleware, 'name' => 'testSign'];
-        $module->params['buildMiddleware'] = ['middleware' => $middleware, 'name' => 'testBuild'];
 
         try {
             $s3 = new S3();
 
-            $ref = new \ReflectionClass($s3);
-            $method = $ref->getMethod('setMiddleware');
+            $handlerList = $this->createMock(HandlerList::class);
+            $handlerList->method('appendAttempt')->willThrowException(new RuntimeException('HandlerList error'));
 
-            $clientMock = $this->createMock(S3Client::class);
-            $handlerList = $this->createMock(\Aws\HandlerList::class);
-            $handlerList->method('appendAttempt')->willThrowException(new \RuntimeException('HandlerList error'));
-            $handlerList->method('appendInit');
-            $handlerList->method('appendValidate');
-            $handlerList->method('appendBuild');
-            $clientMock->method('getHandlerList')->willReturn($handlerList);
+            $client = $this->createMock(S3Client::class);
+            $client->method('getHandlerList')->willReturn($handlerList);
 
-            $method->invoke($s3, $clientMock);
+            $ref = new ReflectionMethod($s3, 'setMiddleware');
+            $ref->invoke($s3, $client);
 
-            $this::assertTrue(true);
+            if ($original === null) {
+                unset($module->params['attemptMiddleware']);
+            } else {
+                $module->params['attemptMiddleware'] = $original;
+            }
+
+            $realClient = $s3->getClient();
+            $this::assertInstanceOf(S3Client::class, $realClient);
+            $this::assertNotEmpty($s3->getListBucketMap());
         } finally {
-            foreach ($originals as $key => $original) {
-                if ($original === null) {
-                    unset($module->params[$key]);
-                } else {
-                    $module->params[$key] = $original;
-                }
+            if ($original === null) {
+                unset($module->params['attemptMiddleware']);
+            } else {
+                $module->params['attemptMiddleware'] = $original;
             }
         }
     }
