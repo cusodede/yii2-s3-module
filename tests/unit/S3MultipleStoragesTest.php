@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace unit;
 
+use Aws\S3\Exception\S3Exception;
 use Codeception\Test\Unit;
 use cusodede\s3\helpers\S3Helper;
 use cusodede\s3\models\cloud_storage\CloudStorage;
@@ -216,6 +217,50 @@ class S3MultipleStoragesTest extends Unit
             $module->params['connection']['FirstS3Connection']['password'] = $originalPassword;
             new S3(['connection' => 'SecondS3Connection'])->deleteObject($storage->key, $storage->bucket);
             CloudStorageTags::deleteAll(['cloud_storage_id' => $storage->id]);
+            $storage->delete();
+        }
+    }
+
+    /**
+     * S3Helper::deleteFile must delete from the storage row's actual bucket,
+     * not from the connection's default bucket. Uploads via FirstS3Connection
+     * to second-bucket (NOT the connection's default of first-bucket), then
+     * verifies that after deleteFile the object is actually gone from the
+     * bucket where it lived.
+     * @return void
+     * @throws Throwable
+     * @throws Exception
+     */
+    public function testDeleteFileUsesStorageBucket(): void
+    {
+        $storage = S3Helper::FileToStorage(
+            Yii::getAlias(self::SAMPLE_FILE_PATH),
+            bucket: 'second-bucket',
+            connection: 'FirstS3Connection'
+        );
+        $this::assertEquals('second-bucket', $storage->bucket);
+        $this::assertEquals('FirstS3Connection', $storage->connection);
+
+        $s3 = new S3(['connection' => 'FirstS3Connection']);
+        $head = $s3->client->headObject(['Bucket' => 'second-bucket', 'Key' => $storage->key]);
+        $this::assertNotNull($head);
+
+        try {
+            S3Helper::deleteFile($storage);
+
+            try {
+                $s3->client->headObject(['Bucket' => 'second-bucket', 'Key' => $storage->key]);
+                $this::fail('Expected S3 object to be deleted from second-bucket');
+            } catch (S3Exception $e) {
+                $this::assertEquals(404, $e->getStatusCode());
+            }
+        } finally {
+            // Best-effort: with the buggy code the object would still be in
+            // second-bucket; ensure cleanup either way.
+            try {
+                $s3->client->deleteObject(['Bucket' => 'second-bucket', 'Key' => $storage->key]);
+            } catch (Throwable) {
+            }
             $storage->delete();
         }
     }
