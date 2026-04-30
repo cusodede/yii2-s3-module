@@ -56,21 +56,25 @@ class S3Helper
     }
 
     /**
-     * Загрузка файла из модели
+     * Загрузка файла из модели.
+     * Если CloudStorage::save() не проходит валидацию, S3-объект удаляется
+     * (откатывается заливка), а валидационная ошибка пробрасывается наверх,
+     * чтобы не оставлять «осиротевший» файл в облаке.
      * @param Model $model
      * @param string $filePath
      * @param string $fileName
      * @param string|null $bucket
      * @param array|null $tags
      * @param string|null $connection Имя соединения (при использовании конфигурации с несколькими соединениями)
-     * @return bool
+     * @return void
+     * @throws Exception when CloudStorage row validation fails
      * @throws Throwable
-     * @throws Exception
      */
-    public static function uploadFileFromModel(Model $model, string $filePath, string $fileName, ?string $bucket = null, ?array $tags = null, ?string $connection = null): bool
+    public static function uploadFileFromModel(Model $model, string $filePath, string $fileName, ?string $bucket = null, ?array $tags = null, ?string $connection = null): void
     {
         $key = S3::GetFileNameKey($fileName);
-        $storageResponse = new S3(['connection' => $connection])->putObject($filePath, $key, $bucket, $tags);
+        $s3 = new S3(['connection' => $connection]);
+        $storageResponse = $s3->putObject($filePath, $key, $bucket, $tags);
 
         $cloudStorage = new CloudStorage([
             'bucket' => $bucket,
@@ -83,7 +87,14 @@ class S3Helper
             'connection' => $connection
         ]);
         $cloudStorage->tags = $tags ?? [];
-        return $cloudStorage->save();
+        if (!$cloudStorage->save()) {
+            try {
+                $s3->deleteObject($key, $bucket);
+            } catch (Throwable $throwable) {
+                Yii::error($throwable);
+            }
+            throw new Exception(sprintf('Failed to persist CloudStorage row: %s', implode('; ', $cloudStorage->getFirstErrors())));
+        }
     }
 
     /**

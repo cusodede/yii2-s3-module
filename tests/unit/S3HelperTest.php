@@ -190,9 +190,7 @@ class S3HelperTest extends Unit
         $fileName = 'user-file-' . uniqid('', true) . '.txt';
         $tags = ['user_id' => (string)$user->id, 'type' => 'document'];
 
-        $result = S3Helper::uploadFileFromModel($user, $filePath, $fileName, self::TEST_BUCKET, $tags);
-
-        $this::assertTrue($result);
+        S3Helper::uploadFileFromModel($user, $filePath, $fileName, self::TEST_BUCKET, $tags);
 
         // Find the created storage
         $storage = CloudStorage::find()
@@ -355,6 +353,60 @@ class S3HelperTest extends Unit
         $storage->bucket = $originalBucket;
         new S3()->deleteObject($key, $originalBucket);
         $storage->delete();
+    }
+
+    /**
+     * uploadFileFromModel() throws when the CloudStorage row fails validation,
+     * rather than silently returning false and leaving an orphaned S3 upload.
+     * @throws Throwable
+     */
+    public function testUploadFileFromModelThrowsOnValidationFailure(): void
+    {
+        $username = 'testuser-throw-' . uniqid('', true);
+        $user = new Users(['username' => $username, 'login' => $username, 'password' => 'pw']);
+        $this::assertTrue($user->save());
+
+        // CloudStorageAR enforces 255-char max on `filename`; this trips the
+        // string validator at save() time. The S3 putObject itself succeeds
+        // because the object key is an MD5 hash, independent of filename length.
+        $longFilename = str_repeat('x', 300) . '.txt';
+
+        try {
+            $this->expectException(Exception::class);
+            $this->expectExceptionMessage('Failed to persist CloudStorage row');
+            S3Helper::uploadFileFromModel($user, Yii::getAlias(self::SAMPLE_FILE_PATH), $longFilename, self::TEST_BUCKET);
+        } finally {
+            $user->delete();
+        }
+    }
+
+    /**
+     * When CloudStorage validation fails, uploadFileFromModel() rolls back the
+     * S3 upload before throwing — the bucket must not accumulate orphaned
+     * objects that the database has no record of.
+     * @throws Throwable
+     */
+    public function testUploadFileFromModelRollsBackUploadOnValidationFailure(): void
+    {
+        $username = 'testuser-rollback-' . uniqid('', true);
+        $user = new Users(['username' => $username, 'login' => $username, 'password' => 'pw']);
+        $this::assertTrue($user->save());
+
+        $s3 = new S3();
+        $countBefore = count($s3->client->listObjects(['Bucket' => self::TEST_BUCKET])->get('Contents') ?? []);
+
+        $longFilename = str_repeat('x', 300) . '.txt';
+
+        try {
+            S3Helper::uploadFileFromModel($user, Yii::getAlias(self::SAMPLE_FILE_PATH), $longFilename, self::TEST_BUCKET);
+        } catch (Exception) {
+            // expected — see testUploadFileFromModelThrowsOnValidationFailure
+        }
+
+        $countAfter = count($s3->client->listObjects(['Bucket' => self::TEST_BUCKET])->get('Contents') ?? []);
+        $this::assertEquals($countBefore, $countAfter);
+
+        $user->delete();
     }
 
     /**
