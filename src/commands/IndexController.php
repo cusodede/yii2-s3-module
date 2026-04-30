@@ -111,8 +111,11 @@ class IndexController extends Controller
     {
         try {
             $res = $this->s3->client->listObjects(['Bucket' => $this->s3->getBucket($bucket)])->toArray();
-            $this->outputResult('Quantity of objects ' . count($res['Contents']));
-            foreach ($res['Contents'] as $content) {
+            // S3/MinIO omits the Contents key entirely on empty buckets;
+            // null-coalesce so count() and foreach receive a real array.
+            $contents = $res['Contents'] ?? [];
+            $this->outputResult('Quantity of objects ' . count($contents));
+            foreach ($contents as $content) {
                 Console::output("{$content['Key']} {$content['Size']} bytes");
             }
         } catch (Throwable $e) {

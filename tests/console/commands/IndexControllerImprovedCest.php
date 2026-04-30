@@ -357,21 +357,17 @@ class IndexControllerImprovedCest
      */
     public function testListCommandEmptyBucket(ConsoleTester $I): void
     {
-        $controller = $this->initDefaultController();
-
-        // Create a new empty bucket for testing
-        $s3 = new S3();
         $emptyBucket = 'empty-test-' . uniqid('', true);
-        $s3->createBucket($emptyBucket);
+        new S3()->createBucket($emptyBucket);
 
-        // List objects in empty bucket (should show 0 objects)
-        $controller->actionList($emptyBucket);
+        // S3/MinIO omits the Contents key from listObjects responses on empty
+        // buckets; the controller must null-coalesce so count() doesn't error.
+        // Pre-fix this would print a TypeError message instead of "Quantity of
+        // objects 0".
+        $I->runShellCommand('php tests/_app/yii s3/index/list ' . $emptyBucket);
+        $I->seeInShellOutput('Quantity of objects 0');
 
-        // Should not throw error - command handles empty buckets gracefully
-        $I->assertTrue(true);
-
-        // Note: Bucket cleanup left for manual removal since S3 model doesn't have deleteBucket method
-        // This is acceptable for test isolation
+        // Bucket cleanup left for manual removal — S3 model has no deleteBucket method.
     }
 
     /**
