@@ -69,6 +69,10 @@ class CloudStorageSearch extends CloudStorage
         return $dataProvider;
     }
 
+    /**
+     * @param ActiveQueryInterface $query
+     * @return void
+     */
     private function filterData(ActiveQueryInterface $query): void
     {
         $query->andFilterWhere([self::fieldName('id') => $this->id]);

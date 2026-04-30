@@ -285,3 +285,51 @@ Test configuration is defined in:
 - `tests/.env.ci` - CI environment variables
 - `docker-compose.yml` - Unified Docker environment
 - `docker/` - PHP container definitions
+
+## Adding Middleware
+
+You can add middleware for certain stages of the request lifecycle.
+
+Available stages:
+
+| Stage    | Purpose                                                       |
+|----------|---------------------------------------------------------------|
+| init     | Command initialization, adding default parameters             |
+| validate | Validation of command input parameters                         |
+| build    | Serialization of the command into an HTTP request             |
+| sign     | HTTP request signing (SigV4)                                  |
+| attempt  | Direct execution of the HTTP request and receiving the response |
+
+### Configuration
+
+```php
+use Aws\CommandInterface;
+use Psr\Http\Message\RequestInterface;
+
+$params = [
+    ...
+    'params' => [
+        ...
+        'attemptMiddleware' => [
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
+            'name' => 'test', // Optional middleware name
+        ],
+        'signMiddleware' => [
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
+            'name' => 'test', // Optional middleware name
+        ],
+        'buildMiddleware' => [
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
+            'name' => 'test', // Optional middleware name
+        ],
+        'initMiddleware' => [
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
+            'name' => 'test', // Optional middleware name
+        ],
+        'validateMiddleware' => [
+            'middleware' => function (CommandInterface $cmd, RequestInterface $request) {},
+            'name' => 'test', // Optional middleware name
+        ],
+    ]
+]
+```
